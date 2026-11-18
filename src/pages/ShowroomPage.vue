@@ -8,9 +8,24 @@ import transmissionIcon from '../images/supergroup-dealerships-transmission-icon
 import showroomVehicle1 from '../images/showroom-vehicle-1.jpg'
 import showroomVehicle2 from '../images/showroom-vehicle-2.jpg'
 
+const clioModules = import.meta.glob('../images/clio-*.jpg', {
+  eager: true,
+  import: 'default',
+})
+
+const clioGallery = Object.entries(clioModules)
+  .sort(([a], [b]) => {
+    const numA = Number(a.match(/clio-(\d+)\.jpg$/)?.[1] || 0)
+    const numB = Number(b.match(/clio-(\d+)\.jpg$/)?.[1] || 0)
+    return numA - numB
+  })
+  .map(([, src]) => src)
+
 const query = ref('')
 const filtersOpen = ref(false)
 const favorites = ref(new Set())
+const activeImageByVehicle = ref({})
+const galleryRefs = {}
 const currentPage = ref(1)
 const totalPages = 3815
 
@@ -24,6 +39,7 @@ const selectedMinPrice = ref('')
 const selectedMaxPrice = ref('')
 
 const modelsByMake = {
+  Renault: ['Clio', 'Kwid', 'Triber', 'Kiger', 'Duster'],
   Toyota: ['Corolla Cross', 'Hilux', 'Fortuner', 'Starlet', 'RAV4'],
   Volkswagen: ['Polo', 'Polo Vivo', 'Golf', 'T-Cross', 'Tiguan'],
   Ford: ['Ranger', 'Everest', 'Puma', 'Territory'],
@@ -68,20 +84,20 @@ const maxPriceOptions = [
 const vehicles = [
   {
     id: 1,
-    name: '2025 TOYOTA COROLLA CROSS',
-    trim: '1.8 XR HYBRID CVT 5DR (90KW)',
-    make: 'Toyota',
-    model: 'Corolla Cross',
-    condition: 'New',
-    priceValue: 498900,
-    price: 'R498 900',
-    estPayment: 'R8 950 p/m*',
-    mileageValue: 15,
-    mileage: '15 km',
-    transmission: 'Automatic',
-    fuelType: 'Hybrid',
-    dealer: 'Supergroup Toyota Sandton',
-    image: showroomVehicle1,
+    name: '2023 RENAULT CLIO',
+    trim: '1.0T ZEN 5DR (66KW)',
+    make: 'Renault',
+    model: 'Clio',
+    condition: 'Used',
+    priceValue: 199900,
+    price: 'R199 900',
+    estPayment: 'R3 580 p/m*',
+    mileageValue: 43987,
+    mileage: '43 987 km',
+    transmission: 'Manual',
+    fuelType: 'Petrol',
+    dealer: 'Supergroup Pre-Owned',
+    images: clioGallery,
   },
   {
     id: 2,
@@ -98,7 +114,7 @@ const vehicles = [
     transmission: 'Manual',
     fuelType: 'Petrol',
     dealer: 'Supergroup VW Johannesburg',
-    image: showroomVehicle2,
+    images: [showroomVehicle2, showroomVehicle1],
   },
   {
     id: 3,
@@ -115,7 +131,7 @@ const vehicles = [
     transmission: 'Automatic',
     fuelType: 'Diesel',
     dealer: 'Supergroup Ford Midrand',
-    image: showroomVehicle1,
+    images: [showroomVehicle1, showroomVehicle2],
   },
   {
     id: 4,
@@ -132,7 +148,7 @@ const vehicles = [
     transmission: 'Automatic',
     fuelType: 'Petrol',
     dealer: 'Supergroup Chery Fourways',
-    image: showroomVehicle2,
+    images: [showroomVehicle2, showroomVehicle1],
   },
   {
     id: 5,
@@ -149,7 +165,7 @@ const vehicles = [
     transmission: 'Automatic',
     fuelType: 'Petrol',
     dealer: 'Supergroup Hyundai Boksburg',
-    image: showroomVehicle1,
+    images: [showroomVehicle1, showroomVehicle2],
   },
   {
     id: 6,
@@ -166,7 +182,7 @@ const vehicles = [
     transmission: 'Automatic',
     fuelType: 'Petrol',
     dealer: 'Supergroup Auto Sandton',
-    image: showroomVehicle2,
+    images: [showroomVehicle2, showroomVehicle1],
   },
   {
     id: 7,
@@ -183,7 +199,7 @@ const vehicles = [
     transmission: 'Manual',
     fuelType: 'Diesel',
     dealer: 'Supergroup Toyota Centurion',
-    image: showroomVehicle1,
+    images: [showroomVehicle1, showroomVehicle2],
   },
   {
     id: 8,
@@ -200,7 +216,7 @@ const vehicles = [
     transmission: 'Automatic',
     fuelType: 'Petrol',
     dealer: 'Supergroup Pre-Owned Menlyn',
-    image: showroomVehicle2,
+    images: [showroomVehicle2, showroomVehicle1],
   },
 ]
 
@@ -253,6 +269,30 @@ function toggleFavorite(id) {
     next.add(id)
   }
   favorites.value = next
+}
+
+function setGalleryRef(id, el) {
+  if (el) galleryRefs[id] = el
+}
+
+function onImageScroll(vehicleId, event) {
+  const el = event.target
+  if (!el || !el.clientWidth) return
+  const idx = Math.round(el.scrollLeft / el.clientWidth)
+  activeImageByVehicle.value = {
+    ...activeImageByVehicle.value,
+    [vehicleId]: idx,
+  }
+}
+
+function scrollVehicleImage(vehicleId, idx) {
+  const el = galleryRefs[vehicleId]
+  if (!el) return
+  el.scrollTo({ left: idx * el.clientWidth, behavior: 'smooth' })
+  activeImageByVehicle.value = {
+    ...activeImageByVehicle.value,
+    [vehicleId]: idx,
+  }
 }
 </script>
 
@@ -438,13 +478,22 @@ function toggleFavorite(id) {
         :key="vehicle.id"
         class="rounded-[24px] border border-neutral-100 bg-white shadow-[0_8px_28px_rgba(0,0,0,0.08)] overflow-hidden"
       >
-        <!-- Vehicle Photo with Condition Pill & Favorite Heart -->
+        <!-- Scrollable Vehicle Photo Gallery with Condition Pill & Favorite Heart -->
         <div class="relative aspect-[16/11] bg-neutral-100 overflow-hidden">
-          <img
-            :src="vehicle.image"
-            :alt="vehicle.name"
-            class="w-full h-full object-cover"
-          />
+          <div
+            :ref="(el) => setGalleryRef(vehicle.id, el)"
+            class="flex w-full h-full overflow-x-auto snap-x snap-mandatory"
+            style="scrollbar-width: none;"
+            @scroll="onImageScroll(vehicle.id, $event)"
+          >
+            <img
+              v-for="(img, idx) in vehicle.images"
+              :key="idx"
+              :src="img"
+              :alt="`${vehicle.name} photo ${idx + 1}`"
+              class="w-full h-full shrink-0 snap-start object-cover"
+            />
+          </div>
 
           <span
             v-if="vehicle.condition !== 'Used'"
@@ -490,8 +539,15 @@ function toggleFavorite(id) {
             </span>
 
             <div class="flex items-center gap-1.5">
-              <span class="w-2 h-2 rounded-full bg-[#0072BC]"></span>
-              <span v-for="dot in 8" :key="dot" class="w-2 h-2 rounded-full bg-neutral-300"></span>
+              <button
+                v-for="(_, idx) in vehicle.images"
+                :key="idx"
+                type="button"
+                :aria-label="`View photo ${idx + 1}`"
+                class="w-2 h-2 rounded-full transition-colors cursor-pointer"
+                :class="(activeImageByVehicle[vehicle.id] || 0) === idx ? 'bg-[#0072BC]' : 'bg-neutral-300'"
+                @click="scrollVehicleImage(vehicle.id, idx)"
+              ></button>
             </div>
           </div>
 
