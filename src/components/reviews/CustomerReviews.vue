@@ -3,6 +3,8 @@ import { ref } from 'vue'
 import starIcon from '../../images/star-icon.svg'
 import googleLogo from '../../images/google-reivew-logo.webp'
 import profileImage from '../../images/customer-review-profile-image.webp'
+import profileImage2 from '../../images/customer-review-profile-image-2.jpg'
+import profileImage3 from '../../images/customer-review-profile-image-3.jpg'
 
 const reviews = [
   {
@@ -16,14 +18,14 @@ const reviews = [
     id: 2,
     name: 'Thabo Mokoena',
     timeAgo: '8 months ago on',
-    avatar: profileImage,
+    avatar: profileImage2,
     text: 'Seamless handover from start to finish. The dealership team kept me updated throughout financing and had my vehicle spotless and ready on collection day.',
   },
   {
     id: 3,
     name: 'Annelize van der Merwe',
     timeAgo: '4 months ago on',
-    avatar: profileImage,
+    avatar: profileImage3,
     text: 'Booked my annual service online and the service bay team was punctual, transparent on pricing, and had me back on the road ahead of schedule.',
   },
 ]
@@ -133,17 +135,10 @@ function handleScroll() {
           </div>
 
           <!-- Review Text -->
-          <p class="text-sm text-neutral-800 leading-relaxed mb-4">
+          <p class="text-sm text-neutral-800 leading-relaxed">
             {{ review.text }}
           </p>
         </div>
-
-        <a
-          href="#reviews"
-          class="inline-block text-sm font-medium text-[#2FA6F3] hover:underline"
-        >
-          Read more
-        </a>
       </article>
     </div>
 
