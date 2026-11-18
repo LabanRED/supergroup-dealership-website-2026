@@ -59,7 +59,7 @@ onUnmounted(() => {
       :data-device="activeDevice"
       :class="
         activeDevice === 'mobile'
-          ? 'w-full min-h-screen bg-white flex flex-col md:w-[390px] md:max-w-full md:shadow-2xl md:rounded-[36px] md:overflow-y-auto md:overflow-x-clip md:border-8 md:border-neutral-900 md:my-6 md:h-[844px] md:max-h-[calc(100vh-4rem)]'
+          ? 'w-full min-h-screen bg-white flex flex-col md:w-[402px] md:max-w-full md:shadow-2xl md:rounded-[48px] md:overflow-y-auto md:overflow-x-clip md:ring-8 md:ring-neutral-900 md:my-6 md:h-[874px] md:max-h-[calc(100vh-4rem)]'
           : 'w-full min-h-screen bg-white flex flex-col'
       "
       :style="activeDevice === 'mobile' ? { scrollbarWidth: 'none' } : undefined"
