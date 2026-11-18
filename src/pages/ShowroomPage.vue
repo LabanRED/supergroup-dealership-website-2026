@@ -13,7 +13,7 @@ import kwid5 from '../images/RlI7K14gOFlnW4ryx9JI00LUNHLyf8kTwhPj8MJ8.jpg'
 import kwid6 from '../images/rObRGkzMSrnecU8RwI3MD4KupMi0GDJlQUNYyR0m.jpg'
 import kwid7 from '../images/WrbcO9oLj52Q8Pg16sGfZc7FCzVMTZflff9ARBjV.jpg'
 
-const kwidGallery = [kwid1, kwid2, kwid3, kwid4, kwid5, kwid6, kwid7]
+const kwidGallery = [kwid3, kwid2, kwid4, kwid5, kwid6, kwid1, kwid7]
 
 const clioModules = import.meta.glob('../images/clio-*.jpg', {
   eager: true,
