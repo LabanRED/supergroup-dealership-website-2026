@@ -47,7 +47,7 @@ onUnmounted(() => {
   <div
     :class="
       activeDevice === 'mobile'
-        ? 'min-h-screen bg-neutral-200 py-6 flex justify-center items-start'
+        ? 'w-full min-h-screen bg-white md:bg-neutral-200 md:py-6 md:flex md:justify-center md:items-start'
         : 'w-full min-h-screen bg-white'
     "
   >
@@ -55,7 +55,7 @@ onUnmounted(() => {
       :data-device="activeDevice"
       :class="
         activeDevice === 'mobile'
-          ? 'w-[390px] max-w-full bg-white shadow-2xl rounded-[36px] overflow-y-auto overflow-x-clip border-8 border-neutral-900 my-6 h-[844px] max-h-[calc(100vh-4rem)] flex flex-col'
+          ? 'w-full min-h-screen bg-white flex flex-col md:w-[390px] md:max-w-full md:shadow-2xl md:rounded-[36px] md:overflow-y-auto md:overflow-x-clip md:border-8 md:border-neutral-900 md:my-6 md:h-[844px] md:max-h-[calc(100vh-4rem)]'
           : 'w-full min-h-screen bg-white flex flex-col'
       "
       :style="activeDevice === 'mobile' ? { scrollbarWidth: 'none' } : undefined"
