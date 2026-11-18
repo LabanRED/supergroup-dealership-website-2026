@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useDevicePreview } from '../composables/useDevicePreview.js'
 import VehicleOverview from '../components/vehicle/VehicleOverview.vue'
 import VehicleSpecifications from '../components/vehicle/VehicleSpecifications.vue'
@@ -38,9 +38,29 @@ const vehicle = {
   images: clioGallery,
 }
 
-const isFavorite = ref(true)
+const isFavorite = ref(false)
+const isScrolled = ref(false)
+const topSectionRef = ref(null)
 const activeIndex = ref(0)
 const mainTrackRef = ref(null)
+let scrollContainer = null
+
+function updateScrollState() {
+  const containerScroll = scrollContainer ? scrollContainer.scrollTop : 0
+  isScrolled.value = window.scrollY > 10 || containerScroll > 10
+}
+
+onMounted(() => {
+  scrollContainer = topSectionRef.value?.closest('[data-device]') || null
+  window.addEventListener('scroll', updateScrollState, { passive: true })
+  scrollContainer?.addEventListener('scroll', updateScrollState, { passive: true })
+  updateScrollState()
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', updateScrollState)
+  scrollContainer?.removeEventListener('scroll', updateScrollState)
+})
 
 function selectPhoto(idx) {
   activeIndex.value = idx
@@ -69,19 +89,25 @@ function scrollToEnquire() {
     :class="activeDevice === 'mobile' ? 'px-[20px]' : 'px-[20px] md:px-10'"
   >
     <div class="max-w-md mx-auto space-y-5">
-      <!-- Sticky Dark Top Section -->
+      <!-- Sticky Top Section (White at rest, Dark on scroll) -->
       <div
-        class="sticky z-40 -mx-[20px] -mt-6 px-[20px] pt-5 pb-4 bg-[#111111] border-b border-white/10 shadow-md space-y-4"
-        :class="activeDevice === 'mobile' ? 'top-[102px]' : 'top-[102px] lg:top-[118px]'"
+        ref="topSectionRef"
+        class="sticky z-40 -mx-[20px] -mt-6 px-[20px] pt-5 pb-4 transition-colors duration-200 space-y-4"
+        :class="[
+          activeDevice === 'mobile' ? 'top-[102px]' : 'top-[102px] lg:top-[118px]',
+          isScrolled ? 'bg-[#111111] border-b border-white/10 shadow-md' : 'bg-white',
+        ]"
       >
         <!-- Top Bar: Browse vehicles + Favorite Heart -->
         <div class="flex items-center justify-between">
           <a
             href="#showroom"
-            class="inline-flex items-center gap-2 text-xs font-medium text-[#2FA6F3] hover:underline"
+            class="inline-flex items-center gap-2 text-xs font-medium hover:underline transition-colors"
+            :class="isScrolled ? 'text-[#2FA6F3]' : 'text-[#0072BC]'"
           >
             <span
-              class="w-7 h-7 rounded-full border border-white/70 flex items-center justify-center text-white"
+              class="w-7 h-7 rounded-full border flex items-center justify-center transition-colors"
+              :class="isScrolled ? 'border-white/70 text-white' : 'border-neutral-400 text-neutral-700'"
             >
               <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
@@ -94,7 +120,13 @@ function scrollToEnquire() {
             type="button"
             aria-label="Save vehicle"
             class="w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer"
-            :class="isFavorite ? 'bg-[#D92D20] text-white' : 'border border-white/70 text-white'"
+            :class="
+              isFavorite
+                ? 'bg-[#D92D20] text-white'
+                : isScrolled
+                  ? 'border border-white/70 text-white'
+                  : 'border border-neutral-800 text-neutral-800'
+            "
             @click="isFavorite = !isFavorite"
           >
             <svg
@@ -115,18 +147,38 @@ function scrollToEnquire() {
         <!-- Price & Est. Payment Split -->
         <div class="flex items-center justify-start gap-[10px]">
           <div class="min-w-0">
-            <div class="text-xs text-white mb-1">Price</div>
-            <div class="text-[42px] font-semibold text-[#2FA6F3] leading-none whitespace-nowrap">
+            <div
+              class="text-xs mb-1 transition-colors"
+              :class="isScrolled ? 'text-white' : 'text-neutral-500'"
+            >
+              Price
+            </div>
+            <div
+              class="text-[42px] font-semibold leading-none whitespace-nowrap transition-colors"
+              :class="isScrolled ? 'text-[#2FA6F3]' : 'text-[#0072BC]'"
+            >
               {{ vehicle.price }}
             </div>
           </div>
 
-          <div class="shrink-0 border-l border-white/70 pl-[10px] space-y-1">
-            <div class="text-[13px] text-white">Est. Payment</div>
-            <div class="text-[14px] font-medium text-white flex items-center gap-1">
+          <div
+            class="shrink-0 border-l pl-[10px] space-y-1 transition-colors"
+            :class="isScrolled ? 'border-white/70' : 'border-[#969696]'"
+          >
+            <div
+              class="text-[13px] transition-colors"
+              :class="isScrolled ? 'text-white' : 'text-neutral-500'"
+            >
+              Est. Payment
+            </div>
+            <div
+              class="text-[14px] font-medium flex items-center gap-1 transition-colors"
+              :class="isScrolled ? 'text-white' : 'text-neutral-800'"
+            >
               <span>{{ vehicle.estPayment }}</span>
               <span
-                class="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full border border-white/80 text-[9px] text-white"
+                class="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full border text-[9px] transition-colors"
+                :class="isScrolled ? 'border-white/80 text-white' : 'border-neutral-400 text-neutral-500'"
               >
                 i
               </span>
@@ -137,12 +189,17 @@ function scrollToEnquire() {
         <!-- Title & Trim -->
         <div>
           <h1
-            class="font-poppins font-medium text-[#2FA6F3] uppercase"
+            class="font-poppins font-medium uppercase transition-colors"
+            :class="isScrolled ? 'text-[#2FA6F3]' : 'text-[#0072BC]'"
             style="font-size: 24px; line-height: 1.2; font-weight: 500;"
           >
             {{ vehicle.name }}
           </h1>
-          <p class="text-xs text-white uppercase mt-1" style="font-size: 12px;">
+          <p
+            class="text-xs uppercase mt-1 transition-colors"
+            :class="isScrolled ? 'text-white' : 'text-neutral-500'"
+            style="font-size: 12px;"
+          >
             {{ vehicle.trim }}
           </p>
         </div>
@@ -151,7 +208,12 @@ function scrollToEnquire() {
         <div class="grid grid-cols-3 gap-2.5">
           <button
             type="button"
-            class="rounded-full border border-white py-2.5 px-3 text-center text-xs sm:text-sm font-medium text-white hover:bg-white/10 transition-colors cursor-pointer"
+            class="rounded-full border py-2.5 px-3 text-center text-xs sm:text-sm font-medium transition-colors cursor-pointer"
+            :class="
+              isScrolled
+                ? 'border-white text-white hover:bg-white/10'
+                : 'border-neutral-800 text-neutral-800 hover:bg-neutral-100'
+            "
           >
             Finance
           </button>
@@ -164,7 +226,12 @@ function scrollToEnquire() {
           </button>
           <button
             type="button"
-            class="rounded-full border border-white py-2.5 px-3 text-center text-xs sm:text-sm font-medium text-white hover:bg-white/10 transition-colors cursor-pointer"
+            class="rounded-full border py-2.5 px-3 text-center text-xs sm:text-sm font-medium transition-colors cursor-pointer"
+            :class="
+              isScrolled
+                ? 'border-white text-white hover:bg-white/10'
+                : 'border-neutral-800 text-neutral-800 hover:bg-neutral-100'
+            "
           >
             Pre-Approval
           </button>
