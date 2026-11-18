@@ -2,9 +2,15 @@
 import { ref, computed, watch } from 'vue'
 import filterIcon from '../images/filter-icon.svg'
 import searchIcon from '../images/search-icon.svg'
+import mileageIcon from '../images/supergroup-dealerships-mileage-icon.svg'
+import fuelIcon from '../images/supergroup-dealerships-fuel-type-icon.svg'
+import transmissionIcon from '../images/supergroup-dealerships-transmission-icon.svg'
+import showroomVehicle1 from '../images/showroom-vehicle-1.jpg'
+import showroomVehicle2 from '../images/showroom-vehicle-2.jpg'
 
 const query = ref('')
 const filtersOpen = ref(false)
+const favorites = ref(new Set())
 
 const selectedMake = ref('')
 const selectedModel = ref('')
@@ -60,59 +66,71 @@ const maxPriceOptions = [
 const vehicles = [
   {
     id: 1,
-    name: '2025 Toyota Corolla Cross 1.8 XR',
+    name: '2025 TOYOTA COROLLA CROSS',
+    trim: '1.8 XR HYBRID CVT 5DR (90KW)',
     make: 'Toyota',
     model: 'Corolla Cross',
     condition: 'New',
     priceValue: 498900,
-    price: 'R 498,900',
+    price: 'R498 900',
+    estPayment: 'R8 950 p/m*',
     mileageValue: 15,
     mileage: '15 km',
     transmission: 'Automatic',
     fuelType: 'Hybrid',
     dealer: 'Supergroup Toyota Sandton',
+    image: showroomVehicle1,
   },
   {
     id: 2,
-    name: '2024 Volkswagen Polo 1.0 TSI Life',
+    name: '2024 VOLKSWAGEN POLO',
+    trim: '1.0 TSI LIFE 5DR (70KW)',
     make: 'Volkswagen',
     model: 'Polo',
     condition: 'Demo',
     priceValue: 364900,
-    price: 'R 364,900',
+    price: 'R364 900',
+    estPayment: 'R6 540 p/m*',
     mileageValue: 4200,
-    mileage: '4,200 km',
+    mileage: '4 200 km',
     transmission: 'Manual',
     fuelType: 'Petrol',
     dealer: 'Supergroup VW Johannesburg',
+    image: showroomVehicle2,
   },
   {
     id: 3,
-    name: '2024 Ford Ranger 2.0 SiT Double Cab XLT',
+    name: '2024 FORD RANGER XLT',
+    trim: '2.0 SiT DOUBLE CAB 4X2 (125KW)',
     make: 'Ford',
     model: 'Ranger',
     condition: 'Used',
     priceValue: 629000,
-    price: 'R 629,000',
+    price: 'R629 000',
+    estPayment: 'R11 280 p/m*',
     mileageValue: 18500,
-    mileage: '18,500 km',
+    mileage: '18 500 km',
     transmission: 'Automatic',
     fuelType: 'Diesel',
     dealer: 'Supergroup Ford Midrand',
+    image: showroomVehicle1,
   },
   {
     id: 4,
-    name: '2025 Chery Tiggo 7 Pro Max 1.6T',
+    name: '2025 CHERY TIGGO 7 PRO MAX',
+    trim: '1.6T EXECUTIVE DCT (145KW)',
     make: 'Chery',
     model: 'Tiggo 7 Pro Max',
     condition: 'New',
     priceValue: 529900,
-    price: 'R 529,900',
+    price: 'R529 900',
+    estPayment: 'R9 490 p/m*',
     mileageValue: 10,
     mileage: '10 km',
     transmission: 'Automatic',
     fuelType: 'Petrol',
     dealer: 'Supergroup Chery Fourways',
+    image: showroomVehicle2,
   },
 ]
 
@@ -127,7 +145,7 @@ const filteredVehicles = computed(() => {
     if (selectedMaxMileage.value && v.mileageValue > Number(selectedMaxMileage.value)) return false
     if (selectedMinPrice.value && v.priceValue < Number(selectedMinPrice.value)) return false
     if (selectedMaxPrice.value && v.priceValue > Number(selectedMaxPrice.value)) return false
-    if (q && !`${v.name} ${v.dealer} ${v.fuelType}`.toLowerCase().includes(q)) return false
+    if (q && !`${v.name} ${v.trim} ${v.dealer} ${v.fuelType}`.toLowerCase().includes(q)) return false
     return true
   })
 })
@@ -155,6 +173,16 @@ function resetFilters() {
   selectedMaxMileage.value = ''
   selectedMinPrice.value = ''
   selectedMaxPrice.value = ''
+}
+
+function toggleFavorite(id) {
+  const next = new Set(favorites.value)
+  if (next.has(id)) {
+    next.delete(id)
+  } else {
+    next.add(id)
+  }
+  favorites.value = next
 }
 </script>
 
@@ -322,7 +350,7 @@ function resetFilters() {
     </section>
 
     <!-- Featured Stock Results -->
-    <section class="!my-0 max-w-md mx-auto space-y-3">
+    <section class="!my-0 max-w-md mx-auto space-y-5">
       <div class="flex items-center justify-between text-xs text-neutral-500 px-1">
         <span>Showing {{ filteredVehicles.length }} featured vehicles</span>
         <button
@@ -338,26 +366,135 @@ function resetFilters() {
       <article
         v-for="vehicle in filteredVehicles"
         :key="vehicle.id"
-        class="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm space-y-2"
+        class="rounded-[24px] border border-neutral-100 bg-white shadow-[0_8px_28px_rgba(0,0,0,0.08)] overflow-hidden"
       >
-        <div class="flex items-center justify-between gap-2">
-          <span class="text-[11px] font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#0072BC]/10 text-[#0072BC]">
+        <!-- Vehicle Photo with Condition Pill & Favorite Heart -->
+        <div class="relative aspect-[16/11] bg-neutral-100 overflow-hidden">
+          <img
+            :src="vehicle.image"
+            :alt="vehicle.name"
+            class="w-full h-full object-cover"
+          />
+
+          <span
+            class="absolute top-3 left-3 px-3.5 py-1 rounded-full bg-[#0072BC] text-white text-xs font-medium shadow-sm"
+          >
             {{ vehicle.condition }}
           </span>
-          <span class="text-sm font-semibold text-neutral-900">{{ vehicle.price }}</span>
+
+          <button
+            type="button"
+            aria-label="Save vehicle"
+            class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white shadow flex items-center justify-center cursor-pointer transition-transform active:scale-95"
+            @click="toggleFavorite(vehicle.id)"
+          >
+            <svg
+              class="w-4 h-4"
+              :class="favorites.has(vehicle.id) ? 'fill-red-500 stroke-red-500' : 'fill-none stroke-red-500'"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 21s-6.7-4.35-9.2-8.1C.8 9.9 2.3 5.5 6.4 4.8c2.2-.38 4.2.58 5.6 2.15 1.4-1.57 3.4-2.53 5.6-2.15 4.1.7 5.6 5.1 3.6 8.1C18.7 16.65 12 21 12 21z"
+              />
+            </svg>
+          </button>
         </div>
 
-        <h3 class="text-base font-medium text-neutral-900">{{ vehicle.name }}</h3>
+        <div class="p-5">
+          <!-- Photo Count + Carousel Dots -->
+          <div class="flex items-center justify-center gap-3 mb-4">
+            <span class="inline-flex items-center gap-1 text-xs font-medium text-[#0072BC]">
+              <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                <path d="M9 3L7.17 5H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2h-3.17L15 3H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.65 0-3 1.35-3 3s1.35 3 3 3 3-1.35 3-3-1.35-3-3-3z" />
+              </svg>
+              <span>12+</span>
+            </span>
 
-        <div class="flex items-center gap-3 text-xs text-neutral-500">
-          <span>{{ vehicle.mileage }}</span>
-          <span>•</span>
-          <span>{{ vehicle.transmission }}</span>
-          <span>•</span>
-          <span>{{ vehicle.fuelType }}</span>
+            <div class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-[#0072BC]"></span>
+              <span v-for="dot in 8" :key="dot" class="w-2 h-2 rounded-full bg-neutral-300"></span>
+            </div>
+          </div>
+
+          <!-- Title & Trim -->
+          <h3 class="text-base font-semibold text-neutral-800 uppercase leading-snug">
+            {{ vehicle.name }}
+          </h3>
+          <p class="text-xs text-neutral-500 uppercase mt-0.5 mb-4" style="color: #737373; font-size: 12px;">
+            {{ vehicle.trim }}
+          </p>
+
+          <!-- Price & Est. Payment Split -->
+          <div class="grid grid-cols-2 items-center gap-4 mb-5">
+            <div>
+              <div class="text-xs text-neutral-500 mb-0.5">Price</div>
+              <div class="text-[26px] font-bold text-[#0072BC] leading-tight">
+                {{ vehicle.price }}
+              </div>
+            </div>
+
+            <div class="border-l border-neutral-200 pl-4 space-y-1.5">
+              <div class="text-[11px] text-neutral-500">Est. Payment</div>
+              <div class="text-xs font-medium text-neutral-800 flex items-center gap-1">
+                <span>{{ vehicle.estPayment }}</span>
+                <span
+                  class="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full border border-neutral-400 text-[9px] text-neutral-500"
+                >
+                  i
+                </span>
+              </div>
+              <button
+                type="button"
+                class="w-full rounded bg-neutral-300/80 hover:bg-neutral-300 py-1.5 px-3 text-xs font-medium text-neutral-800 transition-colors cursor-pointer"
+              >
+                Calculator
+              </button>
+            </div>
+          </div>
+
+          <!-- 3-Icon Spec Row -->
+          <div class="grid grid-cols-3 gap-2 py-2 text-xs text-neutral-700 mb-3">
+            <div class="flex items-center gap-1.5">
+              <img :src="mileageIcon" alt="" class="w-4 h-4 shrink-0" />
+              <span class="truncate">{{ vehicle.mileage }}</span>
+            </div>
+            <div class="flex items-center justify-center gap-1.5">
+              <img :src="fuelIcon" alt="" class="w-4 h-4 shrink-0" />
+              <span class="truncate">{{ vehicle.fuelType }}</span>
+            </div>
+            <div class="flex items-center justify-end gap-1.5">
+              <img :src="transmissionIcon" alt="" class="w-4 h-4 shrink-0" />
+              <span class="truncate">{{ vehicle.transmission }}</span>
+            </div>
+          </div>
+
+          <!-- Dealer Location -->
+          <div class="flex items-center justify-center gap-1.5 text-xs text-neutral-700 mb-5">
+            <svg class="w-4 h-4 text-[#0072BC] fill-current shrink-0" viewBox="0 0 24 24">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z" />
+            </svg>
+            <span>{{ vehicle.dealer }}</span>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="grid grid-cols-2 gap-3">
+            <a
+              href="#contact"
+              class="rounded-full border border-neutral-800 py-2.5 px-4 text-center text-xs font-medium text-neutral-800 hover:bg-neutral-100 transition-colors"
+            >
+              Enquire Now
+            </a>
+            <a
+              href="#showroom"
+              class="rounded-full py-2.5 px-4 text-center text-xs font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-sm hover:opacity-95 transition-opacity"
+            >
+              View Details
+            </a>
+          </div>
         </div>
-
-        <div class="pt-1 text-xs text-neutral-600">{{ vehicle.dealer }}</div>
       </article>
 
       <div
