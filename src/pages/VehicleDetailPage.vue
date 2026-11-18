@@ -328,13 +328,21 @@ function scrollToCalculator() {
 
       <!-- Finance Calculator Section -->
       <section id="vdp-calculator" class="!my-0 pt-2 pb-4 scroll-mt-[126px] space-y-4">
+        <div class="overflow-hidden rounded-[24px] bg-neutral-100 aspect-[16/11]">
+          <img
+            :src="vehicle.images[0]"
+            :alt="vehicle.name"
+            class="w-full h-full object-cover"
+          />
+        </div>
+
         <div class="space-y-1">
           <div class="text-xs font-semibold uppercase tracking-wide text-[#0072BC]">
             CAN I AFFORD IT?
           </div>
-          <h2 class="text-lg font-semibold text-neutral-900 leading-snug">
+          <p class="text-base font-normal text-neutral-800 leading-relaxed">
             Assessing affordability is an important part of making a well-informed decision. We're here to help you every step of the way.
-          </h2>
+          </p>
         </div>
 
         <FinanceCalculator
