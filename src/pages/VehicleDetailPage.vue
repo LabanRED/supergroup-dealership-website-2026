@@ -103,7 +103,7 @@ function scrollToEnquire() {
       </div>
 
       <!-- Price & Est. Payment Split -->
-      <div class="flex items-center justify-between gap-[10px]">
+      <div class="flex items-center justify-start gap-[10px]">
         <div class="min-w-0">
           <div class="text-xs text-neutral-500 mb-1">Price</div>
           <div class="text-[42px] font-semibold text-[#0072BC] leading-none whitespace-nowrap">
@@ -112,8 +112,8 @@ function scrollToEnquire() {
         </div>
 
         <div class="shrink-0 border-l border-[#969696] pl-[10px] space-y-1">
-          <div class="text-[11px] text-neutral-500">Est. Payment</div>
-          <div class="text-xs font-medium text-neutral-800 flex items-center gap-1">
+          <div class="text-[13px] text-neutral-500">Est. Payment</div>
+          <div class="text-[14px] font-medium text-neutral-800 flex items-center gap-1">
             <span>{{ vehicle.estPayment }}</span>
             <span
               class="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full border border-neutral-400 text-[9px] text-neutral-500"
