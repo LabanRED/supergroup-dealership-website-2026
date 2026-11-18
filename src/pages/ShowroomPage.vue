@@ -21,6 +21,19 @@ const clioGallery = Object.entries(clioModules)
   })
   .map(([, src]) => src)
 
+const superCarryModules = import.meta.glob('../images/super-carry-*.jpg', {
+  eager: true,
+  import: 'default',
+})
+
+const superCarryGallery = Object.entries(superCarryModules)
+  .sort(([a], [b]) => {
+    const numA = Number(a.match(/super-carry-(\d+)\.jpg$/)?.[1] || 0)
+    const numB = Number(b.match(/super-carry-(\d+)\.jpg$/)?.[1] || 0)
+    return numA - numB
+  })
+  .map(([, src]) => src)
+
 const query = ref('')
 const filtersOpen = ref(false)
 const favorites = ref(new Set())
@@ -40,6 +53,7 @@ const selectedMaxPrice = ref('')
 
 const modelsByMake = {
   Renault: ['Clio', 'Kwid', 'Triber', 'Kiger', 'Duster'],
+  Suzuki: ['Super Carry', 'Swift', 'Jimny', 'Baleno', 'Fronx'],
   Toyota: ['Corolla Cross', 'Hilux', 'Fortuner', 'Starlet', 'RAV4'],
   Volkswagen: ['Polo', 'Polo Vivo', 'Golf', 'T-Cross', 'Tiguan'],
   Ford: ['Ranger', 'Everest', 'Puma', 'Territory'],
@@ -101,20 +115,20 @@ const vehicles = [
   },
   {
     id: 2,
-    name: '2024 VOLKSWAGEN POLO',
-    trim: '1.0 TSI LIFE 5DR (70KW)',
-    make: 'Volkswagen',
-    model: 'Polo',
-    condition: 'Demo',
-    priceValue: 364900,
-    price: 'R364 900',
-    estPayment: 'R6 540 p/m*',
-    mileageValue: 4200,
-    mileage: '4 200 km',
+    name: '2026 SUZUKI SUPER CARRY',
+    trim: '1.2i P/U S/C (54KW)',
+    make: 'Suzuki',
+    model: 'Super Carry',
+    condition: 'New',
+    priceValue: 179900,
+    price: 'R179 900',
+    estPayment: 'R3 220 p/m*',
+    mileageValue: 0,
+    mileage: '0 km',
     transmission: 'Manual',
     fuelType: 'Petrol',
-    dealer: 'Supergroup VW Johannesburg',
-    images: [showroomVehicle2, showroomVehicle1],
+    dealer: 'Suzuki Bedfordview',
+    images: superCarryGallery,
   },
   {
     id: 3,
@@ -535,7 +549,7 @@ function scrollVehicleImage(vehicleId, idx) {
               <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
                 <path d="M9 3L7.17 5H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2h-3.17L15 3H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.65 0-3 1.35-3 3s1.35 3 3 3 3-1.35 3-3-1.35-3-3-3z" />
               </svg>
-              <span>12+</span>
+              <span>{{ vehicle.images.length >= 12 ? '12+' : vehicle.images.length }}</span>
             </span>
 
             <div class="flex items-center gap-1.5">
