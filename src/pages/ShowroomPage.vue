@@ -11,6 +11,8 @@ import showroomVehicle2 from '../images/showroom-vehicle-2.jpg'
 const query = ref('')
 const filtersOpen = ref(false)
 const favorites = ref(new Set())
+const currentPage = ref(1)
+const totalPages = 3815
 
 const selectedMake = ref('')
 const selectedModel = ref('')
@@ -132,6 +134,74 @@ const vehicles = [
     dealer: 'Supergroup Chery Fourways',
     image: showroomVehicle2,
   },
+  {
+    id: 5,
+    name: '2022 HYUNDAI TUCSON 2.0',
+    trim: 'PREMIUM AUTO 5DR (115KW)',
+    make: 'Hyundai',
+    model: 'Tucson',
+    condition: 'Used',
+    priceValue: 419900,
+    price: 'R419 900',
+    estPayment: 'R7 530 p/m*',
+    mileageValue: 42500,
+    mileage: '42 500 km',
+    transmission: 'Automatic',
+    fuelType: 'Petrol',
+    dealer: 'Supergroup Hyundai Boksburg',
+    image: showroomVehicle1,
+  },
+  {
+    id: 6,
+    name: '2021 BMW 3 SERIES 320i',
+    trim: 'M SPORT STEPTRONIC (135KW)',
+    make: 'BMW',
+    model: '3 Series',
+    condition: 'Used',
+    priceValue: 589000,
+    price: 'R589 000',
+    estPayment: 'R10 560 p/m*',
+    mileageValue: 54000,
+    mileage: '54 000 km',
+    transmission: 'Automatic',
+    fuelType: 'Petrol',
+    dealer: 'Supergroup Auto Sandton',
+    image: showroomVehicle2,
+  },
+  {
+    id: 7,
+    name: '2023 TOYOTA HILUX 2.4 GD-6',
+    trim: 'RB RAIDER DOUBLE CAB (110KW)',
+    make: 'Toyota',
+    model: 'Hilux',
+    condition: 'Used',
+    priceValue: 549900,
+    price: 'R549 900',
+    estPayment: 'R9 860 p/m*',
+    mileageValue: 31200,
+    mileage: '31 200 km',
+    transmission: 'Manual',
+    fuelType: 'Diesel',
+    dealer: 'Supergroup Toyota Centurion',
+    image: showroomVehicle1,
+  },
+  {
+    id: 8,
+    name: '2020 MERCEDES-BENZ A200',
+    trim: 'AMG LINE 7G-DCT (120KW)',
+    make: 'Mercedes-Benz',
+    model: 'A-Class',
+    condition: 'Used',
+    priceValue: 479900,
+    price: 'R479 900',
+    estPayment: 'R8 600 p/m*',
+    mileageValue: 61800,
+    mileage: '61 800 km',
+    transmission: 'Automatic',
+    fuelType: 'Petrol',
+    dealer: 'Supergroup Pre-Owned Menlyn',
+    image: showroomVehicle2,
+  },
 ]
 
 const filteredVehicles = computed(() => {
@@ -187,7 +257,7 @@ function toggleFavorite(id) {
 </script>
 
 <template>
-  <div class="mx-auto max-w-[1400px] px-[20px] md:px-10 py-6 space-y-6">
+  <div class="mx-auto max-w-[1400px] px-[20px] md:px-10 pt-6 pb-0 space-y-6">
     <!-- Browse Our Showroom Search Card -->
     <section class="!my-0 max-w-md mx-auto">
       <div
@@ -510,5 +580,67 @@ function toggleFavorite(id) {
         No matching vehicles found. Try clearing your filters.
       </div>
     </section>
+
+    <!-- Pagination -->
+    <nav
+      aria-label="Showroom pagination"
+      class="max-w-md mx-auto pt-[30px] pb-[50px] flex items-center justify-center gap-3 text-sm"
+    >
+      <button
+        type="button"
+        class="inline-flex items-center gap-1 text-neutral-700 hover:text-[#0072BC] transition-colors cursor-pointer disabled:opacity-50"
+        :disabled="currentPage === 1"
+        @click="currentPage = Math.max(1, currentPage - 1)"
+      >
+        <svg class="w-4 h-4 text-[#0072BC]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+        <span>Previous</span>
+      </button>
+
+      <div class="flex items-center gap-1.5">
+        <button
+          v-for="page in [1, 2, 3]"
+          :key="page"
+          type="button"
+          class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-medium transition-colors cursor-pointer"
+          :class="
+            currentPage === page
+              ? 'bg-[#0072BC] text-white'
+              : 'text-[#0072BC] hover:bg-[#0072BC]/10'
+          "
+          @click="currentPage = page"
+        >
+          {{ page }}
+        </button>
+
+        <span class="px-1 text-[#0072BC]">...</span>
+
+        <button
+          type="button"
+          class="px-2 h-9 rounded-full flex items-center justify-center text-sm font-medium transition-colors cursor-pointer"
+          :class="
+            currentPage === totalPages
+              ? 'bg-[#0072BC] text-white'
+              : 'text-[#0072BC] hover:bg-[#0072BC]/10'
+          "
+          @click="currentPage = totalPages"
+        >
+          {{ totalPages }}
+        </button>
+      </div>
+
+      <button
+        type="button"
+        class="inline-flex items-center gap-1 text-neutral-700 hover:text-[#0072BC] transition-colors cursor-pointer disabled:opacity-50"
+        :disabled="currentPage === totalPages"
+        @click="currentPage = Math.min(totalPages, currentPage + 1)"
+      >
+        <span>Next</span>
+        <svg class="w-4 h-4 text-[#0072BC]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    </nav>
   </div>
 </template>
