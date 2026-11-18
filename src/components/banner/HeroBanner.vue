@@ -2,6 +2,7 @@
 import { useDevicePreview } from '../../composables/useDevicePreview.js'
 import mobileHeroVideo from '../../images/supergroup-dealerships-mobile-hero-banner-background.mp4'
 import desktopHeroVideo from '../../images/supergroup-dealerships-desktop-hero-banner-background.mp4'
+import supergroupSymbol from '../../images/supergroup-dealerships-logo-blue-white.webp'
 
 const { activeDevice } = useDevicePreview()
 </script>
@@ -55,8 +56,20 @@ const { activeDevice } = useDevicePreview()
         class="pointer-events-none absolute inset-x-0 bottom-0 h-28 md:h-36 bg-gradient-to-t from-white via-white/40 to-transparent"
       ></div>
 
-      <!-- Hero Copy -->
-      <div class="relative z-10 flex flex-col items-center">
+      <!-- Intro Supergroup Symbol (fades in first, then fades out) -->
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-x-0 top-8 md:top-16 z-20 flex items-center justify-center hero-symbol-intro"
+      >
+        <img
+          :src="supergroupSymbol"
+          alt="Supergroup Dealerships Symbol"
+          class="h-24 md:h-32 w-auto object-contain drop-shadow-[0_6px_24px_rgba(0,0,0,0.45)]"
+        />
+      </div>
+
+      <!-- Hero Copy (fades in from small to big after symbol) -->
+      <div class="relative z-10 flex flex-col items-center hero-copy-reveal">
         <p
           class="uppercase tracking-wide mb-2"
           style="font-family: var(--font-guester); font-size: 20px; line-height: 1.2; color: #ffffff;"
@@ -142,23 +155,59 @@ const { activeDevice } = useDevicePreview()
 
 <style scoped>
 .hero-fade-in {
-  animation: heroFadeIn 0.85s ease-out both;
+  animation: heroFadeIn 0.6s ease-out both;
+}
+
+.hero-symbol-intro {
+  animation: symbolIntro 1.8s ease-in-out both;
+}
+
+.hero-copy-reveal {
+  animation: heroCopyReveal 0.85s cubic-bezier(0.22, 1, 0.36, 1) 1.55s both;
 }
 
 .sunflare-shine {
   animation:
-    sunflareAppear 0.9s ease-out 0.35s both,
-    sunflarePulse 3.6s ease-in-out 1.25s infinite;
+    sunflareAppear 0.9s ease-out 2.15s both,
+    sunflarePulse 3.6s ease-in-out 3.05s infinite;
 }
 
 @keyframes heroFadeIn {
   from {
     opacity: 0;
-    transform: translateY(8px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+  }
+}
+
+@keyframes symbolIntro {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  25% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes heroCopyReveal {
+  from {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
