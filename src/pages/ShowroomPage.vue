@@ -377,7 +377,13 @@ function toggleFavorite(id) {
           />
 
           <span
-            class="absolute top-3 left-3 px-3.5 py-1 rounded-full bg-[#0072BC] text-white text-xs font-medium shadow-sm"
+            v-if="vehicle.condition !== 'Used'"
+            class="absolute top-3 left-3 px-3.5 py-1 rounded-full text-xs font-medium shadow-sm"
+            :class="
+              vehicle.condition === 'Demo'
+                ? 'bg-white text-[#0072BC]'
+                : 'bg-[#0072BC] text-white'
+            "
           >
             {{ vehicle.condition }}
           </span>
