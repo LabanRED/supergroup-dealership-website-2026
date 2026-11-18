@@ -5,8 +5,15 @@ import searchIcon from '../images/search-icon.svg'
 import mileageIcon from '../images/supergroup-dealerships-mileage-icon.svg'
 import fuelIcon from '../images/supergroup-dealerships-fuel-type-icon.svg'
 import transmissionIcon from '../images/supergroup-dealerships-transmission-icon.svg'
-import showroomVehicle1 from '../images/showroom-vehicle-1.jpg'
-import showroomVehicle2 from '../images/showroom-vehicle-2.jpg'
+import kwid1 from '../images/1Jtan3uuSXWFHvHLQFaTzAaPEokNClQBKO6kRegD.jpg'
+import kwid2 from '../images/BWlN7cQlmWiILtvdLa9ECun7mexMXu9VSdW9Jnzb.jpg'
+import kwid3 from '../images/KwQR3tb5egXz3upjD4eVQqV1pCax2q0ayxms5eYT.jpg'
+import kwid4 from '../images/KyZXfI41n7VYJHCav24m3twJ7AJc9VXA1JSQFUjT.jpg'
+import kwid5 from '../images/RlI7K14gOFlnW4ryx9JI00LUNHLyf8kTwhPj8MJ8.jpg'
+import kwid6 from '../images/rObRGkzMSrnecU8RwI3MD4KupMi0GDJlQUNYyR0m.jpg'
+import kwid7 from '../images/WrbcO9oLj52Q8Pg16sGfZc7FCzVMTZflff9ARBjV.jpg'
+
+const kwidGallery = [kwid1, kwid2, kwid3, kwid4, kwid5, kwid6, kwid7]
 
 const clioModules = import.meta.glob('../images/clio-*.jpg', {
   eager: true,
@@ -172,7 +179,7 @@ const vehicles = [
     transmission: 'Manual',
     fuelType: 'Petrol',
     dealer: 'Supergroup Renault',
-    images: [showroomVehicle2, showroomVehicle1],
+    images: kwidGallery,
   },
 ]
 
@@ -279,7 +286,7 @@ function scrollVehicleImage(vehicleId, idx) {
         >
           Showroom
         </h1>
-        <p class="text-sm text-neutral-700 leading-relaxed mb-6" style="color: #404040;">
+        <p class="text-lg text-neutral-700 leading-relaxed mb-6" style="color: #404040;">
           Find your vehicle from our<br />
           <strong class="font-semibold text-neutral-900">1 800+</strong> quality dealerships stock
         </p>
