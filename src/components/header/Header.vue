@@ -106,7 +106,7 @@ function closeMenus() {
 
       <!-- Mobile Showroom Icon (Right on mobile) -->
       <a
-        href="#contact"
+        href="#showroom"
         class="p-2 rounded-full hover:bg-white/10 transition-colors shrink-0"
         :class="activeDevice === 'mobile' ? 'inline-flex' : 'inline-flex md:hidden'"
         aria-label="Showrooms"

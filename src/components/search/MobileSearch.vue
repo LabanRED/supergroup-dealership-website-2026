@@ -45,6 +45,7 @@ function submitSearch() {
     priceRange: selectedPrice.value,
     condition: selectedCondition.value,
   })
+  window.location.hash = '#showroom'
 }
 </script>
 

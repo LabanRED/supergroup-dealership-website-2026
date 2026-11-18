@@ -4,6 +4,7 @@ import { useDevicePreview } from './composables/useDevicePreview.js'
 import Header from './components/header/Header.vue'
 import Footer from './components/footer/Footer.vue'
 import HomePage from './pages/HomePage.vue'
+import ShowroomPage from './pages/ShowroomPage.vue'
 import UnifiedInboxPage from './pages/UnifiedInboxPage.vue'
 import PostingPage from './pages/PostingPage.vue'
 import FramesPage from './pages/FramesPage.vue'
@@ -13,6 +14,7 @@ import LiveChatAIPage from './pages/LiveChatAIPage.vue'
 const { activeDevice } = useDevicePreview()
 
 const pageMap = {
+  '#showroom': ShowroomPage,
   '#unified-inbox': UnifiedInboxPage,
   '#posting': PostingPage,
   '#frames': FramesPage,
