@@ -197,7 +197,7 @@ const { activeDevice } = useDevicePreview()
     transform: scale(1);
   }
   100% {
-    opacity: 0.25;
+    opacity: 0.4;
     transform: scale(1);
   }
 }
@@ -205,7 +205,7 @@ const { activeDevice } = useDevicePreview()
 @keyframes symbolBehindPulse {
   0%,
   100% {
-    opacity: 0.25;
+    opacity: 0.4;
     transform: scale(1);
   }
   50% {
