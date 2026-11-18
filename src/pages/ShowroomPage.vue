@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import filterIcon from '../images/filter-icon.svg'
 import searchIcon from '../images/search-icon.svg'
 import mileageIcon from '../images/supergroup-dealerships-mileage-icon.svg'
@@ -48,8 +48,16 @@ const favorites = ref(new Set())
 const openCalculatorId = ref(null)
 const activeImageByVehicle = ref({})
 
-function toggleCalculator(vehicleId) {
-  openCalculatorId.value = openCalculatorId.value === vehicleId ? null : vehicleId
+async function toggleCalculator(vehicleId) {
+  if (openCalculatorId.value === vehicleId) {
+    openCalculatorId.value = null
+    return
+  }
+  openCalculatorId.value = vehicleId
+  await nextTick()
+  document
+    .getElementById(`showroom-calculator-${vehicleId}`)
+    ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
 }
 const galleryRefs = {}
 const currentPage = ref(1)
@@ -732,7 +740,9 @@ function scrollVehicleImage(vehicleId, idx) {
 
       <FinanceCalculator
         v-if="openCalculatorId === vehicle.id"
+        :id="`showroom-calculator-${vehicle.id}`"
         :vehicle="vehicle"
+        class="scroll-mt-24"
         @close="openCalculatorId = null"
       />
       </div>
