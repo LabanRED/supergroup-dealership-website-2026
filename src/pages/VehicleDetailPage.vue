@@ -323,12 +323,21 @@ function scrollToCalculator() {
       <VehicleEnquire />
 
       <!-- Finance Calculator Section -->
-      <FinanceCalculator
-        id="vdp-calculator"
-        :vehicle="vehicle"
-        :closable="false"
-        class="scroll-mt-[126px]"
-      />
+      <section id="vdp-calculator" class="!my-0 pt-2 pb-4 scroll-mt-[126px] space-y-4">
+        <div class="space-y-1">
+          <div class="text-xs font-semibold uppercase tracking-wide text-[#0072BC]">
+            CAN I AFFORD IT?
+          </div>
+          <h2 class="text-lg font-semibold text-neutral-900 leading-snug">
+            Assessing affordability is an important part of making a well-informed decision. We're here to help you every step of the way.
+          </h2>
+        </div>
+
+        <FinanceCalculator
+          :vehicle="vehicle"
+          :closable="false"
+        />
+      </section>
 
       <!-- Dealership Location Section -->
       <DealerLocation dealer-name="Suzuki Edenvale" />

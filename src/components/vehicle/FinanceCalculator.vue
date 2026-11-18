@@ -217,6 +217,14 @@ function formatRand(value) {
         <div>Total Repayments: {{ results.valid ? formatRand(results.totalRepayments) : 'R' }}</div>
         <div>Total finance costs: {{ results.valid ? formatRand(results.totalFinanceCosts) : 'R' }}</div>
       </div>
+
+      <!-- Disclaimer -->
+      <div class="pt-4 mt-4 border-t border-neutral-200 text-center space-y-1.5">
+        <div class="text-xs font-semibold text-[#0072BC]">*Disclaimer</div>
+        <p class="text-[11px] leading-relaxed text-neutral-600 text-left">
+          The instalment quoted doesn't include any admins costs, license and registration of the vehicle and any value added products. All calculations, rates quoted and payments shown are GUIDELINES ONLY and are not quotations. The final rates and payments can only be determined by your Finance House once they have assessed all your information (completed in a finance application form). By using this calculator, you hereby INDEMNIFY Supergroup Dealerships, its holding, associated or partner companies against any loss or liability which you may suffer as a result of using the calculator. All information provided to you on this website is for illustrative purposes only and may not be considered to be ADVICE.
+        </p>
+      </div>
     </div>
   </div>
 </template>
