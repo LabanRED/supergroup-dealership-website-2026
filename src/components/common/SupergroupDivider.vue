@@ -9,7 +9,7 @@ import supergroupSymbolIcon from '../../images/brand-logos/supergroup-dealership
       <img
         :src="supergroupSymbolIcon"
         alt="Supergroup Dealerships"
-        class="h-6 w-auto shrink-0"
+        class="h-[44px] w-auto shrink-0"
       />
       <div class="h-px flex-1 bg-neutral-400/60"></div>
     </div>

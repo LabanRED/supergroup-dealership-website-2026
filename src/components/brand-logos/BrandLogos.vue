@@ -49,7 +49,7 @@ const brands = Object.entries(logoModules)
             <img
               :src="brand.src"
               :alt="brand.name"
-              class="h-8 md:h-10 w-auto max-w-[100px] object-contain opacity-85 hover:opacity-100 transition-opacity"
+              class="h-[62px] md:h-[70px] w-auto max-w-[160px] object-contain opacity-85 hover:opacity-100 transition-opacity"
             />
           </div>
         </div>
