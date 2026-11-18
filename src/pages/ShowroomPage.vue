@@ -5,6 +5,8 @@ import searchIcon from '../images/search-icon.svg'
 import mileageIcon from '../images/supergroup-dealerships-mileage-icon.svg'
 import fuelIcon from '../images/supergroup-dealerships-fuel-type-icon.svg'
 import transmissionIcon from '../images/supergroup-dealerships-transmission-icon.svg'
+import showroomVehicle1 from '../images/showroom-vehicle-1.jpg'
+import showroomVehicle2 from '../images/showroom-vehicle-2.jpg'
 
 const clioModules = import.meta.glob('../images/clio-*.jpg', {
   eager: true,
@@ -154,6 +156,23 @@ const vehicles = [
     fuelType: 'Petrol',
     dealer: 'Suzuki Bedfordview',
     images: superCarryGallery,
+  },
+  {
+    id: 3,
+    name: '2026 RENAULT KWID',
+    trim: '1.0 DYNAMIQUE 5DR (50KW)',
+    make: 'Renault',
+    model: 'Kwid',
+    condition: 'Demo',
+    priceValue: 169990,
+    price: 'R169 990',
+    estPayment: 'R3 050 p/m*',
+    mileageValue: 3295,
+    mileage: '3 295 km',
+    transmission: 'Manual',
+    fuelType: 'Petrol',
+    dealer: 'Supergroup Renault',
+    images: [showroomVehicle2, showroomVehicle1],
   },
 ]
 
