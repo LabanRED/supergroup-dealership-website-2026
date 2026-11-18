@@ -5,6 +5,7 @@ import searchIcon from '../images/search-icon.svg'
 import mileageIcon from '../images/supergroup-dealerships-mileage-icon.svg'
 import fuelIcon from '../images/supergroup-dealerships-fuel-type-icon.svg'
 import transmissionIcon from '../images/supergroup-dealerships-transmission-icon.svg'
+import FinanceCalculator from '../components/vehicle/FinanceCalculator.vue'
 import kwid1 from '../images/1Jtan3uuSXWFHvHLQFaTzAaPEokNClQBKO6kRegD.jpg'
 import kwid2 from '../images/BWlN7cQlmWiILtvdLa9ECun7mexMXu9VSdW9Jnzb.jpg'
 import kwid3 from '../images/KwQR3tb5egXz3upjD4eVQqV1pCax2q0ayxms5eYT.jpg'
@@ -44,7 +45,12 @@ const superCarryGallery = Object.entries(superCarryModules)
 const query = ref('')
 const filtersOpen = ref(false)
 const favorites = ref(new Set())
+const openCalculatorId = ref(null)
 const activeImageByVehicle = ref({})
+
+function toggleCalculator(vehicleId) {
+  openCalculatorId.value = openCalculatorId.value === vehicleId ? null : vehicleId
+}
 const galleryRefs = {}
 const currentPage = ref(1)
 const totalPages = 3815
@@ -564,9 +570,12 @@ function scrollVehicleImage(vehicleId, idx) {
         </label>
       </div>
 
-      <article
+      <div
         v-for="vehicle in filteredVehicles"
         :key="vehicle.id"
+        class="space-y-3"
+      >
+      <article
         class="rounded-[24px] border border-neutral-100 bg-white shadow-[0_8px_28px_rgba(0,0,0,0.08)] overflow-hidden"
       >
         <!-- Scrollable Vehicle Photo Gallery with Condition Pill & Favorite Heart -->
@@ -672,6 +681,7 @@ function scrollVehicleImage(vehicleId, idx) {
               <button
                 type="button"
                 class="w-full rounded bg-neutral-300/80 hover:bg-neutral-300 py-1.5 px-3 text-xs font-medium text-neutral-800 transition-colors cursor-pointer"
+                @click="toggleCalculator(vehicle.id)"
               >
                 Calculator
               </button>
@@ -719,6 +729,13 @@ function scrollVehicleImage(vehicleId, idx) {
           </div>
         </div>
       </article>
+
+      <FinanceCalculator
+        v-if="openCalculatorId === vehicle.id"
+        :vehicle="vehicle"
+        @close="openCalculatorId = null"
+      />
+      </div>
 
       <div
         v-if="filteredVehicles.length === 0"
