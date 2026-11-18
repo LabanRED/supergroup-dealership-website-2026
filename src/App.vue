@@ -35,6 +35,8 @@ const currentPage = computed(() => {
   return pageMap[baseHash] || HomePage
 })
 
+const isVehicleDetail = computed(() => currentHash.value.split('?')[0] === '#vehicle-detail')
+
 function handleHashChange() {
   const newHash = window.location.hash
   currentHash.value = newHash
@@ -74,7 +76,7 @@ onUnmounted(() => {
       "
       :style="activeDevice === 'mobile' ? { scrollbarWidth: 'none' } : undefined"
     >
-      <Header />
+      <Header :sticky="!isVehicleDetail" />
       <main class="flex-1">
         <component :is="currentPage" />
       </main>

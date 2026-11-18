@@ -102,11 +102,8 @@ function scrollToCalculator() {
       <!-- Sticky Top Section (White at rest, Dark on scroll) -->
       <div
         ref="topSectionRef"
-        class="sticky z-40 -mx-[20px] -mt-6 px-[20px] pt-5 pb-4 transition-colors duration-200 space-y-4"
-        :class="[
-          activeDevice === 'mobile' ? 'top-[102px]' : 'top-[102px] lg:top-[118px]',
-          isScrolled ? 'bg-[#111111] border-b border-white/10 shadow-md' : 'bg-white',
-        ]"
+        class="sticky top-0 z-40 -mx-[20px] -mt-6 px-[20px] pt-5 pb-4 transition-colors duration-200 space-y-4"
+        :class="isScrolled ? 'bg-[#111111] border-b border-white/10 shadow-md' : 'bg-white'"
       >
         <!-- Top Bar: Browse vehicles + Favorite Heart -->
         <div class="flex items-center justify-between">
@@ -327,7 +324,7 @@ function scrollToCalculator() {
       <VehicleEnquire />
 
       <!-- Finance Calculator Section -->
-      <section id="vdp-calculator" class="!my-0 pt-2 pb-4 scroll-mt-[126px] space-y-4">
+      <section id="vdp-calculator" class="!my-0 pt-2 pb-4 scroll-mt-56 space-y-4">
         <div class="overflow-hidden rounded-[24px] bg-neutral-100 aspect-[16/11]">
           <img
             :src="vehicle.images[0]"

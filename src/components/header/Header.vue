@@ -8,6 +8,13 @@ import burgerMenuIcon from '../../images/burger-menu-icon.svg'
 
 const { activeDevice, setDevice, isLocal } = useDevicePreview()
 
+defineProps({
+  sticky: {
+    type: Boolean,
+    default: true,
+  },
+})
+
 const mobileMenuOpen = ref(false)
 
 const navItems = [
@@ -36,7 +43,7 @@ function closeMenus() {
 </script>
 
 <template>
-  <header class="sticky top-0 z-50 shrink-0">
+  <header class="z-50 shrink-0" :class="sticky ? 'sticky top-0' : 'relative'">
     <div
       class="w-full max-w-full overflow-x-auto overflow-y-hidden bg-white"
       :class="activeDevice === 'mobile' ? 'md:rounded-t-[28px]' : ''"
