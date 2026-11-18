@@ -40,7 +40,7 @@ function scrollVehicleImage(idx) {
     <div class="relative aspect-[16/11] bg-neutral-100 overflow-hidden">
       <div
         ref="galleryRef"
-        class="flex w-full h-full overflow-x-auto snap-x snap-mandatory"
+        class="flex w-full h-full overflow-x-auto snap-x snap-mandatory scroll-smooth"
         style="scrollbar-width: none;"
         @scroll="onImageScroll"
       >
@@ -49,7 +49,7 @@ function scrollVehicleImage(idx) {
           :key="idx"
           :src="img"
           :alt="`${vehicle.name} photo ${idx + 1}`"
-          class="w-full h-full shrink-0 snap-start object-cover"
+          class="w-full h-full shrink-0 snap-start snap-always object-cover"
         />
       </div>
 

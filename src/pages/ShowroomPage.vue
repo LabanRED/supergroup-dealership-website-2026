@@ -611,7 +611,7 @@ function scrollVehicleImage(vehicleId, idx) {
         <div class="relative aspect-[16/11] bg-neutral-100 overflow-hidden">
           <div
             :ref="(el) => setGalleryRef(vehicle.id, el)"
-            class="flex w-full h-full overflow-x-auto snap-x snap-mandatory"
+            class="flex w-full h-full overflow-x-auto snap-x snap-mandatory scroll-smooth"
             style="scrollbar-width: none;"
             @scroll="onImageScroll(vehicle.id, $event)"
           >
@@ -620,7 +620,7 @@ function scrollVehicleImage(vehicleId, idx) {
               :key="idx"
               :src="img"
               :alt="`${vehicle.name} photo ${idx + 1}`"
-              class="w-full h-full shrink-0 snap-start object-cover"
+              class="w-full h-full shrink-0 snap-start snap-always object-cover"
             />
           </div>
 
