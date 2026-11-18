@@ -1,8 +1,5 @@
 <script setup>
 import { ref } from 'vue'
-import mileageIcon from '../images/supergroup-dealerships-mileage-icon.svg'
-import fuelIcon from '../images/supergroup-dealerships-fuel-type-icon.svg'
-import transmissionIcon from '../images/supergroup-dealerships-transmission-icon.svg'
 
 const clioModules = import.meta.glob('../images/clio-*.jpg', {
   eager: true,
@@ -201,29 +198,6 @@ function handleMainScroll(event) {
         <p class="text-sm text-neutral-700 leading-relaxed" style="color: #404040;">
           {{ vehicle.description }}
         </p>
-
-        <!-- Key Specs -->
-        <div class="grid grid-cols-3 gap-2 pt-3 border-t border-neutral-200 text-xs text-neutral-700">
-          <div class="flex items-center gap-1.5">
-            <img :src="mileageIcon" alt="" class="w-4 h-4 shrink-0" />
-            <span class="truncate">{{ vehicle.mileage }}</span>
-          </div>
-          <div class="flex items-center justify-center gap-1.5">
-            <img :src="fuelIcon" alt="" class="w-4 h-4 shrink-0" />
-            <span class="truncate">{{ vehicle.fuelType }}</span>
-          </div>
-          <div class="flex items-center justify-end gap-1.5">
-            <img :src="transmissionIcon" alt="" class="w-4 h-4 shrink-0" />
-            <span class="truncate">{{ vehicle.transmission }}</span>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-1.5 text-xs text-neutral-700 pt-1">
-          <svg class="w-4 h-4 text-[#0072BC] fill-current shrink-0" viewBox="0 0 24 24">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5s2.5 1.12 2.5 2.5S13.38 11.5 12 11.5z" />
-          </svg>
-          <span>{{ vehicle.dealer }}</span>
-        </div>
       </section>
     </div>
   </div>
