@@ -1,68 +1,33 @@
 <script setup>
-import { ref } from 'vue'
-
-const submitted = ref(false)
-const email = ref('')
-
-function handleSubmit() {
-  if (!email.value.trim()) return
-  submitted.value = true
-  email.value = ''
-}
+import ctaImage from '../../images/get-in-touch-cta-image.webp'
 </script>
 
 <template>
   <section id="contact" class="mx-auto max-w-[1400px] px-[20px] md:px-10 py-6">
-    <div
-      class="rounded-[32px] bg-gradient-to-br from-[#00A5C5] to-[#2C8799] text-white px-8 py-12 md:px-14 md:py-16 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-xl"
-    >
-      <div class="lg:col-span-7 space-y-4">
-        <span class="text-xs font-semibold uppercase tracking-widest text-white/80">
-          Get Started
-        </span>
-        <h2 class="!text-white">
-          Transform your dealership network with PostX
-        </h2>
-        <p class="text-white/90 max-w-xl" style="color: rgba(255, 255, 255, 0.9);">
-          Book a personalized walkthrough with our automotive specialists and see how PostX scales across every showroom.
-        </p>
+    <div class="max-w-md mx-auto text-center">
+      <div class="overflow-hidden rounded-[24px] mb-6 bg-neutral-100">
+        <img
+          :src="ctaImage"
+          alt="Supergroup Dealerships showroom experience"
+          class="w-full h-auto object-cover"
+        />
       </div>
 
-      <div class="lg:col-span-5">
-        <form
-          v-if="!submitted"
-          class="bg-white rounded-3xl p-6 shadow-lg space-y-4 text-neutral-900"
-          @submit.prevent="handleSubmit"
-        >
-          <label class="block text-sm font-medium text-neutral-800">
-            Work email
-            <input
-              v-model="email"
-              type="email"
-              required
-              placeholder="you@dealergroup.com"
-              class="mt-2 w-full rounded-full border border-neutral-300 px-4 py-3 text-sm focus:outline-none focus:border-[#00A5C5]"
-            />
-          </label>
-          <button type="submit" class="btn btn-primary w-full">
-            Request Demo
-          </button>
-        </form>
+      <h2 class="mb-4">
+        <span class="block">Ready for a Better</span>
+        <span class="block text-neutral-900">Kind of Dealership Experience?</span>
+      </h2>
 
-        <div v-else class="bg-white rounded-3xl p-6 shadow-lg text-neutral-900 text-center space-y-2">
-          <div class="text-lg font-medium text-[#00A5C5]">Request received</div>
-          <p class="text-sm text-neutral-600">
-            Our team will reach out shortly to schedule your walkthrough.
-          </p>
-          <button
-            type="button"
-            class="btn btn-primary-outline mt-2"
-            @click="submitted = false"
-          >
-            Send another
-          </button>
-        </div>
-      </div>
+      <p class="text-neutral-700 leading-relaxed mb-6" style="color: #404040;">
+        Whether you are upgrading the family SUV, hunting for a reliable pre-owned gem, or booking your next service, your local Super Group team is ready to welcome you in.
+      </p>
+
+      <a
+        href="#showroom"
+        class="block w-full rounded-full py-3.5 px-6 text-sm font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-md hover:opacity-95 transition-opacity"
+      >
+        Browse Showroom
+      </a>
     </div>
   </section>
 </template>

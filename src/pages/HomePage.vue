@@ -4,6 +4,8 @@ import MobileSearch from '../components/search/MobileSearch.vue'
 import BrandLogos from '../components/brand-logos/BrandLogos.vue'
 import SupergroupDivider from '../components/common/SupergroupDivider.vue'
 import CarouselImage from '../components/carousel/CarouselImage.vue'
+import CustomerReviews from '../components/reviews/CustomerReviews.vue'
+import FooterCTA from '../components/cta/FooterCTA.vue'
 </script>
 
 <template>
@@ -22,5 +24,11 @@ import CarouselImage from '../components/carousel/CarouselImage.vue'
 
     <!-- Raising The Standard In Customer Satisfaction -->
     <CarouselImage />
+
+    <!-- Customer Reviews -->
+    <CustomerReviews />
+
+    <!-- Browse Showroom CTA -->
+    <FooterCTA />
   </div>
 </template>
