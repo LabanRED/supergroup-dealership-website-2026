@@ -88,7 +88,7 @@ function handleScroll() {
 </script>
 
 <template>
-  <section class="mx-auto max-w-[1400px] px-[20px] md:px-10 py-6">
+  <section class="!mt-0 mx-auto max-w-[1400px] px-[20px] md:px-10 pt-0 pb-6">
     <!-- Section Heading -->
     <h2 class="text-center mb-6">
       Raising The Standard In Customer Satisfaction
