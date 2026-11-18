@@ -511,30 +511,36 @@ function scrollVehicleImage(vehicleId, idx) {
       </div>
     </section>
 
-    <!-- Sticky Filters Pill Bar (appears on scroll) -->
-    <div
-      v-show="showStickyFilters"
-      class="sticky top-[102px] z-40 max-w-md mx-auto bg-white/95 backdrop-blur-sm py-2"
-    >
+    <!-- Sticky Filters Pill Bar (appears on scroll without shifting layout) -->
+    <div class="sticky top-[102px] z-40 max-w-md mx-auto h-0 overflow-visible">
       <div
-        class="rounded-full border border-[#2FA6F3] bg-white px-5 py-3 flex items-center justify-between shadow-sm"
+        class="bg-white/95 backdrop-blur-sm py-2 transition-all duration-200"
+        :class="
+          showStickyFilters
+            ? 'opacity-100 translate-y-0'
+            : 'opacity-0 -translate-y-2 pointer-events-none'
+        "
       >
-        <button
-          type="button"
-          class="inline-flex items-center gap-2.5 text-sm font-medium text-[#0072BC] cursor-pointer"
-          @click="openFiltersFromSticky"
+        <div
+          class="rounded-full border border-[#2FA6F3] bg-white px-5 py-3 flex items-center justify-between shadow-sm"
         >
-          <img :src="filterIcon" alt="" class="w-5 h-[13px]" />
-          <span>Filters</span>
-        </button>
+          <button
+            type="button"
+            class="inline-flex items-center gap-2.5 text-sm font-medium text-[#0072BC] cursor-pointer"
+            @click="openFiltersFromSticky"
+          >
+            <img :src="filterIcon" alt="" class="w-5 h-[13px]" />
+            <span>Filters</span>
+          </button>
 
-        <button
-          type="button"
-          class="text-sm font-medium text-[#0072BC] hover:underline cursor-pointer"
-          @click="resetFilters"
-        >
-          Clear All
-        </button>
+          <button
+            type="button"
+            class="text-sm font-medium text-[#0072BC] hover:underline cursor-pointer"
+            @click="resetFilters"
+          >
+            Clear All
+          </button>
+        </div>
       </div>
     </div>
 
