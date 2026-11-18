@@ -178,7 +178,7 @@ const vehicles = [
     mileage: '3 295 km',
     transmission: 'Manual',
     fuelType: 'Petrol',
-    dealer: 'Supergroup Renault',
+    dealer: 'Lionel Motors Renault',
     images: kwidGallery,
   },
 ]
