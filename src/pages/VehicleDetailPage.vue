@@ -69,94 +69,106 @@ function scrollToEnquire() {
     :class="activeDevice === 'mobile' ? 'px-[20px]' : 'px-[20px] md:px-10'"
   >
     <div class="max-w-md mx-auto space-y-5">
-      <!-- Top Bar: Browse vehicles + Favorite Heart -->
-      <div class="flex items-center justify-between">
-        <a
-          href="#showroom"
-          class="inline-flex items-center gap-2 text-xs font-medium text-[#0072BC] hover:underline"
-        >
-          <span
-            class="w-7 h-7 rounded-full border border-neutral-400 flex items-center justify-center text-neutral-700"
+      <!-- Sticky Dark Top Section -->
+      <div
+        class="sticky z-40 -mx-[20px] -mt-6 px-[20px] pt-5 pb-4 bg-[#111111] border-b border-white/10 shadow-md space-y-4"
+        :class="activeDevice === 'mobile' ? 'top-[102px]' : 'top-[102px] lg:top-[118px]'"
+      >
+        <!-- Top Bar: Browse vehicles + Favorite Heart -->
+        <div class="flex items-center justify-between">
+          <a
+            href="#showroom"
+            class="inline-flex items-center gap-2 text-xs font-medium text-[#2FA6F3] hover:underline"
           >
-            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-            </svg>
-          </span>
-          <span>Browse vehicles</span>
-        </a>
-
-        <button
-          type="button"
-          aria-label="Save vehicle"
-          class="w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer"
-          :class="isFavorite ? 'bg-[#D92D20] text-white' : 'border border-neutral-300 text-neutral-600'"
-          @click="isFavorite = !isFavorite"
-        >
-          <svg
-            class="w-4 h-4"
-            :class="isFavorite ? 'fill-current' : 'fill-none stroke-current'"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 21s-6.7-4.35-9.2-8.1C.8 9.9 2.3 5.5 6.4 4.8c2.2-.38 4.2.58 5.6 2.15 1.4-1.57 3.4-2.53 5.6-2.15 4.1.7 5.6 5.1 3.6 8.1C18.7 16.65 12 21 12 21z"
-            />
-          </svg>
-        </button>
-      </div>
-
-      <!-- Price & Est. Payment Split -->
-      <div class="flex items-center justify-start gap-[10px]">
-        <div class="min-w-0">
-          <div class="text-xs text-neutral-500 mb-1">Price</div>
-          <div class="text-[42px] font-semibold text-[#0072BC] leading-none whitespace-nowrap">
-            {{ vehicle.price }}
-          </div>
-        </div>
-
-        <div class="shrink-0 border-l border-[#969696] pl-[10px] space-y-1">
-          <div class="text-[13px] text-neutral-500">Est. Payment</div>
-          <div class="text-[14px] font-medium text-neutral-800 flex items-center gap-1">
-            <span>{{ vehicle.estPayment }}</span>
             <span
-              class="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full border border-neutral-400 text-[9px] text-neutral-500"
+              class="w-7 h-7 rounded-full border border-white/70 flex items-center justify-center text-white"
             >
-              i
+              <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
             </span>
+            <span>Browse vehicles</span>
+          </a>
+
+          <button
+            type="button"
+            aria-label="Save vehicle"
+            class="w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer"
+            :class="isFavorite ? 'bg-[#D92D20] text-white' : 'border border-white/70 text-white'"
+            @click="isFavorite = !isFavorite"
+          >
+            <svg
+              class="w-4 h-4"
+              :class="isFavorite ? 'fill-current' : 'fill-none stroke-current'"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 21s-6.7-4.35-9.2-8.1C.8 9.9 2.3 5.5 6.4 4.8c2.2-.38 4.2.58 5.6 2.15 1.4-1.57 3.4-2.53 5.6-2.15 4.1.7 5.6 5.1 3.6 8.1C18.7 16.65 12 21 12 21z"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Price & Est. Payment Split -->
+        <div class="flex items-center justify-start gap-[10px]">
+          <div class="min-w-0">
+            <div class="text-xs text-white mb-1">Price</div>
+            <div class="text-[42px] font-semibold text-[#2FA6F3] leading-none whitespace-nowrap">
+              {{ vehicle.price }}
+            </div>
+          </div>
+
+          <div class="shrink-0 border-l border-white/70 pl-[10px] space-y-1">
+            <div class="text-[13px] text-white">Est. Payment</div>
+            <div class="text-[14px] font-medium text-white flex items-center gap-1">
+              <span>{{ vehicle.estPayment }}</span>
+              <span
+                class="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full border border-white/80 text-[9px] text-white"
+              >
+                i
+              </span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Title & Trim -->
-      <div>
-        <h1
-          class="font-poppins font-medium text-[#0072BC] uppercase"
-          style="font-size: 24px; line-height: 1.2; font-weight: 500;"
-        >
-          {{ vehicle.name }}
-        </h1>
-        <p class="text-xs text-neutral-500 uppercase mt-1" style="color: #737373; font-size: 12px;">
-          {{ vehicle.trim }}
-        </p>
-      </div>
+        <!-- Title & Trim -->
+        <div>
+          <h1
+            class="font-poppins font-medium text-[#2FA6F3] uppercase"
+            style="font-size: 24px; line-height: 1.2; font-weight: 500;"
+          >
+            {{ vehicle.name }}
+          </h1>
+          <p class="text-xs text-white uppercase mt-1" style="font-size: 12px;">
+            {{ vehicle.trim }}
+          </p>
+        </div>
 
-      <!-- Action Buttons -->
-      <div class="grid grid-cols-2 gap-3">
-        <button
-          type="button"
-          class="rounded-full border border-neutral-800 py-3 px-4 text-center text-sm font-medium text-neutral-800 hover:bg-neutral-100 transition-colors cursor-pointer"
-        >
-          Calculator
-        </button>
-        <button
-          type="button"
-          class="rounded-full py-3 px-4 text-center text-sm font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-sm hover:opacity-95 transition-opacity cursor-pointer"
-          @click="scrollToEnquire"
-        >
-          Enquire
-        </button>
+        <!-- Action Buttons -->
+        <div class="grid grid-cols-3 gap-2.5">
+          <button
+            type="button"
+            class="rounded-full border border-white py-2.5 px-3 text-center text-xs sm:text-sm font-medium text-white hover:bg-white/10 transition-colors cursor-pointer"
+          >
+            Finance
+          </button>
+          <button
+            type="button"
+            class="rounded-full py-2.5 px-3 text-center text-xs sm:text-sm font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-sm hover:opacity-95 transition-opacity cursor-pointer"
+            @click="scrollToEnquire"
+          >
+            Enquire
+          </button>
+          <button
+            type="button"
+            class="rounded-full border border-white py-2.5 px-3 text-center text-xs sm:text-sm font-medium text-white hover:bg-white/10 transition-colors cursor-pointer"
+          >
+            Pre-Approval
+          </button>
+        </div>
       </div>
 
       <!-- Main Scrollable Gallery -->
