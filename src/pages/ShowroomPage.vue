@@ -59,7 +59,7 @@ async function toggleCalculator(vehicleId) {
   await nextTick()
   document
     .getElementById(`showroom-calculator-${vehicleId}`)
-    ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 const galleryRefs = {}
 const currentPage = ref(1)
@@ -747,7 +747,7 @@ function scrollVehicleImage(vehicleId, idx) {
         v-if="openCalculatorId === vehicle.id"
         :id="`showroom-calculator-${vehicle.id}`"
         :vehicle="vehicle"
-        class="scroll-mt-24"
+        class="scroll-mt-[126px]"
         @close="openCalculatorId = null"
       />
       </div>
