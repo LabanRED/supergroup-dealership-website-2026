@@ -96,7 +96,7 @@ function closeMenus() {
         <img
           :src="mobileLogo"
           alt="Supergroup Dealerships"
-          class="h-24 w-auto"
+          class="h-16 w-auto"
           :class="activeDevice === 'mobile' ? 'block' : 'block md:hidden'"
         />
         <img
