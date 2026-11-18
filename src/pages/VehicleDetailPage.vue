@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { useDevicePreview } from '../composables/useDevicePreview.js'
 import VehicleOverview from '../components/vehicle/VehicleOverview.vue'
 import VehicleSpecifications from '../components/vehicle/VehicleSpecifications.vue'
 import SupergroupDivider from '../components/common/SupergroupDivider.vue'
@@ -8,6 +9,7 @@ import DealerLocation from '../components/vehicle/DealerLocation.vue'
 import MoreFromDealer from '../components/vehicle/MoreFromDealer.vue'
 import SimilarVehicles from '../components/vehicle/SimilarVehicles.vue'
 
+const { activeDevice } = useDevicePreview()
 const clioModules = import.meta.glob('../images/clio-*.jpg', {
   eager: true,
   import: 'default',
@@ -62,7 +64,10 @@ function scrollToEnquire() {
 </script>
 
 <template>
-  <div class="mx-auto max-w-[1400px] px-[20px] md:px-10 py-6">
+  <div
+    class="mx-auto max-w-[1400px] py-6"
+    :class="activeDevice === 'mobile' ? 'px-[20px]' : 'px-[20px] md:px-10'"
+  >
     <div class="max-w-md mx-auto space-y-5">
       <!-- Top Bar: Browse vehicles + Favorite Heart -->
       <div class="flex items-center justify-between">

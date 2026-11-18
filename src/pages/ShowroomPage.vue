@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
+import { useDevicePreview } from '../composables/useDevicePreview.js'
 import filterIcon from '../images/filter-icon.svg'
 import searchIcon from '../images/search-icon.svg'
 import mileageIcon from '../images/supergroup-dealerships-mileage-icon.svg'
@@ -42,6 +43,7 @@ const superCarryGallery = Object.entries(superCarryModules)
   })
   .map(([, src]) => src)
 
+const { activeDevice } = useDevicePreview()
 const query = ref('')
 const filtersOpen = ref(false)
 const favorites = ref(new Set())
@@ -300,7 +302,10 @@ function scrollVehicleImage(vehicleId, idx) {
 </script>
 
 <template>
-  <div class="mx-auto max-w-[1400px] px-[20px] md:px-10 pt-6 pb-0 space-y-0">
+  <div
+    class="mx-auto max-w-[1400px] pt-6 pb-0 space-y-0"
+    :class="activeDevice === 'mobile' ? 'px-[20px]' : 'px-[20px] md:px-10'"
+  >
     <!-- Browse Our Showroom Search Card -->
     <section ref="topSearchRef" class="!my-0 max-w-md mx-auto">
       <div
