@@ -159,17 +159,19 @@ const { activeDevice } = useDevicePreview()
 }
 
 .hero-symbol-intro {
-  animation: symbolIntro 5s ease-in-out infinite;
+  animation:
+    symbolIntro 1.8s ease-in-out both,
+    symbolBehindPulse 5s ease-in-out 1.8s infinite;
 }
 
 .hero-copy-reveal {
-  animation: heroCopyReveal 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
+  animation: heroCopyReveal 0.85s cubic-bezier(0.22, 1, 0.36, 1) 1.25s both;
 }
 
 .sunflare-shine {
   animation:
-    sunflareAppear 0.9s ease-out 0.8s both,
-    sunflarePulse 3.6s ease-in-out 1.7s infinite;
+    sunflareAppear 0.9s ease-out 1.85s both,
+    sunflarePulse 3.6s ease-in-out 2.75s infinite;
 }
 
 @keyframes heroFadeIn {
@@ -182,14 +184,33 @@ const { activeDevice } = useDevicePreview()
 }
 
 @keyframes symbolIntro {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0.25;
+    transform: scale(1);
+  }
+}
+
+@keyframes symbolBehindPulse {
   0%,
   100% {
-    opacity: 0;
-    transform: scale(0.95);
+    opacity: 0.25;
+    transform: scale(1);
   }
   50% {
-    opacity: 0.1;
-    transform: scale(1);
+    opacity: 0.05;
+    transform: scale(0.96);
   }
 }
 
