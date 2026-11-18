@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import filterIcon from '../images/filter-icon.svg'
 import searchIcon from '../images/search-icon.svg'
 import mileageIcon from '../images/supergroup-dealerships-mileage-icon.svg'
@@ -42,6 +42,32 @@ const galleryRefs = {}
 const currentPage = ref(1)
 const totalPages = 3815
 const sortBy = ref('default')
+const topSearchRef = ref(null)
+const showStickyFilters = ref(false)
+let observer = null
+
+onMounted(() => {
+  if (!topSearchRef.value || typeof IntersectionObserver === 'undefined') return
+  observer = new IntersectionObserver(
+    ([entry]) => {
+      showStickyFilters.value = !entry.isIntersecting
+    },
+    {
+      threshold: 0,
+      rootMargin: '-102px 0px 0px 0px',
+    }
+  )
+  observer.observe(topSearchRef.value)
+})
+
+onUnmounted(() => {
+  observer?.disconnect()
+})
+
+function openFiltersFromSticky() {
+  filtersOpen.value = true
+  topSearchRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
 
 const selectedMake = ref('')
 const selectedModel = ref('')
@@ -323,9 +349,9 @@ function scrollVehicleImage(vehicleId, idx) {
 </script>
 
 <template>
-  <div class="mx-auto max-w-[1400px] px-[20px] md:px-10 pt-6 pb-0 space-y-6">
+  <div class="mx-auto max-w-[1400px] px-[20px] md:px-10 pt-6 pb-0 space-y-0">
     <!-- Browse Our Showroom Search Card -->
-    <section class="!my-0 max-w-md mx-auto">
+    <section ref="topSearchRef" class="!my-0 max-w-md mx-auto">
       <div
         class="rounded-[28px] border border-[#2FA6F3] bg-white px-5 py-6 text-center shadow-[0_6px_24px_rgba(0,114,188,0.08)]"
       >
@@ -485,16 +511,18 @@ function scrollVehicleImage(vehicleId, idx) {
       </div>
     </section>
 
-    <!-- Featured Stock Results -->
-    <section class="!my-0 max-w-md mx-auto space-y-5">
-      <!-- Filters Pill Bar -->
+    <!-- Sticky Filters Pill Bar (appears on scroll) -->
+    <div
+      v-show="showStickyFilters"
+      class="sticky top-[102px] z-40 max-w-md mx-auto bg-white/95 backdrop-blur-sm py-2"
+    >
       <div
-        class="rounded-full border border-[#2FA6F3] bg-white px-5 py-3 flex items-center justify-between"
+        class="rounded-full border border-[#2FA6F3] bg-white px-5 py-3 flex items-center justify-between shadow-sm"
       >
         <button
           type="button"
           class="inline-flex items-center gap-2.5 text-sm font-medium text-[#0072BC] cursor-pointer"
-          @click="filtersOpen = !filtersOpen"
+          @click="openFiltersFromSticky"
         >
           <img :src="filterIcon" alt="" class="w-5 h-[13px]" />
           <span>Filters</span>
@@ -508,9 +536,12 @@ function scrollVehicleImage(vehicleId, idx) {
           Clear All
         </button>
       </div>
+    </div>
 
+    <!-- Featured Stock Results -->
+    <section class="!my-0 !pt-[30px] max-w-md mx-auto space-y-5">
       <!-- Showing & Sort By Row -->
-      <div class="flex items-center justify-between gap-2 text-xs text-neutral-700 px-1">
+      <div class="flex items-center justify-between gap-2 text-xs text-neutral-700 px-1 whitespace-nowrap">
         <div>
           <span>Showing </span>
           <span class="font-medium text-[#0072BC]">
@@ -518,7 +549,7 @@ function scrollVehicleImage(vehicleId, idx) {
           </span>
         </div>
 
-        <label class="inline-flex items-center gap-1.5 cursor-pointer">
+        <label class="inline-flex items-center gap-1.5 cursor-pointer shrink-0">
           <span class="font-medium text-[#0072BC]">Sort by:</span>
           <div class="relative inline-flex items-center">
             <select
