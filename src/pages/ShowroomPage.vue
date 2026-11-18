@@ -111,7 +111,7 @@ const vehicles = [
     mileage: '43 987 km',
     transmission: 'Manual',
     fuelType: 'Petrol',
-    dealer: 'Supergroup Pre-Owned',
+    dealer: 'Suzuki Edenvale',
     images: clioGallery,
   },
   {
@@ -631,15 +631,15 @@ function scrollVehicleImage(vehicleId, idx) {
           </p>
 
           <!-- Price & Est. Payment Split -->
-          <div class="grid grid-cols-2 items-center gap-4 mb-5">
-            <div>
-              <div class="text-xs text-neutral-500 mb-0.5">Price</div>
-              <div class="text-[26px] font-bold text-[#0072BC] leading-tight">
+          <div class="flex items-center justify-between gap-3 mb-5">
+            <div class="min-w-0">
+              <div class="text-xs text-neutral-500 mb-1">Price</div>
+              <div class="text-[42px] font-semibold text-[#0072BC] leading-none whitespace-nowrap">
                 {{ vehicle.price }}
               </div>
             </div>
 
-            <div class="border-l border-neutral-200 pl-4 space-y-1.5">
+            <div class="shrink-0 border-l border-neutral-200 pl-3 space-y-1.5">
               <div class="text-[11px] text-neutral-500">Est. Payment</div>
               <div class="text-xs font-medium text-neutral-800 flex items-center gap-1">
                 <span>{{ vehicle.estPayment }}</span>
