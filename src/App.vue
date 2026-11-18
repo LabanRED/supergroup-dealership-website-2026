@@ -5,6 +5,7 @@ import Header from './components/header/Header.vue'
 import Footer from './components/footer/Footer.vue'
 import HomePage from './pages/HomePage.vue'
 import ShowroomPage from './pages/ShowroomPage.vue'
+import VehicleDetailPage from './pages/VehicleDetailPage.vue'
 import UnifiedInboxPage from './pages/UnifiedInboxPage.vue'
 import PostingPage from './pages/PostingPage.vue'
 import FramesPage from './pages/FramesPage.vue'
@@ -15,6 +16,7 @@ const { activeDevice } = useDevicePreview()
 
 const pageMap = {
   '#showroom': ShowroomPage,
+  '#vehicle-detail': VehicleDetailPage,
   '#unified-inbox': UnifiedInboxPage,
   '#posting': PostingPage,
   '#frames': FramesPage,

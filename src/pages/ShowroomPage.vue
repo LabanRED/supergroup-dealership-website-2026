@@ -650,7 +650,7 @@ function scrollVehicleImage(vehicleId, idx) {
               Enquire Now
             </a>
             <a
-              href="#showroom"
+              href="#vehicle-detail"
               class="rounded-full py-2.5 px-4 text-center text-xs font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-sm hover:opacity-95 transition-opacity"
             >
               View Details
