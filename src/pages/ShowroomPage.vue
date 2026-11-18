@@ -78,12 +78,15 @@ function openFiltersFromSticky() {
 
 const selectedMake = ref('')
 const selectedModel = ref('')
+const selectedMinYear = ref('')
+const selectedMaxYear = ref('')
+const selectedMinPrice = ref('')
+const selectedMaxPrice = ref('')
 const selectedCondition = ref('')
 const selectedTransmission = ref('')
 const selectedFuel = ref('')
-const selectedMaxMileage = ref('')
-const selectedMinPrice = ref('')
-const selectedMaxPrice = ref('')
+const selectedBodyType = ref('')
+const selectedDealer = ref('')
 
 const modelsByMake = {
   Renault: ['Clio', 'Kwid', 'Triber', 'Kiger', 'Duster'],
@@ -104,16 +107,12 @@ watch(selectedMake, () => {
   selectedModel.value = ''
 })
 
+const years = [2026, 2025, 2024, 2023, 2022, 2021, 2020]
 const conditions = ['New', 'Demo', 'Used']
 const transmissions = ['Automatic', 'Manual']
 const fuelTypes = ['Petrol', 'Diesel', 'Hybrid', 'Electric']
-const mileageOptions = [
-  { label: '10,000 km', value: 10000 },
-  { label: '25,000 km', value: 25000 },
-  { label: '50,000 km', value: 50000 },
-  { label: '100,000 km', value: 100000 },
-  { label: '150,000 km', value: 150000 },
-]
+const bodyTypes = ['Hatchback', 'Bakkie / Pickup', 'SUV', 'Sedan']
+const dealers = ['Suzuki Edenvale', 'Suzuki Bedfordview', 'Lionel Motors Renault']
 const minPriceOptions = [
   { label: 'R 150,000', value: 150000 },
   { label: 'R 250,000', value: 250000 },
@@ -132,10 +131,12 @@ const maxPriceOptions = [
 const vehicles = [
   {
     id: 1,
+    year: 2023,
     name: '2023 RENAULT CLIO',
     trim: '1.0T ZEN 5DR (66KW)',
     make: 'Renault',
     model: 'Clio',
+    bodyType: 'Hatchback',
     condition: 'Used',
     priceValue: 199900,
     price: 'R199 900',
@@ -149,10 +150,12 @@ const vehicles = [
   },
   {
     id: 2,
+    year: 2026,
     name: '2026 SUZUKI SUPER CARRY',
     trim: '1.2i P/U S/C (54KW)',
     make: 'Suzuki',
     model: 'Super Carry',
+    bodyType: 'Bakkie / Pickup',
     condition: 'New',
     priceValue: 179900,
     price: 'R179 900',
@@ -166,10 +169,12 @@ const vehicles = [
   },
   {
     id: 3,
+    year: 2026,
     name: '2026 RENAULT KWID',
     trim: '1.0 DYNAMIQUE 5DR (50KW)',
     make: 'Renault',
     model: 'Kwid',
+    bodyType: 'Hatchback',
     condition: 'Demo',
     priceValue: 169990,
     price: 'R169 990',
@@ -188,12 +193,15 @@ const filteredVehicles = computed(() => {
   const list = vehicles.filter((v) => {
     if (selectedMake.value && v.make !== selectedMake.value) return false
     if (selectedModel.value && v.model !== selectedModel.value) return false
+    if (selectedMinYear.value && v.year < Number(selectedMinYear.value)) return false
+    if (selectedMaxYear.value && v.year > Number(selectedMaxYear.value)) return false
+    if (selectedMinPrice.value && v.priceValue < Number(selectedMinPrice.value)) return false
+    if (selectedMaxPrice.value && v.priceValue > Number(selectedMaxPrice.value)) return false
     if (selectedCondition.value && v.condition !== selectedCondition.value) return false
     if (selectedTransmission.value && v.transmission !== selectedTransmission.value) return false
     if (selectedFuel.value && v.fuelType !== selectedFuel.value) return false
-    if (selectedMaxMileage.value && v.mileageValue > Number(selectedMaxMileage.value)) return false
-    if (selectedMinPrice.value && v.priceValue < Number(selectedMinPrice.value)) return false
-    if (selectedMaxPrice.value && v.priceValue > Number(selectedMaxPrice.value)) return false
+    if (selectedBodyType.value && v.bodyType !== selectedBodyType.value) return false
+    if (selectedDealer.value && v.dealer !== selectedDealer.value) return false
     if (q && !`${v.name} ${v.trim} ${v.dealer} ${v.fuelType}`.toLowerCase().includes(q)) return false
     return true
   })
@@ -214,12 +222,15 @@ const activeFilterCount = computed(() => {
   return [
     selectedMake.value,
     selectedModel.value,
+    selectedMinYear.value,
+    selectedMaxYear.value,
+    selectedMinPrice.value,
+    selectedMaxPrice.value,
     selectedCondition.value,
     selectedTransmission.value,
     selectedFuel.value,
-    selectedMaxMileage.value,
-    selectedMinPrice.value,
-    selectedMaxPrice.value,
+    selectedBodyType.value,
+    selectedDealer.value,
   ].filter(Boolean).length
 })
 
@@ -227,12 +238,16 @@ function resetFilters() {
   query.value = ''
   selectedMake.value = ''
   selectedModel.value = ''
+  selectedMinYear.value = ''
+  selectedMaxYear.value = ''
+  selectedMinPrice.value = ''
+  selectedMaxPrice.value = ''
   selectedCondition.value = ''
   selectedTransmission.value = ''
   selectedFuel.value = ''
-  selectedMaxMileage.value = ''
-  selectedMinPrice.value = ''
-  selectedMaxPrice.value = ''
+  selectedBodyType.value = ''
+  selectedDealer.value = ''
+  sortBy.value = 'default'
 }
 
 function toggleFavorite(id) {
@@ -327,7 +342,7 @@ function scrollVehicleImage(vehicleId, idx) {
             </button>
           </div>
 
-          <!-- Expandable 8-Field Filter Panel -->
+          <!-- Expandable 12-Field Filter Panel -->
           <div
             v-if="filtersOpen"
             class="rounded-2xl border border-neutral-200 bg-neutral-50/70 p-4 space-y-3"
@@ -367,11 +382,47 @@ function scrollVehicleImage(vehicleId, idx) {
               </select>
 
               <select
-                v-model="selectedCondition"
-                aria-label="New / Used"
+                v-model="selectedMinYear"
+                aria-label="Min Year"
                 class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
               >
-                <option value="">New / Used</option>
+                <option value="">Min Year</option>
+                <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
+              </select>
+
+              <select
+                v-model="selectedMaxYear"
+                aria-label="Max Year"
+                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+              >
+                <option value="">Max Year</option>
+                <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
+              </select>
+
+              <select
+                v-model="selectedMinPrice"
+                aria-label="Min Price"
+                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+              >
+                <option value="">Min Price</option>
+                <option v-for="p in minPriceOptions" :key="p.value" :value="p.value">{{ p.label }}</option>
+              </select>
+
+              <select
+                v-model="selectedMaxPrice"
+                aria-label="Max Price"
+                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+              >
+                <option value="">Max Price</option>
+                <option v-for="p in maxPriceOptions" :key="p.value" :value="p.value">{{ p.label }}</option>
+              </select>
+
+              <select
+                v-model="selectedCondition"
+                aria-label="Vehicle Type"
+                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+              >
+                <option value="">Vehicle Type</option>
                 <option v-for="cond in conditions" :key="cond" :value="cond">{{ cond }}</option>
               </select>
 
@@ -386,40 +437,50 @@ function scrollVehicleImage(vehicleId, idx) {
 
               <select
                 v-model="selectedFuel"
-                aria-label="Fuel type"
+                aria-label="Fuel Type"
                 class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
               >
-                <option value="">Fuel type</option>
+                <option value="">Fuel Type</option>
                 <option v-for="fuel in fuelTypes" :key="fuel" :value="fuel">{{ fuel }}</option>
               </select>
 
               <select
-                v-model="selectedMaxMileage"
-                aria-label="Max mileage"
+                v-model="selectedBodyType"
+                aria-label="Body Type"
                 class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
               >
-                <option value="">Max mileage</option>
-                <option v-for="m in mileageOptions" :key="m.value" :value="m.value">{{ m.label }}</option>
+                <option value="">Body Type</option>
+                <option v-for="body in bodyTypes" :key="body" :value="body">{{ body }}</option>
               </select>
 
               <select
-                v-model="selectedMinPrice"
-                aria-label="Min price"
+                v-model="selectedDealer"
+                aria-label="Dealer"
                 class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
               >
-                <option value="">Min price</option>
-                <option v-for="p in minPriceOptions" :key="p.value" :value="p.value">{{ p.label }}</option>
+                <option value="">Dealer</option>
+                <option v-for="d in dealers" :key="d" :value="d">{{ d }}</option>
               </select>
 
               <select
-                v-model="selectedMaxPrice"
-                aria-label="Max price"
+                v-model="sortBy"
+                aria-label="Sort By"
                 class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
               >
-                <option value="">Max price</option>
-                <option v-for="p in maxPriceOptions" :key="p.value" :value="p.value">{{ p.label }}</option>
+                <option value="default">Sort By</option>
+                <option value="price-asc">Price - Low to High</option>
+                <option value="price-desc">Price - High to Low</option>
+                <option value="mileage-asc">Mileage - Low to High</option>
               </select>
             </div>
+
+            <button
+              type="button"
+              class="w-full rounded-lg py-2.5 px-4 text-xs font-semibold uppercase tracking-wider text-white bg-[#0072BC] hover:bg-[#005f9e] transition-colors cursor-pointer"
+              @click="filtersOpen = false"
+            >
+              Apply Filter
+            </button>
           </div>
 
           <!-- Search CTA -->
