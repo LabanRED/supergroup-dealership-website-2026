@@ -41,6 +41,7 @@ const activeImageByVehicle = ref({})
 const galleryRefs = {}
 const currentPage = ref(1)
 const totalPages = 3815
+const sortBy = ref('default')
 
 const selectedMake = ref('')
 const selectedModel = ref('')
@@ -236,7 +237,7 @@ const vehicles = [
 
 const filteredVehicles = computed(() => {
   const q = query.value.trim().toLowerCase()
-  return vehicles.filter((v) => {
+  const list = vehicles.filter((v) => {
     if (selectedMake.value && v.make !== selectedMake.value) return false
     if (selectedModel.value && v.model !== selectedModel.value) return false
     if (selectedCondition.value && v.condition !== selectedCondition.value) return false
@@ -248,6 +249,17 @@ const filteredVehicles = computed(() => {
     if (q && !`${v.name} ${v.trim} ${v.dealer} ${v.fuelType}`.toLowerCase().includes(q)) return false
     return true
   })
+
+  if (sortBy.value === 'price-asc') {
+    return [...list].sort((a, b) => a.priceValue - b.priceValue)
+  }
+  if (sortBy.value === 'price-desc') {
+    return [...list].sort((a, b) => b.priceValue - a.priceValue)
+  }
+  if (sortBy.value === 'mileage-asc') {
+    return [...list].sort((a, b) => a.mileageValue - b.mileageValue)
+  }
+  return list
 })
 
 const activeFilterCount = computed(() => {
@@ -475,16 +487,61 @@ function scrollVehicleImage(vehicleId, idx) {
 
     <!-- Featured Stock Results -->
     <section class="!my-0 max-w-md mx-auto space-y-5">
-      <div class="flex items-center justify-between text-xs text-neutral-500 px-1">
-        <span>Showing {{ filteredVehicles.length }} featured vehicles</span>
+      <!-- Filters Pill Bar -->
+      <div
+        class="rounded-full border border-[#2FA6F3] bg-white px-5 py-3 flex items-center justify-between"
+      >
         <button
-          v-if="activeFilterCount > 0 || query"
           type="button"
-          class="text-[#0072BC] font-medium hover:underline cursor-pointer"
+          class="inline-flex items-center gap-2.5 text-sm font-medium text-[#0072BC] cursor-pointer"
+          @click="filtersOpen = !filtersOpen"
+        >
+          <img :src="filterIcon" alt="" class="w-5 h-[13px]" />
+          <span>Filters</span>
+        </button>
+
+        <button
+          type="button"
+          class="text-sm font-medium text-[#0072BC] hover:underline cursor-pointer"
           @click="resetFilters"
         >
-          Clear all
+          Clear All
         </button>
+      </div>
+
+      <!-- Showing & Sort By Row -->
+      <div class="flex items-center justify-between gap-2 text-xs text-neutral-700 px-1">
+        <div>
+          <span>Showing </span>
+          <span class="font-medium text-[#0072BC]">
+            {{ filteredVehicles.length ? `1 - ${filteredVehicles.length}` : '0' }} of 2066
+          </span>
+        </div>
+
+        <label class="inline-flex items-center gap-1.5 cursor-pointer">
+          <span class="font-medium text-[#0072BC]">Sort by:</span>
+          <div class="relative inline-flex items-center">
+            <select
+              v-model="sortBy"
+              aria-label="Sort vehicles"
+              class="appearance-none bg-transparent pr-5 text-xs text-neutral-800 focus:outline-none cursor-pointer"
+            >
+              <option value="default">Price - Default</option>
+              <option value="price-asc">Price - Low to High</option>
+              <option value="price-desc">Price - High to Low</option>
+              <option value="mileage-asc">Mileage - Low to High</option>
+            </select>
+            <svg
+              class="pointer-events-none absolute right-0 w-3.5 h-3.5 text-[#0072BC]"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+            </svg>
+          </div>
+        </label>
       </div>
 
       <article
