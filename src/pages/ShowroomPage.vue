@@ -1,61 +1,117 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import filterIcon from '../images/filter-icon.svg'
 import searchIcon from '../images/search-icon.svg'
 
 const query = ref('')
 const filtersOpen = ref(false)
-const selectedMake = ref('All Makes')
-const selectedBody = ref('All Body Types')
-const selectedCondition = ref('All')
 
-const makes = ['All Makes', 'Toyota', 'Volkswagen', 'Ford', 'Hyundai', 'BMW', 'Mercedes-Benz', 'Chery']
-const bodyTypes = ['All Body Types', 'SUV', 'Hatchback', 'Sedan', 'Bakkie / Pickup']
-const conditions = ['All', 'New', 'Demo', 'Pre-Owned']
+const selectedMake = ref('')
+const selectedModel = ref('')
+const selectedCondition = ref('')
+const selectedTransmission = ref('')
+const selectedFuel = ref('')
+const selectedMaxMileage = ref('')
+const selectedMinPrice = ref('')
+const selectedMaxPrice = ref('')
+
+const modelsByMake = {
+  Toyota: ['Corolla Cross', 'Hilux', 'Fortuner', 'Starlet', 'RAV4'],
+  Volkswagen: ['Polo', 'Polo Vivo', 'Golf', 'T-Cross', 'Tiguan'],
+  Ford: ['Ranger', 'Everest', 'Puma', 'Territory'],
+  Hyundai: ['Grand i10', 'Venue', 'Creta', 'Tucson'],
+  BMW: ['1 Series', '3 Series', 'X1', 'X3'],
+  'Mercedes-Benz': ['A-Class', 'C-Class', 'GLA', 'GLC'],
+  Chery: ['Tiggo 4 Pro', 'Tiggo 7 Pro Max', 'Tiggo 8 Pro'],
+}
+
+const makes = Object.keys(modelsByMake)
+const availableModels = computed(() => (selectedMake.value ? modelsByMake[selectedMake.value] || [] : []))
+
+watch(selectedMake, () => {
+  selectedModel.value = ''
+})
+
+const conditions = ['New', 'Demo', 'Used']
+const transmissions = ['Automatic', 'Manual']
+const fuelTypes = ['Petrol', 'Diesel', 'Hybrid', 'Electric']
+const mileageOptions = [
+  { label: '10,000 km', value: 10000 },
+  { label: '25,000 km', value: 25000 },
+  { label: '50,000 km', value: 50000 },
+  { label: '100,000 km', value: 100000 },
+  { label: '150,000 km', value: 150000 },
+]
+const minPriceOptions = [
+  { label: 'R 150,000', value: 150000 },
+  { label: 'R 250,000', value: 250000 },
+  { label: 'R 350,000', value: 350000 },
+  { label: 'R 500,000', value: 500000 },
+  { label: 'R 750,000', value: 750000 },
+]
+const maxPriceOptions = [
+  { label: 'R 300,000', value: 300000 },
+  { label: 'R 450,000', value: 450000 },
+  { label: 'R 600,000', value: 600000 },
+  { label: 'R 850,000', value: 850000 },
+  { label: 'R 1,200,000+', value: 1200000 },
+]
 
 const vehicles = [
   {
     id: 1,
     name: '2025 Toyota Corolla Cross 1.8 XR',
     make: 'Toyota',
-    bodyType: 'SUV',
+    model: 'Corolla Cross',
     condition: 'New',
+    priceValue: 498900,
     price: 'R 498,900',
+    mileageValue: 15,
     mileage: '15 km',
     transmission: 'Automatic',
+    fuelType: 'Hybrid',
     dealer: 'Supergroup Toyota Sandton',
   },
   {
     id: 2,
     name: '2024 Volkswagen Polo 1.0 TSI Life',
     make: 'Volkswagen',
-    bodyType: 'Hatchback',
+    model: 'Polo',
     condition: 'Demo',
+    priceValue: 364900,
     price: 'R 364,900',
+    mileageValue: 4200,
     mileage: '4,200 km',
     transmission: 'Manual',
+    fuelType: 'Petrol',
     dealer: 'Supergroup VW Johannesburg',
   },
   {
     id: 3,
     name: '2024 Ford Ranger 2.0 SiT Double Cab XLT',
     make: 'Ford',
-    bodyType: 'Bakkie / Pickup',
-    condition: 'Pre-Owned',
+    model: 'Ranger',
+    condition: 'Used',
+    priceValue: 629000,
     price: 'R 629,000',
+    mileageValue: 18500,
     mileage: '18,500 km',
     transmission: 'Automatic',
+    fuelType: 'Diesel',
     dealer: 'Supergroup Ford Midrand',
   },
   {
     id: 4,
     name: '2025 Chery Tiggo 7 Pro Max 1.6T',
     make: 'Chery',
-    bodyType: 'SUV',
+    model: 'Tiggo 7 Pro Max',
     condition: 'New',
+    priceValue: 529900,
     price: 'R 529,900',
+    mileageValue: 10,
     mileage: '10 km',
     transmission: 'Automatic',
+    fuelType: 'Petrol',
     dealer: 'Supergroup Chery Fourways',
   },
 ]
@@ -63,27 +119,42 @@ const vehicles = [
 const filteredVehicles = computed(() => {
   const q = query.value.trim().toLowerCase()
   return vehicles.filter((v) => {
-    if (selectedMake.value !== 'All Makes' && v.make !== selectedMake.value) return false
-    if (selectedBody.value !== 'All Body Types' && v.bodyType !== selectedBody.value) return false
-    if (selectedCondition.value !== 'All' && v.condition !== selectedCondition.value) return false
-    if (q && !`${v.name} ${v.dealer} ${v.bodyType}`.toLowerCase().includes(q)) return false
+    if (selectedMake.value && v.make !== selectedMake.value) return false
+    if (selectedModel.value && v.model !== selectedModel.value) return false
+    if (selectedCondition.value && v.condition !== selectedCondition.value) return false
+    if (selectedTransmission.value && v.transmission !== selectedTransmission.value) return false
+    if (selectedFuel.value && v.fuelType !== selectedFuel.value) return false
+    if (selectedMaxMileage.value && v.mileageValue > Number(selectedMaxMileage.value)) return false
+    if (selectedMinPrice.value && v.priceValue < Number(selectedMinPrice.value)) return false
+    if (selectedMaxPrice.value && v.priceValue > Number(selectedMaxPrice.value)) return false
+    if (q && !`${v.name} ${v.dealer} ${v.fuelType}`.toLowerCase().includes(q)) return false
     return true
   })
 })
 
 const activeFilterCount = computed(() => {
-  let count = 0
-  if (selectedMake.value !== 'All Makes') count++
-  if (selectedBody.value !== 'All Body Types') count++
-  if (selectedCondition.value !== 'All') count++
-  return count
+  return [
+    selectedMake.value,
+    selectedModel.value,
+    selectedCondition.value,
+    selectedTransmission.value,
+    selectedFuel.value,
+    selectedMaxMileage.value,
+    selectedMinPrice.value,
+    selectedMaxPrice.value,
+  ].filter(Boolean).length
 })
 
 function resetFilters() {
   query.value = ''
-  selectedMake.value = 'All Makes'
-  selectedBody.value = 'All Body Types'
-  selectedCondition.value = 'All'
+  selectedMake.value = ''
+  selectedModel.value = ''
+  selectedCondition.value = ''
+  selectedTransmission.value = ''
+  selectedFuel.value = ''
+  selectedMaxMileage.value = ''
+  selectedMinPrice.value = ''
+  selectedMaxPrice.value = ''
 }
 </script>
 
@@ -144,7 +215,7 @@ function resetFilters() {
             </button>
           </div>
 
-          <!-- Expandable Filter Panel -->
+          <!-- Expandable 8-Field Filter Panel -->
           <div
             v-if="filtersOpen"
             class="rounded-2xl border border-neutral-200 bg-neutral-50/70 p-4 space-y-3"
@@ -159,42 +230,82 @@ function resetFilters() {
                 class="text-xs font-medium text-[#0072BC] hover:underline cursor-pointer"
                 @click="resetFilters"
               >
-                Reset
+                Reset ({{ activeFilterCount }})
               </button>
             </div>
 
-            <div class="flex flex-wrap gap-1.5">
-              <button
-                v-for="item in conditions"
-                :key="item"
-                type="button"
-                class="px-3 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer"
-                :class="
-                  selectedCondition === item
-                    ? 'bg-[#0072BC] text-white'
-                    : 'bg-white text-neutral-700 border border-neutral-200'
-                "
-                @click="selectedCondition = item"
-              >
-                {{ item }}
-              </button>
-            </div>
-
-            <div class="grid grid-cols-1 gap-2.5">
+            <div class="grid grid-cols-2 gap-2.5">
               <select
                 v-model="selectedMake"
-                aria-label="Filter by make"
-                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:outline-none focus:border-[#0072BC]"
+                aria-label="Make"
+                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
               >
+                <option value="">Make</option>
                 <option v-for="make in makes" :key="make" :value="make">{{ make }}</option>
               </select>
 
               <select
-                v-model="selectedBody"
-                aria-label="Filter by body type"
-                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:outline-none focus:border-[#0072BC]"
+                v-model="selectedModel"
+                aria-label="Model"
+                :disabled="!selectedMake"
+                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC] disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                <option v-for="body in bodyTypes" :key="body" :value="body">{{ body }}</option>
+                <option value="">{{ selectedMake ? 'Model' : 'Select make first' }}</option>
+                <option v-for="model in availableModels" :key="model" :value="model">{{ model }}</option>
+              </select>
+
+              <select
+                v-model="selectedCondition"
+                aria-label="New / Used"
+                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+              >
+                <option value="">New / Used</option>
+                <option v-for="cond in conditions" :key="cond" :value="cond">{{ cond }}</option>
+              </select>
+
+              <select
+                v-model="selectedTransmission"
+                aria-label="Transmission"
+                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+              >
+                <option value="">Transmission</option>
+                <option v-for="trans in transmissions" :key="trans" :value="trans">{{ trans }}</option>
+              </select>
+
+              <select
+                v-model="selectedFuel"
+                aria-label="Fuel type"
+                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+              >
+                <option value="">Fuel type</option>
+                <option v-for="fuel in fuelTypes" :key="fuel" :value="fuel">{{ fuel }}</option>
+              </select>
+
+              <select
+                v-model="selectedMaxMileage"
+                aria-label="Max mileage"
+                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+              >
+                <option value="">Max mileage</option>
+                <option v-for="m in mileageOptions" :key="m.value" :value="m.value">{{ m.label }}</option>
+              </select>
+
+              <select
+                v-model="selectedMinPrice"
+                aria-label="Min price"
+                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+              >
+                <option value="">Min price</option>
+                <option v-for="p in minPriceOptions" :key="p.value" :value="p.value">{{ p.label }}</option>
+              </select>
+
+              <select
+                v-model="selectedMaxPrice"
+                aria-label="Max price"
+                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+              >
+                <option value="">Max price</option>
+                <option v-for="p in maxPriceOptions" :key="p.value" :value="p.value">{{ p.label }}</option>
               </select>
             </div>
           </div>
@@ -243,7 +354,7 @@ function resetFilters() {
           <span>•</span>
           <span>{{ vehicle.transmission }}</span>
           <span>•</span>
-          <span>{{ vehicle.bodyType }}</span>
+          <span>{{ vehicle.fuelType }}</span>
         </div>
 
         <div class="pt-1 text-xs text-neutral-600">{{ vehicle.dealer }}</div>
