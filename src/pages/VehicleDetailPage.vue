@@ -5,6 +5,7 @@ import VehicleSpecifications from '../components/vehicle/VehicleSpecifications.v
 import SupergroupDivider from '../components/common/SupergroupDivider.vue'
 import VehicleEnquire from '../components/vehicle/VehicleEnquire.vue'
 import DealerLocation from '../components/vehicle/DealerLocation.vue'
+import MoreFromDealer from '../components/vehicle/MoreFromDealer.vue'
 
 const clioModules = import.meta.glob('../images/clio-*.jpg', {
   eager: true,
@@ -231,6 +232,9 @@ function scrollToEnquire() {
 
       <!-- Dealership Location Section -->
       <DealerLocation dealer-name="Suzuki Edenvale" />
+
+      <!-- More Listings From This Dealer -->
+      <MoreFromDealer />
     </div>
   </div>
 </template>
