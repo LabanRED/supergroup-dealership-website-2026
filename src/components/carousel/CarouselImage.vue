@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue'
 import sellYourCarImage from '../../images/supergroup-sell-your-car-cart-image.webp'
+import dealersImage from '../../images/supergroup-dealers-cart-image.webp'
+import financeImage from '../../images/supergroup-finance-calculator-cart-image.webp'
 
 const slides = [
   {
@@ -17,23 +19,23 @@ const slides = [
   {
     id: 'dealers',
     tab: 'Dealers',
-    title: 'Find a Dealership',
-    image: sellYourCarImage,
-    imageAlt: 'Supergroup Dealerships showroom network',
+    title: 'Our Dealers',
+    image: dealersImage,
+    imageAlt: 'Supergroup Dealerships showroom',
     description:
-      'Explore our nationwide network of trusted Super Group dealerships for new, demo, and quality pre-owned vehicles backed by OEM-certified service.',
-    ctaLabel: 'View Dealers',
+      'Super Group Dealerships offers a wide range of dealerships, bringing top brands and expert customer service together to meet your motoring needs',
+    ctaLabel: 'Browse Now',
     ctaHref: '#contact',
   },
   {
     id: 'finance',
     tab: 'Finance',
-    title: 'Vehicle Finance',
-    image: sellYourCarImage,
-    imageAlt: 'Supergroup Dealerships vehicle finance',
+    title: 'Finance Calculator',
+    image: financeImage,
+    imageAlt: 'Supergroup Dealerships finance consultation',
     description:
-      'Flexible finance and insurance solutions tailored to get you behind the wheel faster with competitive rates and seamless approvals.',
-    ctaLabel: 'Apply for Finance',
+      'If you are still looking to purchase your vehicle and are interested in obtaining financial aid, then our finance and insurance products are for you.',
+    ctaLabel: 'Calculate Now',
     ctaHref: '#contact',
   },
 ]
