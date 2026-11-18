@@ -8,15 +8,19 @@ import burgerMenuIcon from '../../images/burger-menu-icon.svg'
 
 const { activeDevice, setDevice, isLocal } = useDevicePreview()
 
-const servicesOpen = ref(false)
 const mobileMenuOpen = ref(false)
 
-const serviceLinks = [
-  { label: 'Unified inbox', href: '#unified-inbox' },
-  { label: 'Posting', href: '#posting' },
-  { label: 'Frames', href: '#frames' },
-  { label: 'Reviews', href: '#reviews' },
-  { label: 'LiveChat AI', href: '#livechat-ai' },
+const navItems = [
+  { label: 'OUR DEALERS', href: null },
+  { label: 'NEW', href: null },
+  { label: 'SHOWROOM', href: '#showroom' },
+  { label: 'FLEET', href: null },
+  { label: 'SELL', href: null },
+  { label: 'FINANCE', href: null },
+  { label: 'ABOUT US', href: null },
+  { label: 'CAREERS', href: null },
+  { label: 'CONTACT US', href: null },
+  { label: 'EXPLORE CHARGING STATION', href: null },
 ]
 
 const deviceModes = [
@@ -27,7 +31,6 @@ const deviceModes = [
 ]
 
 function closeMenus() {
-  servicesOpen.value = false
   mobileMenuOpen.value = false
 }
 </script>
@@ -117,67 +120,36 @@ function closeMenus() {
 
       <!-- Desktop Navigation -->
       <nav
-        class="items-center gap-8 text-sm font-medium text-neutral-300"
+        class="items-center gap-5 xl:gap-6 text-xs font-medium tracking-wide uppercase text-neutral-300 overflow-x-auto"
         :class="activeDevice === 'mobile' ? 'hidden' : 'hidden md:flex'"
+        style="scrollbar-width: none;"
       >
-        <!-- Services Dropdown -->
-        <div
-          class="relative"
-          @mouseenter="servicesOpen = true"
-          @mouseleave="servicesOpen = false"
-        >
-          <button
-            type="button"
-            class="flex items-center gap-1.5 text-neutral-300 hover:text-white transition-colors py-2 cursor-pointer"
-            @click="servicesOpen = !servicesOpen"
+        <template v-for="item in navItems" :key="item.label">
+          <a
+            v-if="item.href"
+            :href="item.href"
+            class="text-neutral-200 hover:text-white transition-colors whitespace-nowrap"
+            @click="closeMenus"
           >
-            <span>Services</span>
-            <svg
-              class="w-4 h-4 transition-transform duration-200"
-              :class="{ 'rotate-180': servicesOpen }"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-
-          <div
-            v-show="servicesOpen"
-            class="absolute left-0 top-full pt-2 w-52"
+            {{ item.label }}
+          </a>
+          <span
+            v-else
+            class="text-neutral-300 cursor-default select-none whitespace-nowrap"
           >
-            <div class="rounded-2xl bg-neutral-950 border border-white/10 shadow-2xl py-2 overflow-hidden">
-              <a
-                v-for="item in serviceLinks"
-                :key="item.href"
-                :href="item.href"
-                class="block px-4 py-2.5 text-sm text-neutral-300 hover:text-white hover:bg-white/10 transition-colors"
-                @click="closeMenus"
-              >
-                {{ item.label }}
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <a href="#blogs" class="hover:text-white transition-colors" @click="closeMenus">
-          Blogs
-        </a>
-        <a href="#about" class="hover:text-white transition-colors" @click="closeMenus">
-          About
-        </a>
+            {{ item.label }}
+          </span>
+        </template>
       </nav>
 
-      <!-- Right Controls: Local Device Switcher + Primary CTA -->
+      <!-- Right Controls: Local Device Switcher -->
       <div
+        v-if="isLocal"
         class="items-center gap-3 shrink-0"
         :class="activeDevice === 'mobile' ? 'hidden' : 'hidden md:flex'"
       >
         <!-- Local-only Device Preview Switcher -->
         <div
-          v-if="isLocal"
           class="hidden lg:flex items-center gap-1 bg-white/10 rounded-full p-1"
           title="Local device preview"
         >
@@ -196,15 +168,6 @@ function closeMenus() {
             {{ mode.label }}
           </button>
         </div>
-
-        <!-- Primary CTA -->
-        <a
-          href="#contact"
-          class="btn btn-secondary text-xs md:text-sm"
-          @click="closeMenus"
-        >
-          Book a Demo
-        </a>
       </div>
     </div>
 
@@ -214,25 +177,24 @@ function closeMenus() {
       class="mx-auto max-w-[1600px] mt-2 rounded-3xl bg-black border border-white/10 shadow-2xl p-6 text-neutral-300 space-y-4"
       :class="activeDevice === 'mobile' ? 'block' : 'block md:hidden'"
     >
-      <div>
-        <div class="text-xs uppercase tracking-wider text-neutral-500 mb-2">Services</div>
-        <div class="grid grid-cols-1 gap-1.5 pl-2">
+      <nav class="flex flex-col gap-1">
+        <template v-for="item in navItems" :key="item.label">
           <a
-            v-for="item in serviceLinks"
-            :key="item.href"
+            v-if="item.href"
             :href="item.href"
-            class="py-1.5 text-sm text-neutral-300 hover:text-white"
+            class="block py-2 text-sm font-medium tracking-wide uppercase text-white hover:text-[#2FA6F3] transition-colors"
             @click="closeMenus"
           >
             {{ item.label }}
           </a>
-        </div>
-      </div>
-
-      <div class="border-t border-white/10 pt-3 flex flex-col gap-2">
-        <a href="#blogs" class="py-1.5 text-sm hover:text-white" @click="closeMenus">Blogs</a>
-        <a href="#about" class="py-1.5 text-sm hover:text-white" @click="closeMenus">About</a>
-      </div>
+          <span
+            v-else
+            class="block py-2 text-sm font-medium tracking-wide uppercase text-neutral-400 cursor-default select-none"
+          >
+            {{ item.label }}
+          </span>
+        </template>
+      </nav>
 
       <div v-if="isLocal" class="border-t border-white/10 pt-3">
         <div class="text-xs uppercase tracking-wider text-neutral-500 mb-2">Device Preview</div>
@@ -252,12 +214,6 @@ function closeMenus() {
             {{ mode.label }}
           </button>
         </div>
-      </div>
-
-      <div class="pt-2">
-        <a href="#contact" class="btn btn-secondary w-full" @click="closeMenus">
-          Book a Demo
-        </a>
       </div>
     </div>
   </header>
