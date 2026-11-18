@@ -2,6 +2,9 @@
 import { ref } from 'vue'
 import VehicleOverview from '../components/vehicle/VehicleOverview.vue'
 import VehicleSpecifications from '../components/vehicle/VehicleSpecifications.vue'
+import SupergroupDivider from '../components/common/SupergroupDivider.vue'
+import VehicleEnquire from '../components/vehicle/VehicleEnquire.vue'
+import DealerLocation from '../components/vehicle/DealerLocation.vue'
 
 const clioModules = import.meta.glob('../images/clio-*.jpg', {
   eager: true,
@@ -49,6 +52,10 @@ function handleMainScroll(event) {
   const el = event.target
   if (!el || !el.clientWidth) return
   activeIndex.value = Math.round(el.scrollLeft / el.clientWidth)
+}
+
+function scrollToEnquire() {
+  document.getElementById('vdp-enquire')?.scrollIntoView({ behavior: 'smooth' })
 }
 </script>
 
@@ -136,12 +143,13 @@ function handleMainScroll(event) {
         >
           Calculator
         </button>
-        <a
-          href="#contact"
-          class="rounded-full py-3 px-4 text-center text-sm font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-sm hover:opacity-95 transition-opacity"
+        <button
+          type="button"
+          class="rounded-full py-3 px-4 text-center text-sm font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-sm hover:opacity-95 transition-opacity cursor-pointer"
+          @click="scrollToEnquire"
         >
           Enquire
-        </a>
+        </button>
       </div>
 
       <!-- Main Scrollable Gallery -->
@@ -214,6 +222,15 @@ function handleMainScroll(event) {
 
       <!-- Additional Specifications Section -->
       <VehicleSpecifications />
+
+      <!-- Divider -->
+      <SupergroupDivider />
+
+      <!-- Enquire Section -->
+      <VehicleEnquire />
+
+      <!-- Dealership Location Section -->
+      <DealerLocation dealer-name="Suzuki Edenvale" />
     </div>
   </div>
 </template>
