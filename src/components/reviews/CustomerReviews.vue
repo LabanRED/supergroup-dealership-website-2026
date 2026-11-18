@@ -28,7 +28,53 @@ const reviews = [
   },
 ]
 
+const trackRef = ref(null)
 const activeIndex = ref(0)
+let isProgrammaticScroll = false
+let scrollTimeout = null
+
+function scrollToIndex(index) {
+  const track = trackRef.value
+  if (!track) return
+
+  activeIndex.value = index
+  isProgrammaticScroll = true
+
+  const targetLeft =
+    index === 0
+      ? 0
+      : track.children[index]?.offsetLeft ?? 0
+
+  track.scrollTo({
+    left: targetLeft,
+    behavior: 'smooth',
+  })
+
+  clearTimeout(scrollTimeout)
+  scrollTimeout = setTimeout(() => {
+    isProgrammaticScroll = false
+  }, 450)
+}
+
+function handleScroll() {
+  if (isProgrammaticScroll) return
+  const track = trackRef.value
+  if (!track) return
+
+  const scrollLeft = track.scrollLeft
+  let closest = 0
+  let minDistance = Infinity
+
+  Array.from(track.children).forEach((child, idx) => {
+    const distance = Math.abs(child.offsetLeft - scrollLeft)
+    if (distance < minDistance) {
+      minDistance = distance
+      closest = idx
+    }
+  })
+
+  activeIndex.value = closest
+}
 </script>
 
 <template>
@@ -42,56 +88,67 @@ const activeIndex = ref(0)
       </p>
     </div>
 
-    <!-- Review Card -->
-    <article
-      class="rounded-[28px] bg-white border border-neutral-100 p-6 shadow-[0_8px_28px_rgba(0,0,0,0.06)] max-w-md mx-auto"
+    <!-- Scrollable Review Track (1 card at a time) -->
+    <div
+      ref="trackRef"
+      class="relative flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 max-w-md mx-auto"
+      style="scrollbar-width: none;"
+      @scroll="handleScroll"
     >
-      <!-- 5 Stars -->
-      <div class="flex items-center gap-1.5 mb-3">
-        <img
-          v-for="n in 5"
-          :key="n"
-          :src="starIcon"
-          alt="Star"
-          class="w-5 h-5"
-        />
-      </div>
-
-      <!-- Google Badge + Date -->
-      <div class="flex items-center gap-2 mb-4">
-        <img :src="googleLogo" alt="Google" class="h-4 w-auto" />
-        <span class="text-xs text-neutral-400">
-          {{ reviews[activeIndex].timeAgo }}
-        </span>
-      </div>
-
-      <!-- Reviewer Profile -->
-      <div class="flex items-center gap-3 mb-4">
-        <img
-          :src="reviews[activeIndex].avatar"
-          :alt="reviews[activeIndex].name"
-          class="w-12 h-12 rounded-full object-cover shrink-0"
-        />
-        <span class="font-medium text-base text-neutral-900">
-          {{ reviews[activeIndex].name }}
-        </span>
-      </div>
-
-      <!-- Review Text -->
-      <p class="text-sm text-neutral-800 leading-relaxed mb-4">
-        {{ reviews[activeIndex].text }}
-      </p>
-
-      <a
-        href="#reviews"
-        class="inline-block text-sm font-medium text-[#2FA6F3] hover:underline"
+      <article
+        v-for="review in reviews"
+        :key="review.id"
+        class="snap-start shrink-0 w-full rounded-[28px] bg-white border border-neutral-100 p-6 shadow-[0_8px_28px_rgba(0,0,0,0.06)] flex flex-col justify-between"
       >
-        Read more
-      </a>
-    </article>
+        <div>
+          <!-- 5 Stars -->
+          <div class="flex items-center gap-1.5 mb-3">
+            <img
+              v-for="n in 5"
+              :key="n"
+              :src="starIcon"
+              alt="Star"
+              class="w-5 h-5"
+            />
+          </div>
+
+          <!-- Google Badge + Date -->
+          <div class="flex items-center gap-2 mb-4">
+            <img :src="googleLogo" alt="Google" class="h-4 w-auto" />
+            <span class="text-xs text-neutral-400">
+              {{ review.timeAgo }}
+            </span>
+          </div>
+
+          <!-- Reviewer Profile -->
+          <div class="flex items-center gap-3 mb-4">
+            <img
+              :src="review.avatar"
+              :alt="review.name"
+              class="w-12 h-12 rounded-full object-cover shrink-0"
+            />
+            <span class="font-medium text-base text-neutral-900">
+              {{ review.name }}
+            </span>
+          </div>
+
+          <!-- Review Text -->
+          <p class="text-sm text-neutral-800 leading-relaxed mb-4">
+            {{ review.text }}
+          </p>
+        </div>
+
+        <a
+          href="#reviews"
+          class="inline-block text-sm font-medium text-[#2FA6F3] hover:underline"
+        >
+          Read more
+        </a>
+      </article>
+    </div>
 
     <!-- Pagination Dots -->
-    <div class="flex items-center justify-center gap-2.5 mt-5">
+    <div class="flex items-center justify-center gap-2.5 mt-2">
       <button
         v-for="(review, idx) in reviews"
         :key="review.id"
@@ -99,7 +156,7 @@ const activeIndex = ref(0)
         :aria-label="`Show review ${idx + 1}`"
         class="w-2.5 h-2.5 rounded-full transition-colors cursor-pointer"
         :class="activeIndex === idx ? 'bg-[#0072BC]' : 'bg-neutral-300 hover:bg-neutral-400'"
-        @click="activeIndex = idx"
+        @click="scrollToIndex(idx)"
       ></button>
     </div>
   </section>
