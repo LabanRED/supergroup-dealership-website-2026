@@ -62,18 +62,6 @@ const quicklinks = [
                 <path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7v4h3V22h4v-8.5z" />
               </svg>
             </a>
-            <a href="#instagram" aria-label="Instagram" class="hover:text-[#0072BC] transition-colors">
-              <svg class="w-6 h-6 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24">
-                <rect x="2" y="2" width="20" height="20" rx="5" />
-                <circle cx="12" cy="12" r="4" />
-                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-              </svg>
-            </a>
-            <a href="#youtube" aria-label="YouTube" class="hover:text-[#0072BC] transition-colors">
-              <svg class="w-7 h-7 fill-current" viewBox="0 0 24 24">
-                <path d="M21.58 7.19a2.75 2.75 0 0 0-1.94-1.94C17.93 4.8 12 4.8 12 4.8s-5.93 0-7.64.45a2.75 2.75 0 0 0-1.94 1.94A28.7 28.7 0 0 0 2 12a28.7 28.7 0 0 0 .42 4.81 2.75 2.75 0 0 0 1.94 1.94c1.71.45 7.64.45 7.64.45s5.93 0 7.64-.45a2.75 2.75 0 0 0 1.94-1.94A28.7 28.7 0 0 0 22 12a28.7 28.7 0 0 0-.42-4.81zM10 15V9l5.2 3-5.2 3z" />
-              </svg>
-            </a>
           </div>
         </div>
 
