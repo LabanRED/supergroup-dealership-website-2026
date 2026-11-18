@@ -54,9 +54,13 @@ function updateScrollState() {
 
 onMounted(() => {
   scrollContainer = topSectionRef.value?.closest('[data-device]') || null
+  if (scrollContainer) {
+    scrollContainer.scrollTop = 0
+  }
+  window.scrollTo({ top: 0, behavior: 'auto' })
+  isScrolled.value = false
   window.addEventListener('scroll', updateScrollState, { passive: true })
   scrollContainer?.addEventListener('scroll', updateScrollState, { passive: true })
-  updateScrollState()
 })
 
 onUnmounted(() => {

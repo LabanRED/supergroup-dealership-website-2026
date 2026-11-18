@@ -28,6 +28,7 @@ const pageMap = {
 }
 
 const currentHash = ref(typeof window !== 'undefined' ? window.location.hash : '')
+const scrollContainerRef = ref(null)
 
 const currentPage = computed(() => {
   const baseHash = currentHash.value.split('?')[0]
@@ -39,7 +40,10 @@ function handleHashChange() {
   currentHash.value = newHash
   const baseHash = newHash.split('?')[0]
   if (pageMap[baseHash]) {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    window.scrollTo({ top: 0, behavior: 'auto' })
+    if (scrollContainerRef.value) {
+      scrollContainerRef.value.scrollTop = 0
+    }
   }
 }
 
@@ -61,6 +65,7 @@ onUnmounted(() => {
     "
   >
     <div
+      ref="scrollContainerRef"
       :data-device="activeDevice"
       :class="
         activeDevice === 'mobile'
