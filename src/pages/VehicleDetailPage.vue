@@ -5,6 +5,7 @@ import VehicleOverview from '../components/vehicle/VehicleOverview.vue'
 import VehicleSpecifications from '../components/vehicle/VehicleSpecifications.vue'
 import SupergroupDivider from '../components/common/SupergroupDivider.vue'
 import VehicleEnquire from '../components/vehicle/VehicleEnquire.vue'
+import FinanceCalculator from '../components/vehicle/FinanceCalculator.vue'
 import DealerLocation from '../components/vehicle/DealerLocation.vue'
 import MoreFromDealer from '../components/vehicle/MoreFromDealer.vue'
 import SimilarVehicles from '../components/vehicle/SimilarVehicles.vue'
@@ -27,6 +28,7 @@ const vehicle = {
   name: '2023 RENAULT CLIO',
   trim: '1.0T ZEN 5DR (66KW)',
   condition: 'Used',
+  priceValue: 199900,
   price: 'R199 900',
   estPayment: 'R3 580 p/m*',
   mileage: '43 987 km',
@@ -80,6 +82,10 @@ function handleMainScroll(event) {
 
 function scrollToEnquire() {
   document.getElementById('vdp-enquire')?.scrollIntoView({ behavior: 'smooth' })
+}
+
+function scrollToCalculator() {
+  document.getElementById('vdp-calculator')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 </script>
 
@@ -214,6 +220,7 @@ function scrollToEnquire() {
                 ? 'border-white text-white hover:bg-white/10'
                 : 'border-neutral-800 text-neutral-800 hover:bg-neutral-100'
             "
+            @click="scrollToCalculator"
           >
             Finance
           </button>
@@ -224,8 +231,8 @@ function scrollToEnquire() {
           >
             Enquire
           </button>
-          <button
-            type="button"
+          <a
+            href="#finance-pre-approval?dealerName=Suzuki+Edenvale&make=RENAULT&model=Clio&newused=USED&price=199900&variant=1.0T+ZEN+5DR+(66KW)&year=2023"
             class="rounded-full border py-2.5 px-3 text-center text-xs sm:text-sm font-medium transition-colors cursor-pointer"
             :class="
               isScrolled
@@ -234,7 +241,7 @@ function scrollToEnquire() {
             "
           >
             Pre-Approval
-          </button>
+          </a>
         </div>
       </div>
 
@@ -314,6 +321,14 @@ function scrollToEnquire() {
 
       <!-- Enquire Section -->
       <VehicleEnquire />
+
+      <!-- Finance Calculator Section -->
+      <FinanceCalculator
+        id="vdp-calculator"
+        :vehicle="vehicle"
+        :closable="false"
+        class="scroll-mt-[126px]"
+      />
 
       <!-- Dealership Location Section -->
       <DealerLocation dealer-name="Suzuki Edenvale" />

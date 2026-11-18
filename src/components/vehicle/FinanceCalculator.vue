@@ -6,6 +6,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  closable: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 const emit = defineEmits(['close'])
@@ -93,6 +97,7 @@ function formatRand(value) {
         Finance Calculator — {{ vehicle.name }}
       </h4>
       <button
+        v-if="closable"
         type="button"
         aria-label="Close calculator"
         class="w-7 h-7 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 hover:bg-neutral-100 transition-colors cursor-pointer"

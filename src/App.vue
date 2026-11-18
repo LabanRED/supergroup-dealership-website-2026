@@ -6,6 +6,7 @@ import Footer from './components/footer/Footer.vue'
 import HomePage from './pages/HomePage.vue'
 import ShowroomPage from './pages/ShowroomPage.vue'
 import VehicleDetailPage from './pages/VehicleDetailPage.vue'
+import FinancePage from './pages/FinancePage.vue'
 import UnifiedInboxPage from './pages/UnifiedInboxPage.vue'
 import PostingPage from './pages/PostingPage.vue'
 import FramesPage from './pages/FramesPage.vue'
@@ -17,6 +18,8 @@ const { activeDevice } = useDevicePreview()
 const pageMap = {
   '#showroom': ShowroomPage,
   '#vehicle-detail': VehicleDetailPage,
+  '#finance': FinancePage,
+  '#finance-pre-approval': FinancePage,
   '#unified-inbox': UnifiedInboxPage,
   '#posting': PostingPage,
   '#frames': FramesPage,
@@ -27,13 +30,15 @@ const pageMap = {
 const currentHash = ref(typeof window !== 'undefined' ? window.location.hash : '')
 
 const currentPage = computed(() => {
-  return pageMap[currentHash.value] || HomePage
+  const baseHash = currentHash.value.split('?')[0]
+  return pageMap[baseHash] || HomePage
 })
 
 function handleHashChange() {
   const newHash = window.location.hash
   currentHash.value = newHash
-  if (pageMap[newHash]) {
+  const baseHash = newHash.split('?')[0]
+  if (pageMap[baseHash]) {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 }
