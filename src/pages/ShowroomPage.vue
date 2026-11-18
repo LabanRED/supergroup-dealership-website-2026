@@ -338,7 +338,7 @@ function scrollVehicleImage(vehicleId, idx) {
         </h1>
         <p class="text-lg text-neutral-700 leading-relaxed mb-6" style="color: #404040;">
           Find your vehicle from our<br />
-          <strong class="font-semibold text-neutral-900">1 800+</strong> quality dealerships stock
+          <strong class="font-semibold text-neutral-900">2 000+</strong> quality dealerships stock
         </p>
 
         <form class="space-y-4 text-left" @submit.prevent="filtersOpen = false">
