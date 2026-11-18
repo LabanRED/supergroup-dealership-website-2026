@@ -20,7 +20,7 @@ const quicklinks = [
           <img
             :src="supergroupLogo"
             alt="Supergroup Dealerships"
-            class="h-14 w-auto"
+            class="h-24 w-auto"
           />
         </a>
       </div>
