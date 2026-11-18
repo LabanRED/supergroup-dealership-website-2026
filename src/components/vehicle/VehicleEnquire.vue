@@ -1,6 +1,23 @@
 <script setup>
 import { ref } from 'vue'
 
+defineProps({
+  sectionId: {
+    type: String,
+    default: 'vdp-enquire',
+  },
+  vehicleName: {
+    type: String,
+    default: '',
+  },
+  closable: {
+    type: Boolean,
+    default: false,
+  },
+})
+
+const emit = defineEmits(['close'])
+
 const fullName = ref('')
 const phone = ref('')
 const email = ref('')
@@ -15,13 +32,30 @@ function handleSubmit() {
 </script>
 
 <template>
-  <section id="vdp-enquire" class="!my-0 pt-2 pb-6">
+  <section :id="sectionId" class="!my-0 pt-2 pb-6">
     <div class="rounded-[28px] border border-neutral-300 bg-white p-6 space-y-5">
-      <div>
-        <h3 class="text-2xl font-medium text-[#004A87] mb-1">Enquire Now</h3>
-        <p class="text-xs leading-relaxed" style="color: #004A87; font-size: 13px;">
-          A member of our sales team will be in touch soon regarding your enquiry.
-        </p>
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <h3 class="text-2xl font-medium text-[#004A87] mb-1">Enquire Now</h3>
+          <p v-if="vehicleName" class="text-xs font-medium text-neutral-600 mb-1">
+            {{ vehicleName }}
+          </p>
+          <p class="text-xs leading-relaxed" style="color: #004A87; font-size: 13px;">
+            A member of our sales team will be in touch soon regarding your enquiry.
+          </p>
+        </div>
+
+        <button
+          v-if="closable"
+          type="button"
+          aria-label="Close enquiry form"
+          class="w-7 h-7 rounded-full border border-neutral-300 flex items-center justify-center text-neutral-600 hover:bg-neutral-100 transition-colors cursor-pointer shrink-0"
+          @click="emit('close')"
+        >
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
       <!-- Call & WhatsApp Buttons -->

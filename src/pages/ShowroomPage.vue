@@ -7,6 +7,7 @@ import mileageIcon from '../images/supergroup-dealerships-mileage-icon.svg'
 import fuelIcon from '../images/supergroup-dealerships-fuel-type-icon.svg'
 import transmissionIcon from '../images/supergroup-dealerships-transmission-icon.svg'
 import FinanceCalculator from '../components/vehicle/FinanceCalculator.vue'
+import VehicleEnquire from '../components/vehicle/VehicleEnquire.vue'
 import kwid1 from '../images/1Jtan3uuSXWFHvHLQFaTzAaPEokNClQBKO6kRegD.jpg'
 import kwid2 from '../images/BWlN7cQlmWiILtvdLa9ECun7mexMXu9VSdW9Jnzb.jpg'
 import kwid3 from '../images/KwQR3tb5egXz3upjD4eVQqV1pCax2q0ayxms5eYT.jpg'
@@ -48,6 +49,7 @@ const query = ref('')
 const filtersOpen = ref(false)
 const favorites = ref(new Set())
 const openCalculatorId = ref(null)
+const openEnquireId = ref(null)
 const activeImageByVehicle = ref({})
 
 async function toggleCalculator(vehicleId) {
@@ -55,10 +57,24 @@ async function toggleCalculator(vehicleId) {
     openCalculatorId.value = null
     return
   }
+  openEnquireId.value = null
   openCalculatorId.value = vehicleId
   await nextTick()
   document
     .getElementById(`showroom-calculator-${vehicleId}`)
+    ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
+async function toggleEnquire(vehicleId) {
+  if (openEnquireId.value === vehicleId) {
+    openEnquireId.value = null
+    return
+  }
+  openCalculatorId.value = null
+  openEnquireId.value = vehicleId
+  await nextTick()
+  document
+    .getElementById(`showroom-enquire-${vehicleId}`)
     ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 const galleryRefs = {}
@@ -727,12 +743,13 @@ function scrollVehicleImage(vehicleId, idx) {
 
           <!-- Action Buttons -->
           <div class="grid grid-cols-2 gap-3">
-            <a
-              href="#contact"
-              class="rounded-full border border-neutral-800 py-2.5 px-4 text-center text-xs font-medium text-neutral-800 hover:bg-neutral-100 transition-colors"
+            <button
+              type="button"
+              class="rounded-full border border-neutral-800 py-2.5 px-4 text-center text-xs font-medium text-neutral-800 hover:bg-neutral-100 transition-colors cursor-pointer"
+              @click="toggleEnquire(vehicle.id)"
             >
               Enquire Now
-            </a>
+            </button>
             <a
               href="#vehicle-detail"
               class="rounded-full py-2.5 px-4 text-center text-xs font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-sm hover:opacity-95 transition-opacity"
@@ -749,6 +766,15 @@ function scrollVehicleImage(vehicleId, idx) {
         :vehicle="vehicle"
         class="scroll-mt-[126px]"
         @close="openCalculatorId = null"
+      />
+
+      <VehicleEnquire
+        v-if="openEnquireId === vehicle.id"
+        :section-id="`showroom-enquire-${vehicle.id}`"
+        :vehicle-name="vehicle.name"
+        :closable="true"
+        class="scroll-mt-[126px]"
+        @close="openEnquireId = null"
       />
       </div>
 
