@@ -127,21 +127,21 @@ function handleSubmit() {
       </div>
 
       <!-- Selected Vehicle Summary -->
-      <div class="rounded-[24px] border border-neutral-200 bg-[#F4F8FC] p-4 flex items-center justify-between gap-3">
+      <div class="py-1 flex items-center justify-between gap-3">
         <div class="min-w-0">
-          <div class="text-[11px] uppercase tracking-wide text-[#0072BC] font-medium">
+          <div class="text-[13px] uppercase tracking-wide text-[#0072BC] font-medium">
             {{ vehicleSummary.condition }} · {{ vehicleSummary.dealerName }}
           </div>
-          <div class="text-sm font-semibold text-neutral-900 truncate">
+          <div class="text-[16px] font-semibold text-neutral-900 truncate">
             {{ vehicleSummary.title }}
           </div>
-          <div class="text-xs text-neutral-600 truncate">
+          <div class="text-[14px] text-neutral-600 truncate">
             {{ vehicleSummary.variant }}
           </div>
         </div>
         <div class="shrink-0 text-right">
-          <div class="text-[11px] text-neutral-500">Price</div>
-          <div class="text-lg font-semibold text-[#0072BC] whitespace-nowrap">
+          <div class="text-[13px] text-neutral-500">Price</div>
+          <div class="text-[20px] font-semibold text-[#0072BC] whitespace-nowrap">
             {{ vehicleSummary.price }}
           </div>
         </div>
