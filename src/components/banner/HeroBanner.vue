@@ -77,11 +77,12 @@ const { activeDevice } = useDevicePreview()
             Supergroup
           </h1>
 
-          <!-- Sunflare shine towards the end of "Supergroup" -->
+          <!-- Sunflare shine on top-right of the letter "p" in "Supergroup" -->
           <div
             aria-hidden="true"
-            class="pointer-events-none absolute -top-4 -right-5 z-20 w-24 h-24 flex items-center justify-center sunflare-shine"
+            class="pointer-events-none absolute top-[12px] -right-[1px] z-20 w-0 h-0 flex items-center justify-center"
           >
+            <div class="w-24 h-24 shrink-0 flex items-center justify-center sunflare-shine">
             <!-- Outer atmospheric halo -->
             <span
               class="absolute inset-0 rounded-full"
@@ -124,6 +125,7 @@ const { activeDevice } = useDevicePreview()
               class="relative w-2.5 h-2.5 rounded-full bg-white"
               style="box-shadow: 0 0 12px 4px rgba(255, 255, 255, 0.95), 0 0 24px 8px rgba(125, 211, 252, 0.7);"
             ></span>
+            </div>
           </div>
         </div>
 
