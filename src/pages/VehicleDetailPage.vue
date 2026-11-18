@@ -1,5 +1,7 @@
 <script setup>
 import { ref } from 'vue'
+import VehicleOverview from '../components/vehicle/VehicleOverview.vue'
+import VehicleSpecifications from '../components/vehicle/VehicleSpecifications.vue'
 
 const clioModules = import.meta.glob('../images/clio-*.jpg', {
   eager: true,
@@ -199,6 +201,19 @@ function handleMainScroll(event) {
           {{ vehicle.description }}
         </p>
       </section>
+
+      <!-- Overview Section -->
+      <VehicleOverview
+        mileage="43 987 Km"
+        exterior-colour="White"
+        body-type="Hatch"
+        transmission="Manual"
+        engine-size="999 Cc"
+        fuel-type="Petrol"
+      />
+
+      <!-- Additional Specifications Section -->
+      <VehicleSpecifications />
     </div>
   </div>
 </template>
