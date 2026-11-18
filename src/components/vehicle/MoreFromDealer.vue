@@ -1,5 +1,7 @@
 <script setup>
 import dealerImage from '../../images/suzuki-dealer-image.webp'
+import { vehicles } from '../../data/vehicles'
+import VehicleCard from './VehicleCard.vue'
 </script>
 
 <template>
@@ -20,5 +22,17 @@ import dealerImage from '../../images/suzuki-dealer-image.webp'
     <p class="mt-3 leading-relaxed" style="color: #0072BC;">
       Browse more quality vehicles available from this dealer. Explore a wider range of trusted listings, great deals, and options to suit your needs.
     </p>
+
+    <div
+      class="mt-6 flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-1 px-1"
+      style="scrollbar-width: none;"
+    >
+      <VehicleCard
+        v-for="item in vehicles"
+        :key="`dealer-${item.id}`"
+        :vehicle="item"
+        class="w-[88%] shrink-0 snap-start"
+      />
+    </div>
   </section>
 </template>

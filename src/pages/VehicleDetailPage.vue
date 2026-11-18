@@ -6,6 +6,7 @@ import SupergroupDivider from '../components/common/SupergroupDivider.vue'
 import VehicleEnquire from '../components/vehicle/VehicleEnquire.vue'
 import DealerLocation from '../components/vehicle/DealerLocation.vue'
 import MoreFromDealer from '../components/vehicle/MoreFromDealer.vue'
+import SimilarVehicles from '../components/vehicle/SimilarVehicles.vue'
 
 const clioModules = import.meta.glob('../images/clio-*.jpg', {
   eager: true,
@@ -235,6 +236,9 @@ function scrollToEnquire() {
 
       <!-- More Listings From This Dealer -->
       <MoreFromDealer />
+
+      <!-- Similar Vehicles -->
+      <SimilarVehicles />
     </div>
   </div>
 </template>
