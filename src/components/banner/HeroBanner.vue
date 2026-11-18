@@ -56,22 +56,22 @@ const { activeDevice } = useDevicePreview()
         class="pointer-events-none absolute inset-x-0 bottom-0 h-28 md:h-36 bg-gradient-to-t from-white via-white/40 to-transparent"
       ></div>
 
-      <!-- Intro Supergroup Symbol (fades in first, then fades out) -->
+      <!-- Background Supergroup Symbol (fades in and out behind hero text at 10% opacity) -->
       <div
         aria-hidden="true"
-        class="pointer-events-none absolute inset-x-0 top-8 md:top-16 z-20 flex items-center justify-center hero-symbol-intro"
+        class="pointer-events-none absolute inset-x-0 top-4 md:top-12 z-[5] flex items-center justify-center hero-symbol-intro"
       >
         <img
           :src="supergroupSymbol"
-          alt="Supergroup Dealerships Symbol"
-          class="h-24 md:h-32 w-auto object-contain drop-shadow-[0_6px_24px_rgba(0,0,0,0.45)]"
+          alt=""
+          class="h-32 md:h-44 w-auto object-contain"
         />
       </div>
 
-      <!-- Hero Copy (fades in from small to big after symbol) -->
+      <!-- Hero Copy (fades in from small to big) -->
       <div class="relative z-10 flex flex-col items-center hero-copy-reveal">
         <p
-          class="uppercase tracking-wide mb-2"
+          class="tracking-wide mb-2"
           style="font-family: var(--font-guester); font-size: 20px; line-height: 1.2; color: #ffffff;"
         >
           Welcome to
@@ -159,17 +159,17 @@ const { activeDevice } = useDevicePreview()
 }
 
 .hero-symbol-intro {
-  animation: symbolIntro 1.8s ease-in-out both;
+  animation: symbolIntro 5s ease-in-out infinite;
 }
 
 .hero-copy-reveal {
-  animation: heroCopyReveal 0.85s cubic-bezier(0.22, 1, 0.36, 1) 1.55s both;
+  animation: heroCopyReveal 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
 }
 
 .sunflare-shine {
   animation:
-    sunflareAppear 0.9s ease-out 2.15s both,
-    sunflarePulse 3.6s ease-in-out 3.05s infinite;
+    sunflareAppear 0.9s ease-out 0.8s both,
+    sunflarePulse 3.6s ease-in-out 1.7s infinite;
 }
 
 @keyframes heroFadeIn {
@@ -182,21 +182,14 @@ const { activeDevice } = useDevicePreview()
 }
 
 @keyframes symbolIntro {
-  0% {
-    opacity: 0;
-    transform: scale(0.85);
-  }
-  25% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  65% {
-    opacity: 1;
-    transform: scale(1);
-  }
+  0%,
   100% {
     opacity: 0;
-    transform: scale(1.06);
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 0.1;
+    transform: scale(1);
   }
 }
 
