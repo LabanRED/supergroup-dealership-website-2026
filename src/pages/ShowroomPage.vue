@@ -182,7 +182,7 @@ function resetFilters() {
         <form class="space-y-4 text-left" @submit.prevent="filtersOpen = false">
           <!-- Search Input Box -->
           <div
-            class="flex items-center gap-2 rounded-2xl border border-neutral-200 bg-white pl-4 pr-1.5 py-1.5"
+            class="flex items-center gap-2 rounded-full border border-neutral-200 bg-white pl-5 pr-1.5 py-1.5"
           >
             <input
               v-model="query"
