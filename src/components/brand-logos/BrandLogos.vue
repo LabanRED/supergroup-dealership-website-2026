@@ -16,7 +16,7 @@ const brands = Object.entries(logoModules)
 <template>
   <section class="!mb-0 mx-auto max-w-[1400px] px-[20px] md:px-10 pt-6 pb-0">
     <div class="text-center mb-6">
-      <p class="text-sm text-neutral-500 mb-1" style="color: #737373;">
+      <p class="text-lg text-neutral-500 mb-1" style="color: #737373;">
         Representing
       </p>
       <h2>
