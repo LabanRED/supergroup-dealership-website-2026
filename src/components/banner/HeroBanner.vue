@@ -8,7 +8,7 @@ const { activeDevice } = useDevicePreview()
 
 <template>
   <section
-    class="!mt-0"
+    class="!mt-0 hero-fade-in"
     :class="
       activeDevice === 'mobile'
         ? 'w-full px-0 !mb-0'
@@ -64,17 +64,68 @@ const { activeDevice } = useDevicePreview()
           Welcome to
         </p>
 
-        <h1
-          class="font-poppins font-semibold bg-clip-text text-transparent select-none pb-2"
-          style="
-            font-size: 56px;
-            line-height: 54px;
-            font-weight: 600;
-            background-image: linear-gradient(180deg, #ffffff 0%, #ffffff 55%, rgba(255, 255, 255, 0.55) 100%);
-          "
-        >
-          Supergroup
-        </h1>
+        <div class="relative inline-block">
+          <h1
+            class="relative z-10 font-poppins font-semibold bg-clip-text text-transparent select-none pb-2"
+            style="
+              font-size: 56px;
+              line-height: 54px;
+              font-weight: 600;
+              background-image: linear-gradient(180deg, #ffffff 0%, #ffffff 55%, rgba(255, 255, 255, 0.55) 100%);
+            "
+          >
+            Supergroup
+          </h1>
+
+          <!-- Sunflare shine towards the end of "Supergroup" -->
+          <div
+            aria-hidden="true"
+            class="pointer-events-none absolute -top-4 -right-5 z-20 w-24 h-24 flex items-center justify-center sunflare-shine"
+          >
+            <!-- Outer atmospheric halo -->
+            <span
+              class="absolute inset-0 rounded-full"
+              style="
+                background: radial-gradient(
+                  circle,
+                  rgba(255, 255, 255, 0.9) 0%,
+                  rgba(165, 226, 255, 0.55) 24%,
+                  rgba(47, 166, 243, 0.22) 48%,
+                  transparent 72%
+                );
+                filter: blur(3px);
+              "
+            ></span>
+            <!-- Horizontal anamorphic flare streak -->
+            <span
+              class="absolute w-28 h-[2px]"
+              style="
+                background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.95) 50%, transparent 100%);
+                filter: blur(0.5px);
+              "
+            ></span>
+            <!-- Vertical flare ray -->
+            <span
+              class="absolute h-16 w-[1.5px]"
+              style="
+                background: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.85) 50%, transparent 100%);
+                filter: blur(0.5px);
+              "
+            ></span>
+            <!-- Diagonal flare ray -->
+            <span
+              class="absolute w-14 h-[1px] rotate-45"
+              style="
+                background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.75) 50%, transparent 100%);
+              "
+            ></span>
+            <!-- Bright sunflare core -->
+            <span
+              class="relative w-2.5 h-2.5 rounded-full bg-white"
+              style="box-shadow: 0 0 12px 4px rgba(255, 255, 255, 0.95), 0 0 24px 8px rgba(125, 211, 252, 0.7);"
+            ></span>
+          </div>
+        </div>
 
         <p
           class="font-poppins font-light mt-1"
@@ -86,3 +137,49 @@ const { activeDevice } = useDevicePreview()
     </div>
   </section>
 </template>
+
+<style scoped>
+.hero-fade-in {
+  animation: heroFadeIn 0.85s ease-out both;
+}
+
+.sunflare-shine {
+  animation:
+    sunflareAppear 0.9s ease-out 0.35s both,
+    sunflarePulse 3.6s ease-in-out 1.25s infinite;
+}
+
+@keyframes heroFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sunflareAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes sunflarePulse {
+  0%,
+  100% {
+    opacity: 0.88;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.12) rotate(6deg);
+  }
+}
+</style>
