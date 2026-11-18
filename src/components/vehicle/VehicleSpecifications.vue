@@ -68,7 +68,7 @@ function toggle(id) {
 </script>
 
 <template>
-  <section class="!my-0 pt-4 pb-6 space-y-4">
+  <section class="!my-0 pt-[30px] pb-6 space-y-4">
     <h2>Additional Specifications</h2>
 
     <div class="space-y-3">
