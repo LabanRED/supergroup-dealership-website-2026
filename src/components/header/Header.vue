@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useDevicePreview } from '../../composables/useDevicePreview.js'
 import mobileLogo from '../../images/supergroup-dealerships-mobile-logo.webp'
 import desktopLogo from '../../images/supergroup-dealerships-desktop-logo.webp'
@@ -16,6 +16,31 @@ defineProps({
 })
 
 const mobileMenuOpen = ref(false)
+const mobileMenuBg = ref('#000000')
+
+const menuColorMap = {
+  1: '#000000',
+  2: '#000219',
+  3: '#3C3C3C',
+}
+
+function handleMenuColorKeydown(event) {
+  const tag = event.target?.tagName
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || event.target?.isContentEditable) {
+    return
+  }
+  if (menuColorMap[event.key]) {
+    mobileMenuBg.value = menuColorMap[event.key]
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', handleMenuColorKeydown)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleMenuColorKeydown)
+})
 
 const navItems = [
   { label: 'OUR DEALERS', href: null },
@@ -182,8 +207,9 @@ function closeMenus() {
     <!-- Mobile Navigation Drawer (overlays body without pushing content down) -->
     <div
       v-if="mobileMenuOpen"
-      class="absolute left-0 right-0 top-full z-50 bg-black border-t border-white/10 shadow-2xl p-6 text-neutral-300 space-y-4 max-h-[calc(100vh-110px)] overflow-y-auto"
+      class="absolute left-0 right-0 top-full z-50 border-t border-white/10 shadow-2xl p-6 text-neutral-300 space-y-4 max-h-[calc(100vh-110px)] overflow-y-auto transition-colors duration-200"
       :class="activeDevice === 'mobile' ? 'block' : 'block md:hidden'"
+      :style="{ backgroundColor: mobileMenuBg }"
     >
       <nav class="flex flex-col gap-1">
         <template v-for="item in navItems" :key="item.label">
