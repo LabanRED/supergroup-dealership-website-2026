@@ -4,6 +4,8 @@ import { createDragScrollHandler } from '../../composables/useDragScroll.js'
 import mileageIcon from '../../images/supergroup-dealerships-mileage-icon.svg'
 import fuelIcon from '../../images/supergroup-dealerships-fuel-type-icon.svg'
 import transmissionIcon from '../../images/supergroup-dealerships-transmission-icon.svg'
+import hybridHevIcon from '../../images/hybrid-hev-icon.svg'
+import electricIcon from '../../images/electric-icon.svg'
 
 defineProps({
   vehicle: {
@@ -119,7 +121,21 @@ function scrollVehicleImage(idx) {
       <!-- Title & Trim -->
       <h3 class="text-base font-semibold text-neutral-800 leading-snug">
         <span class="block">{{ vehicle.year }}</span>
-        <span class="block">{{ vehicle.make }} {{ vehicle.model }}</span>
+        <span class="inline-flex items-center gap-1.5">
+          <span>{{ vehicle.make }} {{ vehicle.model }}</span>
+          <img
+            v-if="vehicle.fuelType === 'Hybrid'"
+            :src="hybridHevIcon"
+            alt="Hybrid"
+            class="w-4 h-4 shrink-0"
+          />
+          <img
+            v-else-if="vehicle.fuelType === 'Electric'"
+            :src="electricIcon"
+            alt="Electric"
+            class="w-4 h-4 shrink-0"
+          />
+        </span>
       </h3>
       <p class="text-xs text-neutral-500 uppercase mt-0.5 mb-4" style="color: #737373; font-size: 12px;">
         {{ vehicle.trim }}

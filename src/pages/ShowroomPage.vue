@@ -8,43 +8,11 @@ import searchIcon from '../images/search-icon.svg'
 import mileageIcon from '../images/supergroup-dealerships-mileage-icon.svg'
 import fuelIcon from '../images/supergroup-dealerships-fuel-type-icon.svg'
 import transmissionIcon from '../images/supergroup-dealerships-transmission-icon.svg'
+import hybridHevIcon from '../images/hybrid-hev-icon.svg'
+import electricIcon from '../images/electric-icon.svg'
+import { vehicles } from '../data/vehicles.js'
 import FinanceCalculator from '../components/vehicle/FinanceCalculator.vue'
 import VehicleEnquire from '../components/vehicle/VehicleEnquire.vue'
-import kwid1 from '../images/1Jtan3uuSXWFHvHLQFaTzAaPEokNClQBKO6kRegD.jpg'
-import kwid2 from '../images/BWlN7cQlmWiILtvdLa9ECun7mexMXu9VSdW9Jnzb.jpg'
-import kwid3 from '../images/KwQR3tb5egXz3upjD4eVQqV1pCax2q0ayxms5eYT.jpg'
-import kwid4 from '../images/KyZXfI41n7VYJHCav24m3twJ7AJc9VXA1JSQFUjT.jpg'
-import kwid5 from '../images/RlI7K14gOFlnW4ryx9JI00LUNHLyf8kTwhPj8MJ8.jpg'
-import kwid6 from '../images/rObRGkzMSrnecU8RwI3MD4KupMi0GDJlQUNYyR0m.jpg'
-import kwid7 from '../images/WrbcO9oLj52Q8Pg16sGfZc7FCzVMTZflff9ARBjV.jpg'
-
-const kwidGallery = [kwid4, kwid3, kwid2, kwid5, kwid6, kwid1, kwid7]
-
-const clioModules = import.meta.glob('../images/clio-*.jpg', {
-  eager: true,
-  import: 'default',
-})
-
-const clioGallery = Object.entries(clioModules)
-  .sort(([a], [b]) => {
-    const numA = Number(a.match(/clio-(\d+)\.jpg$/)?.[1] || 0)
-    const numB = Number(b.match(/clio-(\d+)\.jpg$/)?.[1] || 0)
-    return numA - numB
-  })
-  .map(([, src]) => src)
-
-const superCarryModules = import.meta.glob('../images/super-carry-*.jpg', {
-  eager: true,
-  import: 'default',
-})
-
-const superCarryGallery = Object.entries(superCarryModules)
-  .sort(([a], [b]) => {
-    const numA = Number(a.match(/super-carry-(\d+)\.jpg$/)?.[1] || 0)
-    const numB = Number(b.match(/super-carry-(\d+)\.jpg$/)?.[1] || 0)
-    return numA - numB
-  })
-  .map(([, src]) => src)
 
 const { activeDevice } = useDevicePreview()
 const { favorites, toggleFavorite } = useWishlist()
@@ -126,6 +94,8 @@ const selectedDealer = ref('')
 const modelsByMake = {
   Renault: ['Clio', 'Kwid', 'Triber', 'Kiger', 'Duster'],
   Suzuki: ['Super Carry', 'Swift', 'Jimny', 'Baleno', 'Fronx'],
+  GWM: ['Ora 5', 'Haval Jolion', 'Haval H6'],
+  Geely: ['E2', 'Geometry C'],
   Toyota: ['Corolla Cross', 'Hilux', 'Fortuner', 'Starlet', 'RAV4'],
   Volkswagen: ['Polo', 'Polo Vivo', 'Golf', 'T-Cross', 'Tiguan'],
   Ford: ['Ranger', 'Everest', 'Puma', 'Territory'],
@@ -147,7 +117,13 @@ const conditions = ['New', 'Demo', 'Used']
 const transmissions = ['Automatic', 'Manual']
 const fuelTypes = ['Petrol', 'Diesel', 'Hybrid', 'Electric']
 const bodyTypes = ['Hatchback', 'Bakkie / Pickup', 'SUV', 'Sedan']
-const dealers = ['Suzuki Edenvale', 'Suzuki Bedfordview', 'Lionel Motors Renault']
+const dealers = [
+  'Suzuki Edenvale',
+  'Suzuki Bedfordview',
+  'Lionel Motors Renault',
+  'GWM Haval Benoni',
+  'Geely Rustenburg',
+]
 const minPriceOptions = [
   { label: 'R 150,000', value: 150000 },
   { label: 'R 250,000', value: 250000 },
@@ -161,66 +137,6 @@ const maxPriceOptions = [
   { label: 'R 600,000', value: 600000 },
   { label: 'R 850,000', value: 850000 },
   { label: 'R 1,200,000+', value: 1200000 },
-]
-
-const vehicles = [
-  {
-    id: 1,
-    year: 2023,
-    name: '2023 RENAULT CLIO',
-    trim: '1.0T ZEN 5DR (66KW)',
-    make: 'Renault',
-    model: 'Clio',
-    bodyType: 'Hatchback',
-    condition: 'Used',
-    priceValue: 199900,
-    price: 'R199 900',
-    estPayment: 'R3 580 p/m*',
-    mileageValue: 43987,
-    mileage: '43 987 km',
-    transmission: 'Manual',
-    fuelType: 'Petrol',
-    dealer: 'Suzuki Edenvale',
-    images: clioGallery,
-  },
-  {
-    id: 2,
-    year: 2026,
-    name: '2026 SUZUKI SUPER CARRY',
-    trim: '1.2i P/U S/C (54KW)',
-    make: 'Suzuki',
-    model: 'Super Carry',
-    bodyType: 'Bakkie / Pickup',
-    condition: 'New',
-    priceValue: 179900,
-    price: 'R179 900',
-    estPayment: 'R3 220 p/m*',
-    mileageValue: 0,
-    mileage: '0 km',
-    transmission: 'Manual',
-    fuelType: 'Petrol',
-    dealer: 'Suzuki Bedfordview',
-    images: superCarryGallery,
-  },
-  {
-    id: 3,
-    year: 2026,
-    name: '2026 RENAULT KWID',
-    trim: '1.0 DYNAMIQUE 5DR (50KW)',
-    make: 'Renault',
-    model: 'Kwid',
-    bodyType: 'Hatchback',
-    condition: 'Demo',
-    priceValue: 169990,
-    price: 'R169 990',
-    estPayment: 'R3 050 p/m*',
-    mileageValue: 3295,
-    mileage: '3 295 km',
-    transmission: 'Manual',
-    fuelType: 'Petrol',
-    dealer: 'Lionel Motors Renault',
-    images: kwidGallery,
-  },
 ]
 
 const filteredVehicles = computed(() => {
@@ -682,7 +598,21 @@ function scrollVehicleImage(vehicleId, idx) {
           <!-- Title & Trim -->
           <h3 class="text-base font-semibold text-neutral-800 leading-snug">
             <span class="block">{{ vehicle.year }}</span>
-            <span class="block">{{ vehicle.make }} {{ vehicle.model }}</span>
+            <span class="inline-flex items-center gap-1.5">
+              <span>{{ vehicle.make }} {{ vehicle.model }}</span>
+              <img
+                v-if="vehicle.fuelType === 'Hybrid'"
+                :src="hybridHevIcon"
+                alt="Hybrid"
+                class="w-4 h-4 shrink-0"
+              />
+              <img
+                v-else-if="vehicle.fuelType === 'Electric'"
+                :src="electricIcon"
+                alt="Electric"
+                class="w-4 h-4 shrink-0"
+              />
+            </span>
           </h3>
           <p class="text-xs text-neutral-500 uppercase mt-0.5 mb-4" style="color: #737373; font-size: 12px;">
             {{ vehicle.trim }}
