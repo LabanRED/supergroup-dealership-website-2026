@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { useDevicePreview } from '../composables/useDevicePreview.js'
+import { useWishlist } from '../composables/useWishlist.js'
 import { createDragScrollHandler } from '../composables/useDragScroll.js'
 import filterIcon from '../images/filter-icon.svg'
 import searchIcon from '../images/search-icon.svg'
@@ -46,10 +47,10 @@ const superCarryGallery = Object.entries(superCarryModules)
   .map(([, src]) => src)
 
 const { activeDevice } = useDevicePreview()
+const { favorites, toggleFavorite } = useWishlist()
 const handleGalleryMouseDown = createDragScrollHandler({ snapToSlide: true })
 const query = ref('')
 const filtersOpen = ref(false)
-const favorites = ref(new Set())
 const openCalculatorId = ref(null)
 const openEnquireId = ref(null)
 const activeImageByVehicle = ref({})
@@ -282,16 +283,6 @@ function resetFilters() {
   selectedBodyType.value = ''
   selectedDealer.value = ''
   sortBy.value = 'default'
-}
-
-function toggleFavorite(id) {
-  const next = new Set(favorites.value)
-  if (next.has(id)) {
-    next.delete(id)
-  } else {
-    next.add(id)
-  }
-  favorites.value = next
 }
 
 function setGalleryRef(id, el) {

@@ -36,6 +36,7 @@ const currentPage = computed(() => {
 })
 
 const isVehicleDetail = computed(() => currentHash.value.split('?')[0] === '#vehicle-detail')
+const isShowroom = computed(() => currentHash.value.split('?')[0] === '#showroom')
 
 function handleHashChange() {
   const newHash = window.location.hash
@@ -76,7 +77,7 @@ onUnmounted(() => {
       "
       :style="activeDevice === 'mobile' ? { scrollbarWidth: 'none' } : undefined"
     >
-      <Header :sticky="!isVehicleDetail" />
+      <Header :sticky="!isVehicleDetail" :is-showroom="isShowroom" />
       <main class="flex-1">
         <component :is="currentPage" />
       </main>
