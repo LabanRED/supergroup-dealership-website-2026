@@ -120,7 +120,7 @@ function scrollVehicleImage(idx) {
 
       <!-- Title & Trim -->
       <h3 class="text-base font-semibold text-neutral-800 leading-snug">
-        <span class="block">{{ vehicle.year }}</span>
+        <span class="block text-[#0072BC]">{{ vehicle.year }}</span>
         <span class="inline-flex items-center gap-1.5">
           <span>{{ vehicle.make }} {{ vehicle.model }}</span>
           <img
