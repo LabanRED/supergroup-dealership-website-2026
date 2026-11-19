@@ -237,16 +237,16 @@ function scrollToCalculator() {
             Enquire
           </button>
           <a
-            href="#finance-pre-approval?dealerName=Suzuki+Edenvale&make=RENAULT&model=Clio&newused=USED&price=199900&variant=1.0T+ZEN+5DR+(66KW)&year=2023"
-            class="rounded-full border py-2.5 px-2.5 flex items-center justify-center whitespace-nowrap font-medium transition-colors cursor-pointer"
-            :class="[
-              activeDevice === 'mobile' ? 'text-xs' : 'text-xs sm:text-sm',
-              isScrolled
-                ? 'border-white text-white hover:bg-white/10'
-                : 'border-neutral-800 text-neutral-800 hover:bg-neutral-100',
-            ]"
+            href="https://wa.me/27105934429"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="rounded-full py-2.5 px-2.5 flex items-center justify-center gap-1.5 whitespace-nowrap font-medium text-white bg-[#34C759] hover:bg-[#2eb850] shadow-sm transition-colors cursor-pointer"
+            :class="activeDevice === 'mobile' ? 'text-xs' : 'text-xs sm:text-sm'"
           >
-            Pre-Approval
+            <svg class="w-4 h-4 fill-current shrink-0" viewBox="0 0 24 24">
+              <path d="M12.04 2a9.9 9.9 0 0 0-8.52 14.95L2 22l5.2-1.48A9.92 9.92 0 1 0 12.04 2zm0 18.1a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.08.88.88-3-.2-.31A8.2 8.2 0 1 1 12.04 20.1zm4.5-6.14c-.25-.12-1.46-.72-1.69-.8-.22-.08-.39-.12-.55.12-.16.25-.64.8-.78.97-.14.16-.29.18-.54.06a6.75 6.75 0 0 1-3.34-2.92c-.25-.43.25-.4.72-1.33.08-.16.04-.31-.02-.43-.06-.12-.55-1.33-.76-1.82-.2-.48-.4-.41-.55-.42h-.47c-.16 0-.43.06-.65.31-.22.25-.86.84-.86 2.05 0 1.21.88 2.38 1 2.54.12.16 1.73 2.64 4.2 3.7.59.25 1.05.4 1.4.51.59.19 1.13.16 1.55.1.47-.07 1.46-.6 1.67-1.17.2-.57.2-1.06.14-1.17-.06-.1-.22-.16-.47-.29z" />
+            </svg>
+            <span>WhatsApp</span>
           </a>
         </div>
       </div>
