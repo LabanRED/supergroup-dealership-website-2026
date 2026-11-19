@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { useDevicePreview } from '../composables/useDevicePreview.js'
+import { createDragScrollHandler } from '../composables/useDragScroll.js'
 import filterIcon from '../images/filter-icon.svg'
 import searchIcon from '../images/search-icon.svg'
 import mileageIcon from '../images/supergroup-dealerships-mileage-icon.svg'
@@ -45,6 +46,7 @@ const superCarryGallery = Object.entries(superCarryModules)
   .map(([, src]) => src)
 
 const { activeDevice } = useDevicePreview()
+const handleGalleryMouseDown = createDragScrollHandler({ snapToSlide: true })
 const query = ref('')
 const filtersOpen = ref(false)
 const favorites = ref(new Set())
@@ -614,15 +616,18 @@ function scrollVehicleImage(vehicleId, idx) {
         <div class="relative aspect-[16/11] bg-neutral-100 overflow-hidden">
           <div
             :ref="(el) => setGalleryRef(vehicle.id, el)"
-            class="flex w-full h-full overflow-x-auto snap-x snap-mandatory scroll-smooth"
+            class="flex w-full h-full overflow-x-auto snap-x snap-mandatory scroll-smooth cursor-grab active:cursor-grabbing select-none"
             style="scrollbar-width: none;"
             @scroll="onImageScroll(vehicle.id, $event)"
+            @mousedown="handleGalleryMouseDown"
+            @dragstart.prevent
           >
             <img
               v-for="(img, idx) in vehicle.images"
               :key="idx"
               :src="img"
               :alt="`${vehicle.name} photo ${idx + 1}`"
+              draggable="false"
               class="w-full h-full shrink-0 snap-start snap-always object-cover"
             />
           </div>

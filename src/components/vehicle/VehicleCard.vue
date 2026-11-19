@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { createDragScrollHandler } from '../../composables/useDragScroll.js'
 import mileageIcon from '../../images/supergroup-dealerships-mileage-icon.svg'
 import fuelIcon from '../../images/supergroup-dealerships-fuel-type-icon.svg'
 import transmissionIcon from '../../images/supergroup-dealerships-transmission-icon.svg'
@@ -14,6 +15,7 @@ defineProps({
 const isFavorite = ref(false)
 const activeImage = ref(0)
 const galleryRef = ref(null)
+const handleGalleryMouseDown = createDragScrollHandler({ snapToSlide: true })
 
 function onImageScroll(event) {
   const el = event.target
@@ -40,15 +42,18 @@ function scrollVehicleImage(idx) {
     <div class="relative aspect-[16/11] bg-neutral-100 overflow-hidden">
       <div
         ref="galleryRef"
-        class="flex w-full h-full overflow-x-auto snap-x snap-mandatory scroll-smooth"
+        class="flex w-full h-full overflow-x-auto snap-x snap-mandatory scroll-smooth cursor-grab active:cursor-grabbing select-none"
         style="scrollbar-width: none;"
         @scroll="onImageScroll"
+        @mousedown="handleGalleryMouseDown"
+        @dragstart.prevent
       >
         <img
           v-for="(img, idx) in vehicle.images"
           :key="idx"
           :src="img"
           :alt="`${vehicle.name} photo ${idx + 1}`"
+          draggable="false"
           class="w-full h-full shrink-0 snap-start snap-always object-cover"
         />
       </div>
