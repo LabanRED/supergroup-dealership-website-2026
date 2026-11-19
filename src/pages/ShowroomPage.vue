@@ -530,7 +530,10 @@ function scrollVehicleImage(vehicleId, idx) {
     </section>
 
     <!-- Sticky Filters Pill Bar (appears on scroll without shifting layout) -->
-    <div class="sticky top-[102px] z-40 max-w-md mx-auto h-0 overflow-visible">
+    <div
+      class="sticky z-40 max-w-md mx-auto h-0 overflow-visible"
+      :class="activeDevice === 'mobile' ? 'top-[102px]' : 'top-[102px] lg:top-[118px]'"
+    >
       <div
         class="bg-white/95 backdrop-blur-sm py-2 transition-all duration-200"
         :class="
@@ -764,7 +767,7 @@ function scrollVehicleImage(vehicleId, idx) {
         v-if="openCalculatorId === vehicle.id"
         :id="`showroom-calculator-${vehicle.id}`"
         :vehicle="vehicle"
-        class="scroll-mt-[126px]"
+        :class="activeDevice === 'mobile' ? 'scroll-mt-[172px]' : 'scroll-mt-[188px]'"
         @close="openCalculatorId = null"
       />
 
@@ -773,7 +776,7 @@ function scrollVehicleImage(vehicleId, idx) {
         :section-id="`showroom-enquire-${vehicle.id}`"
         :vehicle-name="vehicle.name"
         :closable="true"
-        class="scroll-mt-[126px]"
+        :class="activeDevice === 'mobile' ? 'scroll-mt-[172px]' : 'scroll-mt-[188px]'"
         @close="openEnquireId = null"
       />
       </div>

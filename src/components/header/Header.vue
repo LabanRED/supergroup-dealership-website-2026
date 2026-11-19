@@ -60,7 +60,8 @@ function closeMenus() {
       ></iframe>
     </div>
     <div
-      class="mx-auto h-20 lg:h-24 bg-black border border-white/10 shadow-2xl px-5 md:px-10 flex items-center justify-between gap-4 relative"
+      class="mx-auto h-20 bg-black border border-white/10 shadow-2xl px-5 flex items-center justify-between gap-4 relative"
+      :class="activeDevice === 'mobile' ? '' : 'lg:h-24 md:px-10'"
     >
       <!-- Mobile Menu Button (Left on mobile) -->
       <button
