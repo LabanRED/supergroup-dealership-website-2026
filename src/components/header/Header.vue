@@ -179,10 +179,10 @@ function closeMenus() {
       </div>
     </div>
 
-    <!-- Mobile Navigation Drawer -->
+    <!-- Mobile Navigation Drawer (overlays body without pushing content down) -->
     <div
       v-if="mobileMenuOpen"
-      class="mx-auto max-w-[1600px] mt-2 rounded-3xl bg-black border border-white/10 shadow-2xl p-6 text-neutral-300 space-y-4"
+      class="absolute left-0 right-0 top-full z-50 bg-black border-t border-white/10 shadow-2xl p-6 text-neutral-300 space-y-4 max-h-[calc(100vh-110px)] overflow-y-auto"
       :class="activeDevice === 'mobile' ? 'block' : 'block md:hidden'"
     >
       <nav class="flex flex-col gap-1">
