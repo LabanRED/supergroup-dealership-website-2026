@@ -117,8 +117,9 @@ function scrollVehicleImage(idx) {
       </div>
 
       <!-- Title & Trim -->
-      <h3 class="text-base font-semibold text-neutral-800 uppercase leading-snug">
-        {{ vehicle.name }}
+      <h3 class="text-base font-semibold text-neutral-800 leading-snug">
+        <span class="block">{{ vehicle.year }}</span>
+        <span class="block">{{ vehicle.make }} {{ vehicle.model }}</span>
       </h3>
       <p class="text-xs text-neutral-500 uppercase mt-0.5 mb-4" style="color: #737373; font-size: 12px;">
         {{ vehicle.trim }}
