@@ -3,6 +3,40 @@ import { ref } from 'vue'
 
 const sections = [
   {
+    id: 'general',
+    title: 'General',
+    specs: [
+      { label: 'Body Type', value: 'Hatchback' },
+      { label: 'Doors', value: '5' },
+      { label: 'Seats', value: '5' },
+      { label: 'Boot Capacity', value: '391 L' },
+      { label: 'Fuel Tank Capacity', value: '42 L' },
+    ],
+  },
+  {
+    id: 'engine',
+    title: 'Engine',
+    specs: [
+      { label: 'Engine Size', value: '999 cc (1.0T)' },
+      { label: 'Cylinders', value: '3-Cylinder Turbo' },
+      { label: 'Fuel Type', value: 'Petrol' },
+      { label: 'Max Power', value: '66 kW @ 5,000 rpm' },
+      { label: 'Max Torque', value: '160 Nm' },
+      { label: 'Fuel Consumption', value: '5.7 L/100 km' },
+    ],
+  },
+  {
+    id: 'handling',
+    title: 'Handling',
+    specs: [
+      { label: 'Drive Type', value: 'Front-Wheel Drive' },
+      { label: 'Transmission', value: '5-Speed Manual' },
+      { label: 'Power Steering', value: 'Electric' },
+      { label: '0–100 km/h', value: '12.2 s' },
+      { label: 'Top Speed', value: '180 km/h' },
+    ],
+  },
+  {
     id: 'comfort',
     title: 'Comfort',
     specs: [
@@ -13,49 +47,22 @@ const sections = [
     ],
   },
   {
-    id: 'measurements',
-    title: 'Measurements',
+    id: 'technology',
+    title: 'Technology',
     specs: [
-      { label: 'Doors', value: '5' },
-      { label: 'Seats', value: '5' },
-      { label: 'Fuel Tank Capacity', value: '42 L' },
-      { label: 'Boot Capacity', value: '391 L' },
+      { label: 'Infotainment', value: 'Touchscreen Display' },
+      { label: 'Connectivity', value: 'Bluetooth / USB' },
+      { label: 'Smartphone Integration', value: 'Apple CarPlay & Android Auto' },
     ],
   },
   {
-    id: 'performance',
-    title: 'Performance',
+    id: 'safety',
+    title: 'Safety',
     specs: [
-      { label: '0–100 km/h', value: '12.2 s' },
-      { label: 'Top Speed', value: '180 km/h' },
-      { label: 'Fuel Consumption', value: '5.7 L/100 km' },
-    ],
-  },
-  {
-    id: 'drivetrain',
-    title: 'Drivetrain',
-    specs: [
-      { label: 'Drive Type', value: 'Front-Wheel Drive' },
-      { label: 'Gearbox', value: '5-Speed Manual' },
-    ],
-  },
-  {
-    id: 'power',
-    title: 'Power',
-    specs: [
-      { label: 'Engine Size', value: '999 cc (1.0T)' },
-      { label: 'Cylinders', value: '3-Cylinder Turbo' },
-      { label: 'Max Power', value: '66 kW @ 5,000 rpm' },
-      { label: 'Max Torque', value: '160 Nm' },
-    ],
-  },
-  {
-    id: 'styling',
-    title: 'Styling',
-    specs: [
-      { label: 'Headlights', value: 'LED' },
-      { label: 'Daytime Running Lights', value: 'LED' },
-      { label: 'Side Mirrors', value: 'Body-Coloured' },
+      { label: 'Airbags', value: '6 Airbags' },
+      { label: 'ABS Braking', value: 'Standard with EBD' },
+      { label: 'Stability Control', value: 'ESC' },
+      { label: 'ISOFIX Child Seat Anchors', value: 'Standard' },
     ],
   },
 ]
@@ -107,6 +114,19 @@ function toggle(id) {
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Specs Note -->
+    <div class="pt-3 space-y-3 text-xs leading-relaxed text-neutral-600">
+      <div>
+        <div class="font-semibold text-[#004A87] mb-1">Please note:</div>
+        <p>
+          The data displayed above are manufacturer specs for New vehicles and do not reflect the current condition of a used vehicle which may differ from the one being offered for sale. We recommend that you always check the details with the seller prior to purchase.
+        </p>
+      </div>
+      <p>
+        ** Real world fuel consumption averages may vary according to factors such as driving styles, environmental conditions, load, wheel and tyre fitment, accessories and options fitted.
+      </p>
     </div>
   </section>
 </template>
