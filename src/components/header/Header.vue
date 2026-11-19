@@ -16,12 +16,18 @@ defineProps({
 })
 
 const mobileMenuOpen = ref(false)
-const mobileMenuBg = ref('#000000')
+const navBg = ref('#000000')
 
 const menuColorMap = {
   1: '#000000',
   2: '#000219',
   3: '#3C3C3C',
+  Digit1: '#000000',
+  Digit2: '#000219',
+  Digit3: '#3C3C3C',
+  Numpad1: '#000000',
+  Numpad2: '#000219',
+  Numpad3: '#3C3C3C',
 }
 
 function handleMenuColorKeydown(event) {
@@ -29,8 +35,9 @@ function handleMenuColorKeydown(event) {
   if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || event.target?.isContentEditable) {
     return
   }
-  if (menuColorMap[event.key]) {
-    mobileMenuBg.value = menuColorMap[event.key]
+  const color = menuColorMap[event.key] || menuColorMap[event.code]
+  if (color) {
+    navBg.value = color
   }
 }
 
@@ -85,13 +92,14 @@ function closeMenus() {
       ></iframe>
     </div>
     <div
-      class="mx-auto h-20 bg-white border-b border-neutral-200 shadow-sm px-5 flex items-center justify-between gap-4 relative"
+      class="mx-auto h-20 border border-white/10 shadow-2xl px-5 flex items-center justify-between gap-4 relative transition-colors duration-200"
       :class="activeDevice === 'mobile' ? '' : 'lg:h-24 md:px-10'"
+      :style="{ backgroundColor: navBg }"
     >
       <!-- Mobile Menu Button (Left on mobile) -->
       <button
         type="button"
-        class="p-2 rounded-full text-neutral-800 hover:text-black hover:bg-neutral-100 transition-colors cursor-pointer shrink-0"
+        class="p-2 rounded-full text-neutral-300 hover:text-white hover:bg-white/10 transition-colors cursor-pointer shrink-0"
         :class="activeDevice === 'mobile' ? 'inline-flex' : 'inline-flex md:hidden'"
         aria-label="Toggle menu"
         @click="mobileMenuOpen = !mobileMenuOpen"
@@ -100,7 +108,7 @@ function closeMenus() {
           v-if="!mobileMenuOpen"
           :src="burgerMenuIcon"
           alt=""
-          class="w-[27px] h-[20px] invert"
+          class="w-[27px] h-[20px]"
         />
         <svg
           v-else
@@ -129,13 +137,13 @@ function closeMenus() {
         <img
           :src="mobileLogo"
           alt="Supergroup Dealerships"
-          class="h-16 w-auto invert hue-rotate-180"
+          class="h-16 w-auto"
           :class="activeDevice === 'mobile' ? 'block' : 'block md:hidden'"
         />
         <img
           :src="desktopLogo"
           alt="Supergroup Dealerships"
-          class="h-9 lg:h-11 w-auto invert hue-rotate-180"
+          class="h-9 lg:h-11 w-auto"
           :class="activeDevice === 'mobile' ? 'hidden' : 'hidden md:block'"
         />
       </a>
@@ -143,17 +151,17 @@ function closeMenus() {
       <!-- Mobile Showroom Icon (Right on mobile) -->
       <a
         href="#showroom"
-        class="p-2 rounded-full hover:bg-neutral-100 transition-colors shrink-0"
+        class="p-2 rounded-full hover:bg-white/10 transition-colors shrink-0"
         :class="activeDevice === 'mobile' ? 'inline-flex' : 'inline-flex md:hidden'"
         aria-label="Showrooms"
         @click="closeMenus"
       >
-        <img :src="showroomMobileIcon" alt="Showrooms" class="w-[27px] h-[24px] invert" />
+        <img :src="showroomMobileIcon" alt="Showrooms" class="w-[27px] h-[24px]" />
       </a>
 
       <!-- Desktop Navigation -->
       <nav
-        class="items-center gap-5 xl:gap-6 text-xs font-medium tracking-wide uppercase text-neutral-700 overflow-x-auto"
+        class="items-center gap-5 xl:gap-6 text-xs font-medium tracking-wide uppercase text-neutral-300 overflow-x-auto"
         :class="activeDevice === 'mobile' ? 'hidden' : 'hidden md:flex'"
         style="scrollbar-width: none;"
       >
@@ -161,14 +169,14 @@ function closeMenus() {
           <a
             v-if="item.href"
             :href="item.href"
-            class="text-neutral-900 hover:text-[#0072BC] transition-colors whitespace-nowrap"
+            class="text-neutral-200 hover:text-white transition-colors whitespace-nowrap"
             @click="closeMenus"
           >
             {{ item.label }}
           </a>
           <span
             v-else
-            class="text-neutral-600 cursor-default select-none whitespace-nowrap"
+            class="text-neutral-300 cursor-default select-none whitespace-nowrap"
           >
             {{ item.label }}
           </span>
@@ -183,7 +191,7 @@ function closeMenus() {
       >
         <!-- Local-only Device Preview Switcher -->
         <div
-          class="hidden lg:flex items-center gap-1 bg-neutral-100 rounded-full p-1"
+          class="hidden lg:flex items-center gap-1 bg-white/10 rounded-full p-1"
           title="Local device preview"
         >
           <button
@@ -194,7 +202,7 @@ function closeMenus() {
             :class="
               activeDevice === mode.id
                 ? 'bg-[#00A5C5] text-white'
-                : 'text-neutral-600 hover:text-neutral-900'
+                : 'text-neutral-300 hover:text-white'
             "
             @click="setDevice(mode.id)"
           >
@@ -209,7 +217,7 @@ function closeMenus() {
       v-if="mobileMenuOpen"
       class="absolute left-0 right-0 top-full z-50 border-t border-white/10 shadow-2xl p-6 text-neutral-300 space-y-4 max-h-[calc(100vh-110px)] overflow-y-auto transition-colors duration-200"
       :class="activeDevice === 'mobile' ? 'block' : 'block md:hidden'"
-      :style="{ backgroundColor: mobileMenuBg }"
+      :style="{ backgroundColor: navBg }"
     >
       <nav class="flex flex-col gap-1">
         <template v-for="item in navItems" :key="item.label">
