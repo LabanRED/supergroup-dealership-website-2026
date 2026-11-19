@@ -21,7 +21,7 @@ const { activeDevice } = useDevicePreview()
       :class="
         activeDevice === 'mobile'
           ? 'px-6 pt-8 pb-[126px] rounded-none'
-          : 'px-6 pt-8 pb-[126px] md:min-h-[540px] md:px-14 md:pt-20 md:pb-32 md:rounded-[32px]'
+          : 'px-6 pt-8 pb-[126px] md:min-h-[540px] md:px-14 md:pt-14 md:pb-36 md:rounded-[32px]'
       "
     >
       <!-- Mobile Background Video -->
@@ -56,15 +56,15 @@ const { activeDevice } = useDevicePreview()
         class="pointer-events-none absolute inset-x-0 bottom-0 h-28 md:h-36 bg-gradient-to-t from-white via-white/40 to-transparent"
       ></div>
 
-      <!-- Background Supergroup Symbol (fades in and out behind hero text at 10% opacity) -->
+      <!-- Background Supergroup Symbol (fades in and out behind hero text at 40% opacity) -->
       <div
         aria-hidden="true"
-        class="pointer-events-none absolute inset-x-0 top-4 md:top-12 z-[5] flex items-center justify-center hero-symbol-intro"
+        class="pointer-events-none absolute inset-x-0 top-4 md:top-8 z-[5] flex items-center justify-center hero-symbol-intro"
       >
         <img
           :src="supergroupSymbol"
           alt=""
-          class="h-32 md:h-44 w-auto object-contain"
+          class="h-32 md:h-36 w-auto object-contain"
         />
       </div>
 
