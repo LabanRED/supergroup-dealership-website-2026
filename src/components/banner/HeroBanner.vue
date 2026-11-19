@@ -135,8 +135,8 @@ const { activeDevice } = useDevicePreview()
             ></span>
             <!-- Bright sunflare core -->
             <span
-              class="relative w-2.5 h-2.5 rounded-full bg-white"
-              style="box-shadow: 0 0 12px 4px rgba(255, 255, 255, 0.95), 0 0 24px 8px rgba(125, 211, 252, 0.7);"
+              class="relative w-2 h-2 rounded-full bg-white/80"
+              style="box-shadow: 0 0 10px 3px rgba(255, 255, 255, 0.65), 0 0 20px 6px rgba(125, 211, 252, 0.45);"
             ></span>
             </div>
           </div>
@@ -231,7 +231,7 @@ const { activeDevice } = useDevicePreview()
     transform: scale(0.5);
   }
   to {
-    opacity: 1;
+    opacity: 0.7;
     transform: scale(1);
   }
 }
@@ -239,12 +239,12 @@ const { activeDevice } = useDevicePreview()
 @keyframes sunflarePulse {
   0%,
   100% {
-    opacity: 0.88;
-    transform: scale(1) rotate(0deg);
+    opacity: 0.4;
+    transform: scale(0.95) rotate(0deg);
   }
   50% {
-    opacity: 1;
-    transform: scale(1.12) rotate(6deg);
+    opacity: 0.7;
+    transform: scale(1.06) rotate(6deg);
   }
 }
 </style>
