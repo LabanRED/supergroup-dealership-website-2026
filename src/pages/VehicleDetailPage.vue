@@ -212,34 +212,37 @@ function scrollToCalculator() {
         </div>
 
         <!-- Action Buttons -->
-        <div class="grid grid-cols-3 gap-2.5">
+        <div class="grid grid-cols-3 gap-2">
           <button
             type="button"
-            class="rounded-full border py-2.5 px-3 text-center text-xs sm:text-sm font-medium transition-colors cursor-pointer"
-            :class="
+            class="rounded-full border py-2.5 px-2.5 flex items-center justify-center whitespace-nowrap font-medium transition-colors cursor-pointer"
+            :class="[
+              activeDevice === 'mobile' ? 'text-xs' : 'text-xs sm:text-sm',
               isScrolled
                 ? 'border-white text-white hover:bg-white/10'
-                : 'border-neutral-800 text-neutral-800 hover:bg-neutral-100'
-            "
+                : 'border-neutral-800 text-neutral-800 hover:bg-neutral-100',
+            ]"
             @click="scrollToCalculator"
           >
             Finance
           </button>
           <button
             type="button"
-            class="rounded-full py-2.5 px-3 text-center text-xs sm:text-sm font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-sm hover:opacity-95 transition-opacity cursor-pointer"
+            class="rounded-full py-2.5 px-2.5 flex items-center justify-center whitespace-nowrap font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-sm hover:opacity-95 transition-opacity cursor-pointer"
+            :class="activeDevice === 'mobile' ? 'text-xs' : 'text-xs sm:text-sm'"
             @click="scrollToEnquire"
           >
             Enquire
           </button>
           <a
             href="#finance-pre-approval?dealerName=Suzuki+Edenvale&make=RENAULT&model=Clio&newused=USED&price=199900&variant=1.0T+ZEN+5DR+(66KW)&year=2023"
-            class="rounded-full border py-2.5 px-3 text-center text-xs sm:text-sm font-medium transition-colors cursor-pointer"
-            :class="
+            class="rounded-full border py-2.5 px-2.5 flex items-center justify-center whitespace-nowrap font-medium transition-colors cursor-pointer"
+            :class="[
+              activeDevice === 'mobile' ? 'text-xs' : 'text-xs sm:text-sm',
               isScrolled
                 ? 'border-white text-white hover:bg-white/10'
-                : 'border-neutral-800 text-neutral-800 hover:bg-neutral-100'
-            "
+                : 'border-neutral-800 text-neutral-800 hover:bg-neutral-100',
+            ]"
           >
             Pre-Approval
           </a>
