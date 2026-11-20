@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage.vue'
 import ShowroomPage from './pages/ShowroomPage.vue'
 import VehicleDetailPage from './pages/VehicleDetailPage.vue'
 import FinancePage from './pages/FinancePage.vue'
+import WishlistPage from './pages/WishlistPage.vue'
 import UnifiedInboxPage from './pages/UnifiedInboxPage.vue'
 import PostingPage from './pages/PostingPage.vue'
 import FramesPage from './pages/FramesPage.vue'
@@ -18,6 +19,7 @@ const { activeDevice } = useDevicePreview()
 const pageMap = {
   '#showroom': ShowroomPage,
   '#vehicle-detail': VehicleDetailPage,
+  '#wishlist': WishlistPage,
   '#finance': FinancePage,
   '#finance-pre-approval': FinancePage,
   '#unified-inbox': UnifiedInboxPage,

@@ -180,12 +180,13 @@ function closeMenus() {
       </a>
 
       <!-- Mobile Showroom / Wishlist Icon (Right on mobile) -->
-      <button
+      <a
         v-if="isShowroom"
-        type="button"
+        href="#wishlist"
         aria-label="Wishlist"
         class="relative p-2 rounded-full text-white hover:bg-white/10 transition-colors shrink-0 cursor-pointer"
         :class="activeDevice === 'mobile' ? 'inline-flex' : 'inline-flex md:hidden'"
+        @click="closeMenus"
       >
         <svg
           class="w-6 h-6"
@@ -204,7 +205,7 @@ function closeMenus() {
         >
           {{ wishlistCount }}
         </span>
-      </button>
+      </a>
 
       <a
         v-else

@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { createDragScrollHandler } from '../../composables/useDragScroll.js'
+import { useWishlist } from '../../composables/useWishlist.js'
 import mileageIcon from '../../images/supergroup-dealerships-mileage-icon.svg'
 import fuelIcon from '../../images/supergroup-dealerships-fuel-type-icon.svg'
 import transmissionIcon from '../../images/supergroup-dealerships-transmission-icon.svg'
@@ -14,7 +15,7 @@ defineProps({
   },
 })
 
-const isFavorite = ref(false)
+const { isFavorite, toggleFavorite } = useWishlist()
 const activeImage = ref(0)
 const galleryRef = ref(null)
 const handleGalleryMouseDown = createDragScrollHandler({ snapToSlide: true })
@@ -76,11 +77,11 @@ function scrollVehicleImage(idx) {
         type="button"
         aria-label="Save vehicle"
         class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white shadow flex items-center justify-center cursor-pointer transition-transform active:scale-95"
-        @click="isFavorite = !isFavorite"
+        @click="toggleFavorite(vehicle.id)"
       >
         <svg
           class="w-4 h-4"
-          :class="isFavorite ? 'fill-red-500 stroke-red-500' : 'fill-none stroke-red-500'"
+          :class="isFavorite(vehicle.id) ? 'fill-red-500 stroke-red-500' : 'fill-none stroke-red-500'"
           stroke-width="2"
           viewBox="0 0 24 24"
         >
