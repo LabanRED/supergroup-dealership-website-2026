@@ -79,7 +79,7 @@ onUnmounted(() => {
       "
       :style="activeDevice === 'mobile' ? { scrollbarWidth: 'none' } : undefined"
     >
-      <Header :sticky="!isVehicleDetail" :is-showroom="isShowroom" />
+      <Header :sticky="!isVehicleDetail" :is-showroom="isShowroom" :is-vehicle-detail="isVehicleDetail" />
       <main class="flex-1">
         <component :is="currentPage" />
       </main>
