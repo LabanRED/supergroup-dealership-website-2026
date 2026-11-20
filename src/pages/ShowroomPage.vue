@@ -66,6 +66,8 @@ const showStickyFilters = ref(false)
 let observer = null
 
 onMounted(() => {
+  applyFiltersFromHash()
+  window.addEventListener('hashchange', applyFiltersFromHash)
   if (!topSearchRef.value || typeof IntersectionObserver === 'undefined') return
   observer = new IntersectionObserver(
     ([entry]) => {
@@ -80,6 +82,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+  window.removeEventListener('hashchange', applyFiltersFromHash)
   observer?.disconnect()
 })
 
@@ -94,6 +97,7 @@ const selectedMinYear = ref('')
 const selectedMaxYear = ref('')
 const selectedMinPrice = ref('')
 const selectedMaxPrice = ref('')
+const selectedMaxMileage = ref('')
 const selectedCondition = ref('')
 const selectedTransmission = ref('')
 const selectedFuel = ref('')
@@ -101,6 +105,7 @@ const selectedBodyType = ref('')
 const selectedDealer = ref('')
 
 const modelsByMake = {
+  'Alfa Romeo': ['Junior'],
   Renault: ['Clio', 'Kwid', 'Triber', 'Kiger', 'Duster'],
   Suzuki: ['Super Carry', 'Swift', 'Jimny', 'Baleno', 'Fronx'],
   GWM: ['Ora 5', 'Haval Jolion', 'Haval H6'],
@@ -118,15 +123,34 @@ const makes = Object.keys(modelsByMake)
 const availableModels = computed(() => (selectedMake.value ? modelsByMake[selectedMake.value] || [] : []))
 
 watch(selectedMake, () => {
-  selectedModel.value = ''
+  if (!availableModels.value.includes(selectedModel.value)) {
+    selectedModel.value = ''
+  }
 })
+
+function applyFiltersFromHash() {
+  if (typeof window === 'undefined') return
+  const [, queryString = ''] = window.location.hash.split('?')
+  if (!queryString) return
+  const params = new URLSearchParams(queryString)
+  if (params.has('query')) query.value = params.get('query') || ''
+  if (params.has('make')) selectedMake.value = params.get('make') || ''
+  if (params.has('model')) selectedModel.value = params.get('model') || ''
+  if (params.has('condition')) selectedCondition.value = params.get('condition') || ''
+  if (params.has('transmission')) selectedTransmission.value = params.get('transmission') || ''
+  if (params.has('fuelType')) selectedFuel.value = params.get('fuelType') || ''
+  if (params.has('maxMileage')) selectedMaxMileage.value = params.get('maxMileage') || ''
+  if (params.has('minPrice')) selectedMinPrice.value = params.get('minPrice') || ''
+  if (params.has('maxPrice')) selectedMaxPrice.value = params.get('maxPrice') || ''
+}
 
 const years = [2026, 2025, 2024, 2023, 2022, 2021, 2020]
 const conditions = ['New', 'Demo', 'Used']
 const transmissions = ['Automatic', 'Manual']
 const fuelTypes = ['Petrol', 'Diesel', 'Hybrid', 'Electric']
-const bodyTypes = ['Hatchback', 'Bakkie / Pickup', 'SUV', 'Sedan']
+const bodyTypes = ['Hatchback', 'Bakkie / Pickup', 'SUV', 'Cross-Over', 'Sedan']
 const dealers = [
+  'Arnold Chatz Cars',
   'Suzuki Edenvale',
   'Suzuki Bedfordview',
   'Lionel Motors Renault',
@@ -157,6 +181,7 @@ const filteredVehicles = computed(() => {
     if (selectedMaxYear.value && v.year > Number(selectedMaxYear.value)) return false
     if (selectedMinPrice.value && v.priceValue < Number(selectedMinPrice.value)) return false
     if (selectedMaxPrice.value && v.priceValue > Number(selectedMaxPrice.value)) return false
+    if (selectedMaxMileage.value && v.mileageValue > Number(selectedMaxMileage.value)) return false
     if (selectedCondition.value && v.condition !== selectedCondition.value) return false
     if (selectedTransmission.value && v.transmission !== selectedTransmission.value) return false
     if (selectedFuel.value && v.fuelType !== selectedFuel.value) return false
@@ -186,6 +211,7 @@ const activeFilterCount = computed(() => {
     selectedMaxYear.value,
     selectedMinPrice.value,
     selectedMaxPrice.value,
+    selectedMaxMileage.value,
     selectedCondition.value,
     selectedTransmission.value,
     selectedFuel.value,
@@ -210,12 +236,16 @@ function resetFilters() {
   selectedMaxYear.value = ''
   selectedMinPrice.value = ''
   selectedMaxPrice.value = ''
+  selectedMaxMileage.value = ''
   selectedCondition.value = ''
   selectedTransmission.value = ''
   selectedFuel.value = ''
   selectedBodyType.value = ''
   selectedDealer.value = ''
   sortBy.value = 'default'
+  if (typeof window !== 'undefined' && window.location.hash.startsWith('#showroom?')) {
+    window.history.replaceState(null, '', '#showroom')
+  }
 }
 
 function clearAllAndReset() {

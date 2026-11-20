@@ -21,6 +21,11 @@ const selectedMinPrice = ref('')
 const selectedMaxPrice = ref('')
 
 const modelsByMake = {
+  'Alfa Romeo': ['Junior'],
+  Renault: ['Clio', 'Kwid', 'Triber', 'Kiger', 'Duster'],
+  Suzuki: ['Super Carry', 'Swift', 'Jimny', 'Baleno', 'Fronx'],
+  GWM: ['Ora 5', 'Haval Jolion', 'Haval H6'],
+  Geely: ['E2', 'Geometry C'],
   Toyota: ['Corolla Cross', 'Hilux', 'Fortuner', 'Starlet', 'RAV4'],
   Volkswagen: ['Polo', 'Polo Vivo', 'Golf', 'T-Cross', 'Tiguan'],
   Ford: ['Ranger', 'Everest', 'Puma', 'Territory'],
@@ -75,6 +80,10 @@ const activeFilterCount = computed(() => {
   ].filter(Boolean).length
 })
 
+const hasSearchCriteria = computed(
+  () => activeFilterCount.value > 0 || Boolean(query.value.trim()),
+)
+
 function resetFilters() {
   selectedMake.value = ''
   selectedModel.value = ''
@@ -87,7 +96,7 @@ function resetFilters() {
 }
 
 function submitSearch() {
-  emit('search', {
+  const payload = {
     query: query.value.trim(),
     make: selectedMake.value,
     model: selectedModel.value,
@@ -97,8 +106,17 @@ function submitSearch() {
     maxMileage: selectedMaxMileage.value,
     minPrice: selectedMinPrice.value,
     maxPrice: selectedMaxPrice.value,
-  })
-  window.location.hash = '#showroom'
+  }
+  emit('search', payload)
+
+  const params = new URLSearchParams()
+  for (const [key, value] of Object.entries(payload)) {
+    if (value !== '' && value !== null && value !== undefined) {
+      params.set(key, String(value))
+    }
+  }
+  const search = params.toString()
+  window.location.hash = search ? `#showroom?${search}` : '#showroom'
 }
 </script>
 
@@ -248,7 +266,7 @@ function submitSearch() {
           type="submit"
           class="w-full rounded-full py-3.5 px-6 text-sm font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-md hover:opacity-95 transition-opacity cursor-pointer"
         >
-          Find Your Next Car
+          {{ hasSearchCriteria ? 'Search' : 'Find Your Next Car' }}
         </button>
       </form>
     </div>
