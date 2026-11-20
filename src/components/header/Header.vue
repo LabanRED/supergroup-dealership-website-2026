@@ -189,7 +189,6 @@ function closeMenus() {
         :class="activeDevice === 'mobile' ? 'inline-flex' : 'inline-flex md:hidden'"
       >
         <a
-          v-if="isShowroom || isVehicleDetail"
           href="#wishlist"
           aria-label="Wishlist"
           class="relative p-2 rounded-full text-white hover:bg-white/10 transition-colors shrink-0 cursor-pointer inline-flex"
@@ -249,14 +248,39 @@ function closeMenus() {
         </template>
       </nav>
 
-      <!-- Right Controls: Local Device Switcher -->
+      <!-- Right Controls: Desktop Wishlist + Local Device Switcher -->
       <div
-        v-if="isLocal"
         class="items-center gap-3 shrink-0"
         :class="activeDevice === 'mobile' ? 'hidden' : 'hidden md:flex'"
       >
+        <a
+          href="#wishlist"
+          aria-label="Wishlist"
+          class="relative p-2 rounded-full text-white hover:bg-white/10 transition-colors shrink-0 cursor-pointer inline-flex"
+          @click="closeMenus"
+        >
+          <svg
+            class="w-6 h-6"
+            :class="wishlistCount > 0 ? 'fill-[#D92D20] stroke-[#D92D20]' : 'fill-none stroke-white'"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 21s-6.7-4.35-9.2-8.1C.8 9.9 2.3 5.5 6.4 4.8c2.2-.38 4.2.58 5.6 2.15 1.4-1.57 3.4-2.53 5.6-2.15 4.1.7 5.6 5.1 3.6 8.1C18.7 16.65 12 21 12 21z"
+            />
+          </svg>
+          <span
+            class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#D92D20] text-white text-[10px] font-semibold flex items-center justify-center leading-none"
+          >
+            {{ wishlistCount }}
+          </span>
+        </a>
+
         <!-- Local-only Device Preview Switcher -->
         <div
+          v-if="isLocal"
           class="hidden lg:flex items-center gap-1 bg-white/10 rounded-full p-1"
           title="Local device preview"
         >
