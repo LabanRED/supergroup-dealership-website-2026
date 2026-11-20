@@ -23,6 +23,29 @@ defineProps({
 
 const mobileMenuOpen = ref(false)
 const navBg = ref('#000000')
+const navColors = ['#000000', '#000219', '#3C3C3C']
+let touchStartX = 0
+let touchStartY = 0
+
+function onNavTouchStart(event) {
+  const touch = event.touches?.[0]
+  if (!touch) return
+  touchStartX = touch.clientX
+  touchStartY = touch.clientY
+}
+
+function onNavTouchEnd(event) {
+  const touch = event.changedTouches?.[0]
+  if (!touch) return
+  const dx = touch.clientX - touchStartX
+  const dy = touch.clientY - touchStartY
+  if (Math.abs(dx) <= 40 || Math.abs(dx) <= Math.abs(dy)) return
+
+  const currentIdx = navColors.indexOf(navBg.value)
+  const idx = currentIdx === -1 ? 0 : currentIdx
+  const nextIdx = dx < 0 ? (idx + 1) % navColors.length : (idx - 1 + navColors.length) % navColors.length
+  navBg.value = navColors[nextIdx]
+}
 
 const menuColorMap = {
   1: '#000000',
@@ -101,6 +124,8 @@ function closeMenus() {
       class="mx-auto h-20 border border-white/10 shadow-2xl px-5 flex items-center justify-between gap-4 relative transition-colors duration-200"
       :class="activeDevice === 'mobile' ? '' : 'lg:h-24 md:px-10'"
       :style="{ backgroundColor: navBg }"
+      @touchstart.passive="onNavTouchStart"
+      @touchend.passive="onNavTouchEnd"
     >
       <!-- Mobile Menu Button (Left on mobile) -->
       <button
