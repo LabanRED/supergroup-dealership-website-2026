@@ -21,8 +21,29 @@ import geely4 from '../images/57e7154890f22a496b2370c249381786.jpg'
 import geely5 from '../images/c15e6ce971f4ef62641b90504a53060c.jpg'
 import geely6 from '../images/ddfe3e254c1910c6d880345bfe462b4b.jpg'
 
+import junior1 from '../images/e3e204995ab3958c052cdea1cf7bc114.jpg'
+import junior2 from '../images/949034df93ad97679f462b5f47f324a6.jpg'
+import junior3 from '../images/ac1b65c0a3b00f70be8700b35cb23be8.jpg'
+import junior4 from '../images/4694c3e79a6da48d989c0b1481e59b7b.jpg'
+import junior5 from '../images/cefa7ed042d76e987560bdfe40beed5b.jpg'
+import junior6 from '../images/4ebf8fe2306d7db626c48918319892a2.jpg'
+import junior7 from '../images/9c19bb9cd8b270a47c01a32ddbea4b92.jpg'
+import junior8 from '../images/d66e8a9e80b47ab905c43baf8e94d5f1.jpg'
+import junior9 from '../images/b021e2fed2657f41867080d2cd53148f.jpg'
+
 const oraGallery = [ora1, ora2, ora3, ora4, ora5, ora6, ora7]
 const geelyGallery = [geely1, geely2, geely3, geely4, geely5, geely6]
+const juniorGallery = [
+  junior1,
+  junior2,
+  junior3,
+  junior4,
+  junior5,
+  junior6,
+  junior7,
+  junior8,
+  junior9,
+]
 
 const kwidGallery = [kwid4, kwid3, kwid2, kwid5, kwid6, kwid1, kwid7]
 
@@ -177,5 +198,30 @@ export const vehicles = [
     description:
       'The price you see is the price you pay - no hidden admin fees or on-road costs. Brand new 2026 Geely E2 Aspire all-electric hatchback offering up to 325 km WLTP range, rapid DC charging, and smart urban versatility.',
     images: geelyGallery,
+  },
+  {
+    id: 6,
+    year: 2026,
+    name: '2026 ALFA ROMEO JUNIOR',
+    trim: 'ELETTRICA',
+    make: 'Alfa Romeo',
+    model: 'Junior',
+    bodyType: 'Cross-Over',
+    condition: 'New',
+    priceValue: 699900,
+    price: 'R699 900',
+    estPayment: 'R12 550 p/m*',
+    mileageValue: 10,
+    mileage: '10 km',
+    transmission: 'Automatic',
+    fuelType: 'Electric',
+    exteriorColour: 'Metallic Grey',
+    engineSize: '54 kWh EV',
+    dealer: 'Arnold Chatz Cars',
+    address: '15 J.G. Strydom Rd, Constantia Kloof, Roodepoort 1709',
+    phone: '010 823 8154',
+    description:
+      'The price you see is the price you pay - no hidden admin fees or on-road costs. Brand New 2026 Alfa Romeo Junior Elettrica for sale! Featuring a 54 kWh all-electric powertrain delivering agile crossover performance, up to 407 km WLTP range, and Italian design flair.',
+    images: juniorGallery,
   },
 ]
