@@ -69,7 +69,13 @@ export const vehicles = [
     mileage: '43 987 km',
     transmission: 'Manual',
     fuelType: 'Petrol',
+    exteriorColour: 'White',
+    engineSize: '999 Cc',
     dealer: 'Suzuki Edenvale',
+    address: 'Cnr K90 and Bentel Road 145',
+    phone: '010 593 4429',
+    description:
+      'The price you see is the price you pay - no hidden admin fees or on-road costs. This well-maintained 2023 Renault Clio 1.0T Zen in white blends a full service history with efficient turbocharged performance.',
     images: clioGallery,
   },
   {
@@ -88,7 +94,13 @@ export const vehicles = [
     mileage: '0 km',
     transmission: 'Manual',
     fuelType: 'Petrol',
+    exteriorColour: 'White',
+    engineSize: '1197 Cc',
     dealer: 'Suzuki Bedfordview',
+    address: 'Van Buuren Road, Bedfordview',
+    phone: '010 593 4429',
+    description:
+      'The price you see is the price you pay - no hidden admin fees or on-road costs. Brand new 2026 Suzuki Super Carry 1.2i Pick-Up Single Cab built for dependable everyday commercial utility.',
     images: superCarryGallery,
   },
   {
@@ -107,7 +119,13 @@ export const vehicles = [
     mileage: '3 295 km',
     transmission: 'Manual',
     fuelType: 'Petrol',
+    exteriorColour: 'White',
+    engineSize: '999 Cc',
     dealer: 'Lionel Motors Renault',
+    address: 'Main Reef Road, Krugersdorp',
+    phone: '010 593 4429',
+    description:
+      'The price you see is the price you pay - no hidden admin fees or on-road costs. Low-mileage 2026 Renault Kwid 1.0 Dynamique Demo with agile city handling and impressive fuel efficiency.',
     images: kwidGallery,
   },
   {
@@ -126,7 +144,13 @@ export const vehicles = [
     mileage: '15 km',
     transmission: 'Automatic',
     fuelType: 'Hybrid',
+    exteriorColour: 'White',
+    engineSize: '1497 Cc',
     dealer: 'GWM Haval Benoni',
+    address: '132 Woburn Avenue, Benoni',
+    phone: '010 593 4429',
+    description:
+      'The price you see is the price you pay - no hidden admin fees or on-road costs. Brand new 2026 GWM Ora 5 1.5T HEV Super Luxury DHT combining responsive turbocharged hybrid power (164 kW / 476 Nm) with refined crossover comfort and advanced safety technology.',
     images: oraGallery,
   },
   {
@@ -145,7 +169,13 @@ export const vehicles = [
     mileage: '10 km',
     transmission: 'Automatic',
     fuelType: 'Electric',
+    exteriorColour: 'Cream',
+    engineSize: '39.4 kWh EV',
     dealer: 'Geely Rustenburg',
+    address: 'Cnr Marlin & Korokoro Street, Rustenburg',
+    phone: '010 593 4429',
+    description:
+      'The price you see is the price you pay - no hidden admin fees or on-road costs. Brand new 2026 Geely E2 Aspire all-electric hatchback offering up to 325 km WLTP range, rapid DC charging, and smart urban versatility.',
     images: geelyGallery,
   },
 ]

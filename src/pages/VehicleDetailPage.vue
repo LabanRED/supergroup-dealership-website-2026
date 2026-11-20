@@ -1,7 +1,11 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useDevicePreview } from '../composables/useDevicePreview.js'
+import { useWishlist } from '../composables/useWishlist.js'
 import { createDragScrollHandler } from '../composables/useDragScroll.js'
+import { vehicles } from '../data/vehicles.js'
+import hybridHevIcon from '../images/hybrid-hev-icon.svg'
+import electricIcon from '../images/electric-icon.svg'
 import VehicleOverview from '../components/vehicle/VehicleOverview.vue'
 import VehicleSpecifications from '../components/vehicle/VehicleSpecifications.vue'
 import SupergroupDivider from '../components/common/SupergroupDivider.vue'
@@ -12,42 +16,41 @@ import MoreFromDealer from '../components/vehicle/MoreFromDealer.vue'
 import SimilarVehicles from '../components/vehicle/SimilarVehicles.vue'
 
 const { activeDevice } = useDevicePreview()
+const { isFavorite, toggleFavorite } = useWishlist()
 const handleGalleryMouseDown = createDragScrollHandler({ snapToSlide: true })
-const clioModules = import.meta.glob('../images/clio-*.jpg', {
-  eager: true,
-  import: 'default',
+
+const currentHash = ref(typeof window !== 'undefined' ? window.location.hash : '')
+
+const vehicle = computed(() => {
+  const queryStr = currentHash.value.includes('?') ? currentHash.value.split('?')[1] : ''
+  const idParam = Number(new URLSearchParams(queryStr).get('id'))
+  return vehicles.find((v) => v.id === idParam) || vehicles[0]
 })
 
-const clioGallery = Object.entries(clioModules)
-  .sort(([a], [b]) => {
-    const numA = Number(a.match(/clio-(\d+)\.jpg$/)?.[1] || 0)
-    const numB = Number(b.match(/clio-(\d+)\.jpg$/)?.[1] || 0)
-    return numA - numB
-  })
-  .map(([, src]) => src)
-
-const vehicle = {
-  name: '2023 RENAULT CLIO',
-  trim: '1.0T ZEN 5DR (66KW)',
-  condition: 'Used',
-  priceValue: 199900,
-  price: 'R199 900',
-  estPayment: 'R3 580 p/m*',
-  mileage: '43 987 km',
-  fuelType: 'Petrol',
-  transmission: 'Manual',
-  dealer: 'Suzuki Edenvale',
-  description:
-    'The price you see is the price you pay - no hidden admin fees or on-road costs. This well-maintained 2023 Renault Clio 1.0T Zen in white blends a full service history with efficient turbocharged performance.',
-  images: clioGallery,
-}
-
-const isFavorite = ref(false)
 const isScrolled = ref(false)
 const topSectionRef = ref(null)
 const activeIndex = ref(0)
 const mainTrackRef = ref(null)
 let scrollContainer = null
+
+function syncHash() {
+  currentHash.value = window.location.hash
+}
+
+watch(
+  () => vehicle.value.id,
+  () => {
+    activeIndex.value = 0
+    if (mainTrackRef.value) {
+      mainTrackRef.value.scrollLeft = 0
+    }
+    if (scrollContainer) {
+      scrollContainer.scrollTop = 0
+    }
+    window.scrollTo({ top: 0, behavior: 'auto' })
+    isScrolled.value = false
+  }
+)
 
 function updateScrollState() {
   const containerScroll = scrollContainer ? scrollContainer.scrollTop : 0
@@ -61,11 +64,13 @@ onMounted(() => {
   }
   window.scrollTo({ top: 0, behavior: 'auto' })
   isScrolled.value = false
+  window.addEventListener('hashchange', syncHash)
   window.addEventListener('scroll', updateScrollState, { passive: true })
   scrollContainer?.addEventListener('scroll', updateScrollState, { passive: true })
 })
 
 onUnmounted(() => {
+  window.removeEventListener('hashchange', syncHash)
   window.removeEventListener('scroll', updateScrollState)
   scrollContainer?.removeEventListener('scroll', updateScrollState)
 })
@@ -130,17 +135,17 @@ function scrollToCalculator() {
             aria-label="Save vehicle"
             class="w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer"
             :class="
-              isFavorite
+              isFavorite(vehicle.id)
                 ? 'bg-[#D92D20] text-white'
                 : isScrolled
                   ? 'border border-white/70 text-white'
                   : 'border border-neutral-800 text-neutral-800'
             "
-            @click="isFavorite = !isFavorite"
+            @click="toggleFavorite(vehicle.id)"
           >
             <svg
               class="w-4 h-4"
-              :class="isFavorite ? 'fill-current' : 'fill-none stroke-current'"
+              :class="isFavorite(vehicle.id) ? 'fill-current' : 'fill-none stroke-current'"
               stroke-width="2"
               viewBox="0 0 24 24"
             >
@@ -198,11 +203,23 @@ function scrollToCalculator() {
         <!-- Title & Trim -->
         <div>
           <h1
-            class="font-poppins font-medium uppercase transition-colors"
+            class="font-poppins font-medium uppercase transition-colors flex items-center gap-2"
             :class="isScrolled ? 'text-[#2FA6F3]' : 'text-[#0072BC]'"
             style="font-size: 24px; line-height: 1.2; font-weight: 500;"
           >
-            {{ vehicle.name }}
+            <span>{{ vehicle.name }}</span>
+            <img
+              v-if="vehicle.fuelType === 'Hybrid'"
+              :src="hybridHevIcon"
+              alt="Hybrid"
+              class="w-5 h-5 shrink-0"
+            />
+            <img
+              v-else-if="vehicle.fuelType === 'Electric'"
+              :src="electricIcon"
+              alt="Electric"
+              class="w-5 h-5 shrink-0"
+            />
           </h1>
           <p
             class="text-xs uppercase mt-1 transition-colors"
@@ -314,12 +331,12 @@ function scrollToCalculator() {
 
       <!-- Overview Section -->
       <VehicleOverview
-        mileage="43 987 Km"
-        exterior-colour="White"
-        body-type="Hatch"
-        transmission="Manual"
-        engine-size="999 Cc"
-        fuel-type="Petrol"
+        :mileage="vehicle.mileage"
+        :exterior-colour="vehicle.exteriorColour"
+        :body-type="vehicle.bodyType"
+        :transmission="vehicle.transmission"
+        :engine-size="vehicle.engineSize"
+        :fuel-type="vehicle.fuelType"
       />
 
       <!-- Additional Specifications Section -->
@@ -351,13 +368,18 @@ function scrollToCalculator() {
         </div>
 
         <FinanceCalculator
+          :key="vehicle.id"
           :vehicle="vehicle"
           :closable="false"
         />
       </section>
 
       <!-- Dealership Location Section -->
-      <DealerLocation dealer-name="Suzuki Edenvale" />
+      <DealerLocation
+        :dealer-name="vehicle.dealer"
+        :address="vehicle.address"
+        :phone="vehicle.phone"
+      />
 
       <!-- More Listings From This Dealer -->
       <MoreFromDealer />

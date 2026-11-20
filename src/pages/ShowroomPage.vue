@@ -681,7 +681,7 @@ function scrollVehicleImage(vehicleId, idx) {
               Enquire Now
             </button>
             <a
-              href="#vehicle-detail"
+              :href="`#vehicle-detail?id=${vehicle.id}`"
               class="rounded-full py-2.5 px-4 text-center text-xs font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-sm hover:opacity-95 transition-opacity"
             >
               View Details
