@@ -207,6 +207,7 @@ function closeMenus() {
             />
           </svg>
           <span
+            v-if="wishlistCount > 0"
             class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#D92D20] text-white text-[10px] font-semibold flex items-center justify-center leading-none"
           >
             {{ wishlistCount }}
@@ -272,6 +273,7 @@ function closeMenus() {
             />
           </svg>
           <span
+            v-if="wishlistCount > 0"
             class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#D92D20] text-white text-[10px] font-semibold flex items-center justify-center leading-none"
           >
             {{ wishlistCount }}
