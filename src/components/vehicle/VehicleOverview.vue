@@ -1,4 +1,5 @@
 <script setup>
+import { computed } from 'vue'
 import mileageIcon from '../../images/vdp-mileage-icon.svg'
 import paintIcon from '../../images/vdp-paint-icon.svg'
 import bodyTypeIcon from '../../images/vdp-body-type-icon.svg'
@@ -33,14 +34,14 @@ const props = defineProps({
   },
 })
 
-const items = [
+const items = computed(() => [
   { label: 'Mileage', value: props.mileage, icon: mileageIcon },
   { label: 'Exterior Colour', value: props.exteriorColour, icon: paintIcon },
   { label: 'Body Type', value: props.bodyType, icon: bodyTypeIcon },
   { label: 'Transmission', value: props.transmission, icon: transmissionIcon },
   { label: 'Engine Size', value: props.engineSize, icon: engineSizeIcon },
   { label: 'Fuel Type', value: props.fuelType, icon: fuelTypeIcon },
-]
+])
 </script>
 
 <template>

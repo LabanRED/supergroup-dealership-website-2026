@@ -1,14 +1,18 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
-defineProps({
+const props = defineProps({
   fuelType: {
     type: String,
     default: 'Petrol',
   },
+  specifications: {
+    type: Array,
+    default: null,
+  },
 })
 
-const sections = [
+const defaultSections = [
   {
     id: 'general',
     title: 'General',
@@ -73,6 +77,10 @@ const sections = [
     ],
   },
 ]
+
+const sections = computed(() =>
+  props.specifications?.length ? props.specifications : defaultSections,
+)
 
 const openId = ref(null)
 
