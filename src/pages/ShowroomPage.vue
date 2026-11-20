@@ -194,6 +194,14 @@ const activeFilterCount = computed(() => {
   ].filter(Boolean).length
 })
 
+const hasActiveFilters = computed(() => {
+  return (
+    activeFilterCount.value > 0 ||
+    Boolean(query.value.trim()) ||
+    sortBy.value !== 'default'
+  )
+})
+
 function resetFilters() {
   query.value = ''
   selectedMake.value = ''
@@ -208,6 +216,11 @@ function resetFilters() {
   selectedBodyType.value = ''
   selectedDealer.value = ''
   sortBy.value = 'default'
+}
+
+function clearAllAndReset() {
+  resetFilters()
+  filtersOpen.value = false
 }
 
 function setGalleryRef(id, el) {
@@ -436,8 +449,24 @@ function scrollVehicleImage(vehicleId, idx) {
             </button>
           </div>
 
-          <!-- Search CTA -->
+          <!-- Search CTA (Default vs Filtered State) -->
+          <div v-if="hasActiveFilters" class="grid grid-cols-2 gap-3">
+            <button
+              type="submit"
+              class="w-full rounded-full py-3.5 px-6 text-sm font-medium text-neutral-900 bg-white border border-neutral-800 hover:bg-neutral-50 transition-colors cursor-pointer"
+            >
+              Search
+            </button>
+            <button
+              type="button"
+              class="w-full rounded-full py-3.5 px-6 text-sm font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-md hover:opacity-95 transition-opacity cursor-pointer"
+              @click="clearAllAndReset"
+            >
+              Clear All
+            </button>
+          </div>
           <button
+            v-else
             type="submit"
             class="w-full rounded-full py-3.5 px-6 text-sm font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-md hover:opacity-95 transition-opacity cursor-pointer"
           >
