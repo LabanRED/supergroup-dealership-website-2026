@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useDevicePreview } from './composables/useDevicePreview.js'
+import { useScrollReveal } from './composables/useScrollReveal.js'
 import Header from './components/header/Header.vue'
 import Footer from './components/footer/Footer.vue'
 import HomePage from './pages/HomePage.vue'
@@ -31,6 +32,9 @@ const pageMap = {
 
 const currentHash = ref(typeof window !== 'undefined' ? window.location.hash : '')
 const scrollContainerRef = ref(null)
+const mainRef = ref(null)
+
+useScrollReveal(mainRef, scrollContainerRef, [currentHash, activeDevice])
 
 const currentPage = computed(() => {
   const baseHash = currentHash.value.split('?')[0]
@@ -80,7 +84,7 @@ onUnmounted(() => {
       :style="activeDevice === 'mobile' ? { scrollbarWidth: 'none' } : undefined"
     >
       <Header :sticky="!isVehicleDetail" :is-showroom="isShowroom" :is-vehicle-detail="isVehicleDetail" />
-      <main class="flex-1">
+      <main ref="mainRef" class="flex-1">
         <component :is="currentPage" />
       </main>
       <Footer />
