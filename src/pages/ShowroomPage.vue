@@ -52,6 +52,15 @@ const galleryRefs = {}
 const currentPage = ref(1)
 const totalPages = 3815
 const sortBy = ref('default')
+const sortOptions = [
+  { value: 'default', label: 'Price - Default' },
+  { value: 'price-asc', label: 'Price - Low to High' },
+  { value: 'price-desc', label: 'Price - High to Low' },
+  { value: 'mileage-asc', label: 'Mileage - Low to High' },
+]
+const sortLabel = computed(
+  () => sortOptions.find((opt) => opt.value === sortBy.value)?.label ?? 'Price - Default',
+)
 const topSearchRef = ref(null)
 const showStickyFilters = ref(false)
 let observer = null
@@ -485,21 +494,12 @@ function scrollVehicleImage(vehicleId, idx) {
           </span>
         </div>
 
-        <label class="inline-flex items-center gap-1.5 cursor-pointer shrink-0">
+        <label class="ml-auto inline-flex items-center justify-end gap-1.5 cursor-pointer shrink-0 text-right">
           <span class="font-medium text-[#0072BC]">Sort by:</span>
-          <div class="relative inline-flex items-center">
-            <select
-              v-model="sortBy"
-              aria-label="Sort vehicles"
-              class="appearance-none bg-transparent pr-5 text-xs text-neutral-800 focus:outline-none cursor-pointer"
-            >
-              <option value="default">Price - Default</option>
-              <option value="price-asc">Price - Low to High</option>
-              <option value="price-desc">Price - High to Low</option>
-              <option value="mileage-asc">Mileage - Low to High</option>
-            </select>
+          <div class="relative inline-flex items-center gap-1">
+            <span class="text-xs text-neutral-800">{{ sortLabel }}</span>
             <svg
-              class="pointer-events-none absolute right-0 w-3.5 h-3.5 text-[#0072BC]"
+              class="pointer-events-none w-3.5 h-3.5 text-[#0072BC] shrink-0"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -507,6 +507,15 @@ function scrollVehicleImage(vehicleId, idx) {
             >
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
             </svg>
+            <select
+              v-model="sortBy"
+              aria-label="Sort vehicles"
+              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            >
+              <option v-for="option in sortOptions" :key="option.value" :value="option.value">
+                {{ option.label }}
+              </option>
+            </select>
           </div>
         </label>
       </div>
