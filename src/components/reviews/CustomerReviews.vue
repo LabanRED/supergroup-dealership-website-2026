@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { createDragScrollHandler } from '../../composables/useDragScroll.js'
 import starIcon from '../../images/star-icon.svg'
 import googleLogo from '../../images/google-reivew-logo.webp'
 import profileImage from '../../images/customer-review-profile-image.webp'
@@ -32,6 +33,7 @@ const reviews = [
 
 const trackRef = ref(null)
 const activeIndex = ref(0)
+const handleTrackMouseDown = createDragScrollHandler({ snapToSlide: true })
 let isProgrammaticScroll = false
 let scrollTimeout = null
 
@@ -93,9 +95,11 @@ function handleScroll() {
     <!-- Scrollable Review Track (1 card at a time) -->
     <div
       ref="trackRef"
-      class="relative flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 max-w-md mx-auto"
+      class="relative flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 max-w-md mx-auto cursor-grab active:cursor-grabbing select-none"
       style="scrollbar-width: none;"
       @scroll="handleScroll"
+      @mousedown="handleTrackMouseDown"
+      @dragstart.prevent
     >
       <article
         v-for="review in reviews"
@@ -110,13 +114,14 @@ function handleScroll() {
               :key="n"
               :src="starIcon"
               alt="Star"
+              draggable="false"
               class="w-5 h-5"
             />
           </div>
 
           <!-- Google Badge + Date -->
           <div class="flex items-center gap-2 mb-4">
-            <img :src="googleLogo" alt="Google" class="h-4 w-auto" />
+            <img :src="googleLogo" alt="Google" draggable="false" class="h-4 w-auto" />
             <span class="text-xs text-neutral-400">
               {{ review.timeAgo }}
             </span>
@@ -127,6 +132,7 @@ function handleScroll() {
             <img
               :src="review.avatar"
               :alt="review.name"
+              draggable="false"
               class="w-12 h-12 rounded-full object-cover shrink-0"
             />
             <span class="font-medium text-base text-neutral-900">

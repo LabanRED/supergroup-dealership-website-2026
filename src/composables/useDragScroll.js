@@ -39,8 +39,9 @@ export function createDragScrollHandler({ snapToSlide = true } = {}) {
 
         if (snapToSlide && el.clientWidth) {
           const targetIdx = Math.round(el.scrollLeft / el.clientWidth)
+          const targetLeft = el.children[targetIdx]?.offsetLeft ?? targetIdx * el.clientWidth
           el.scrollTo({
-            left: targetIdx * el.clientWidth,
+            left: targetLeft,
             behavior: 'smooth',
           })
         }
