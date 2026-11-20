@@ -23,7 +23,7 @@ defineProps({
 
 const mobileMenuOpen = ref(false)
 const navBg = ref('#000000')
-const navColors = ['#000000', '#000219', '#3C3C3C']
+const navColors = ['#000000', '#00032B', '#3C3C3C']
 let touchStartX = 0
 let touchStartY = 0
 
@@ -49,13 +49,13 @@ function onNavTouchEnd(event) {
 
 const menuColorMap = {
   1: '#000000',
-  2: '#000219',
+  2: '#00032B',
   3: '#3C3C3C',
   Digit1: '#000000',
-  Digit2: '#000219',
+  Digit2: '#00032B',
   Digit3: '#3C3C3C',
   Numpad1: '#000000',
-  Numpad2: '#000219',
+  Numpad2: '#00032B',
   Numpad3: '#3C3C3C',
 }
 
