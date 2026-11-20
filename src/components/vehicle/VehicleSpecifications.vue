@@ -82,8 +82,7 @@ function toggle(id) {
       <div
         v-for="section in sections"
         :key="section.id"
-        class="border border-neutral-200 bg-white overflow-hidden transition-all"
-        :class="openId === section.id ? 'rounded-3xl' : 'rounded-full'"
+        class="rounded-[28px] border border-neutral-200 bg-white overflow-hidden"
       >
         <button
           type="button"
