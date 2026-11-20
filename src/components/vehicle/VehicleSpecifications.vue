@@ -1,6 +1,13 @@
 <script setup>
 import { ref } from 'vue'
 
+defineProps({
+  fuelType: {
+    type: String,
+    default: 'Petrol',
+  },
+})
+
 const sections = [
   {
     id: 'general',
@@ -123,7 +130,10 @@ function toggle(id) {
           The data displayed above are manufacturer specs for New vehicles and do not reflect the current condition of a used vehicle which may differ from the one being offered for sale. We recommend that you always check the details with the seller prior to purchase.
         </p>
       </div>
-      <p>
+      <p v-if="fuelType === 'Electric'">
+        ** Real world range and energy consumption averages may vary according to factors such as driving styles, environmental conditions, load, wheel and tyre fitment, accessories and options fitted.
+      </p>
+      <p v-else>
         ** Real world fuel consumption averages may vary according to factors such as driving styles, environmental conditions, load, wheel and tyre fitment, accessories and options fitted.
       </p>
     </div>

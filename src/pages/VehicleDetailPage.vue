@@ -340,7 +340,7 @@ function scrollToCalculator() {
       />
 
       <!-- Additional Specifications Section -->
-      <VehicleSpecifications />
+      <VehicleSpecifications :fuel-type="vehicle.fuelType" />
 
       <!-- Divider -->
       <SupergroupDivider />
