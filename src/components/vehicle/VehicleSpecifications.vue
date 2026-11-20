@@ -106,10 +106,10 @@ function toggle(id) {
           <div
             v-for="spec in section.specs"
             :key="spec.label"
-            class="flex items-center justify-between text-xs py-1"
+            class="flex items-start justify-between gap-4 text-xs py-1"
           >
-            <span class="text-neutral-500">{{ spec.label }}</span>
-            <span class="font-medium text-neutral-900">{{ spec.value }}</span>
+            <span class="text-neutral-500 text-left">{{ spec.label }}</span>
+            <span class="font-medium text-neutral-900 text-right">{{ spec.value }}</span>
           </div>
         </div>
       </div>
