@@ -43,10 +43,17 @@ export function useWishlist() {
     return favorites.value.has(vehicleId)
   }
 
+  function clearWishlist() {
+    const next = new Set()
+    favorites.value = next
+    saveFavorites(next)
+  }
+
   return {
     favorites,
     wishlistCount,
     toggleFavorite,
     isFavorite,
+    clearWishlist,
   }
 }

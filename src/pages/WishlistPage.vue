@@ -6,7 +6,7 @@ import { vehicles } from '../data/vehicles.js'
 import VehicleCard from '../components/vehicle/VehicleCard.vue'
 
 const { activeDevice } = useDevicePreview()
-const { favorites } = useWishlist()
+const { favorites, clearWishlist } = useWishlist()
 
 const wishlistedVehicles = computed(() =>
   vehicles.filter((v) => favorites.value.has(v.id))
@@ -19,8 +19,8 @@ const wishlistedVehicles = computed(() =>
     :class="activeDevice === 'mobile' ? 'px-[20px]' : 'px-[20px] md:px-10'"
   >
     <div class="max-w-md mx-auto space-y-5">
-      <!-- Top Bar: Browse vehicles -->
-      <div>
+      <!-- Top Bar: Browse vehicles + Clear All -->
+      <div class="flex items-center justify-between gap-3">
         <a
           href="#showroom"
           class="inline-flex items-center gap-2 text-xs font-medium text-[#0072BC] hover:underline"
@@ -34,6 +34,15 @@ const wishlistedVehicles = computed(() =>
           </span>
           <span>Browse vehicles</span>
         </a>
+
+        <button
+          v-if="wishlistedVehicles.length > 0"
+          type="button"
+          class="text-xs font-medium text-neutral-500 hover:text-[#0072BC] hover:underline transition-colors cursor-pointer"
+          @click="clearWishlist"
+        >
+          Clear All
+        </button>
       </div>
 
       <!-- My Wishlist Heading + Item Count -->
