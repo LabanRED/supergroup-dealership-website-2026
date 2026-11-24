@@ -179,18 +179,30 @@ function submitSearch() {
         >
           <div class="overflow-hidden">
             <div class="rounded-2xl border border-neutral-200 bg-neutral-50/70 p-4 space-y-3">
-          <div class="flex items-center justify-between">
+          <div class="flex items-center justify-between gap-2">
             <span class="text-xs font-semibold uppercase tracking-wider text-neutral-500">
               Filter Vehicles
             </span>
-            <button
-              v-if="activeFilterCount > 0"
-              type="button"
-              class="text-xs font-medium text-[#0072BC] hover:underline cursor-pointer"
-              @click="resetFilters"
-            >
-              Reset ({{ activeFilterCount }})
-            </button>
+            <div class="flex items-center gap-2">
+              <button
+                v-if="activeFilterCount > 0"
+                type="button"
+                class="text-xs font-medium text-[#0072BC] hover:underline cursor-pointer"
+                @click="resetFilters"
+              >
+                Reset ({{ activeFilterCount }})
+              </button>
+              <button
+                type="button"
+                aria-label="Close filter menu"
+                class="p-1 rounded-full text-neutral-500 hover:text-neutral-800 hover:bg-neutral-200/70 transition-colors cursor-pointer"
+                @click="filtersOpen = false"
+              >
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           </div>
 
           <div class="grid grid-cols-2 gap-2.5">
