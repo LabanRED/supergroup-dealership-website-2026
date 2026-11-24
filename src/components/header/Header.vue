@@ -64,7 +64,7 @@ function closeMenus() {
   <header class="z-50 shrink-0" :class="sticky ? 'sticky top-0' : 'relative'">
     <div
       class="w-full max-w-full overflow-x-auto overflow-y-hidden bg-white"
-      :class="activeDevice === 'mobile' ? 'md:rounded-t-[28px]' : ''"
+      :class="activeDevice === 'mobile' ? 'md:rounded-t-[55px]' : ''"
       style="scrollbar-width: none;"
     >
       <iframe
