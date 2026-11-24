@@ -2,6 +2,7 @@
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import { useDevicePreview } from '../composables/useDevicePreview.js'
 import { useWishlist } from '../composables/useWishlist.js'
+import { useChromeTheme } from '../composables/useChromeTheme.js'
 import { createDragScrollHandler } from '../composables/useDragScroll.js'
 import { vehicles } from '../data/vehicles.js'
 import hybridHevIcon from '../images/hybrid-hev-icon.svg'
@@ -17,6 +18,7 @@ import SimilarVehicles from '../components/vehicle/SimilarVehicles.vue'
 
 const { activeDevice } = useDevicePreview()
 const { isFavorite, toggleFavorite } = useWishlist()
+const { chromeBg } = useChromeTheme()
 const handleGalleryMouseDown = createDragScrollHandler({ snapToSlide: true })
 
 const currentHash = ref(typeof window !== 'undefined' ? window.location.hash : '')
@@ -106,11 +108,12 @@ function scrollToCalculator() {
     :class="activeDevice === 'mobile' ? 'px-[20px]' : 'px-[20px] md:px-10'"
   >
     <div class="max-w-md mx-auto space-y-5">
-      <!-- Sticky Top Section (White at rest, Dark on scroll) -->
+      <!-- Sticky Top Section (White at rest, Navbar colour on scroll) -->
       <div
         ref="topSectionRef"
         class="sticky top-0 z-40 -mx-[20px] -mt-6 px-[20px] pt-5 pb-4 transition-colors duration-200 space-y-4"
-        :class="isScrolled ? 'bg-[#111111] border-b border-white/10 shadow-md' : 'bg-white'"
+        :class="isScrolled ? 'border-b border-white/10 shadow-md' : 'bg-white'"
+        :style="isScrolled ? { backgroundColor: chromeBg } : undefined"
       >
         <!-- Top Bar: Browse vehicles + Favorite Heart -->
         <div class="flex items-center justify-between">
