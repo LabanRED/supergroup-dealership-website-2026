@@ -13,6 +13,7 @@ import electricIcon from '../images/electric-icon.svg'
 import { vehicles } from '../data/vehicles.js'
 import FinanceCalculator from '../components/vehicle/FinanceCalculator.vue'
 import VehicleEnquire from '../components/vehicle/VehicleEnquire.vue'
+import VehicleBadges from '../components/vehicle/VehicleBadges.vue'
 
 const { activeDevice } = useDevicePreview()
 const { favorites, toggleFavorite } = useWishlist()
@@ -607,17 +608,10 @@ function scrollVehicleImage(vehicleId, idx) {
             />
           </div>
 
-          <span
-            v-if="vehicle.condition !== 'Used'"
-            class="absolute top-3 left-3 px-3.5 py-1 rounded-full text-xs font-medium shadow-sm"
-            :class="
-              vehicle.condition === 'Demo'
-                ? 'bg-white text-[#0072BC]'
-                : 'bg-[#0072BC] text-white'
-            "
-          >
-            {{ vehicle.condition }}
-          </span>
+          <VehicleBadges
+            :condition="vehicle.condition"
+            :fuel-type="vehicle.fuelType"
+          />
 
           <button
             type="button"

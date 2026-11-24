@@ -7,6 +7,7 @@ import fuelIcon from '../../images/supergroup-dealerships-fuel-type-icon.svg'
 import transmissionIcon from '../../images/supergroup-dealerships-transmission-icon.svg'
 import hybridHevIcon from '../../images/hybrid-hev-icon.svg'
 import electricIcon from '../../images/electric-icon.svg'
+import VehicleBadges from './VehicleBadges.vue'
 
 defineProps({
   vehicle: {
@@ -61,17 +62,10 @@ function scrollVehicleImage(idx) {
         />
       </div>
 
-      <span
-        v-if="vehicle.condition !== 'Used'"
-        class="absolute top-3 left-3 px-3.5 py-1 rounded-full text-xs font-medium shadow-sm"
-        :class="
-          vehicle.condition === 'Demo'
-            ? 'bg-white text-[#0072BC]'
-            : 'bg-[#0072BC] text-white'
-        "
-      >
-        {{ vehicle.condition }}
-      </span>
+      <VehicleBadges
+        :condition="vehicle.condition"
+        :fuel-type="vehicle.fuelType"
+      />
 
       <button
         type="button"
