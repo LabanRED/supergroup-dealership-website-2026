@@ -106,13 +106,13 @@ function scrollToCalculator() {
 <template>
   <div
     class="mx-auto max-w-[1400px] py-6"
-    :class="activeDevice === 'mobile' ? 'px-[20px]' : 'px-[20px] md:px-10'"
+    :class="activeDevice === 'mobile' ? 'px-[10px]' : 'px-[10px] md:px-10'"
   >
     <div class="max-w-md mx-auto space-y-5">
       <!-- Sticky Top Section (White at rest, Navbar colour on scroll) -->
       <div
         ref="topSectionRef"
-        class="sticky top-0 z-40 -mx-[20px] -mt-6 px-[20px] pt-5 pb-4 transition-colors duration-200 space-y-4"
+        class="sticky top-0 z-40 -mx-[10px] -mt-6 px-[10px] pt-5 pb-4 transition-colors duration-200 space-y-4"
         :class="isScrolled ? 'border-b border-white/10 shadow-md' : 'bg-white'"
         :style="isScrolled ? { backgroundColor: chromeBg } : undefined"
       >

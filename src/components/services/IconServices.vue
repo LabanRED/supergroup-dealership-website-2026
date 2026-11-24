@@ -29,7 +29,7 @@ const services = [
 </script>
 
 <template>
-  <section class="mx-auto max-w-[1400px] px-[20px] md:px-10 py-8">
+  <section class="mx-auto max-w-[1400px] px-[10px] md:px-10 py-8">
     <div class="mb-8">
       <span class="text-xs font-semibold uppercase tracking-widest text-[#00A5C5]">
         Platform Modules
@@ -59,7 +59,7 @@ const services = [
         </div>
 
         <span class="mt-6 inline-flex items-center text-xs font-semibold text-[#00A5C5]">
-          Explore →
+          Explore â†’
         </span>
       </a>
     </div>

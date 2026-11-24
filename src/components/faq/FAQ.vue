@@ -28,7 +28,7 @@ function toggle(idx) {
 </script>
 
 <template>
-  <section id="faq" class="mx-auto max-w-[1000px] px-[20px] md:px-10 py-10">
+  <section id="faq" class="mx-auto max-w-[1000px] px-[10px] md:px-10 py-10">
     <div class="text-center mb-10">
       <span class="text-xs font-semibold uppercase tracking-widest text-[#00A5C5]">FAQ</span>
       <h2 class="mt-2">

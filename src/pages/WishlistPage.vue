@@ -16,7 +16,7 @@ const wishlistedVehicles = computed(() =>
 <template>
   <div
     class="mx-auto max-w-[1400px] py-6"
-    :class="activeDevice === 'mobile' ? 'px-[20px]' : 'px-[20px] md:px-10'"
+    :class="activeDevice === 'mobile' ? 'px-[10px]' : 'px-[10px] md:px-10'"
   >
     <div class="max-w-md mx-auto space-y-5">
       <!-- Top Bar: Browse vehicles + Clear All -->

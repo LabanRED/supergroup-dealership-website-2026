@@ -21,7 +21,7 @@ const quicklinks = [
 </script>
 
 <template>
-  <footer class="mx-auto max-w-[1400px] px-[20px] pb-6 pt-4">
+  <footer class="mx-auto max-w-[1400px] px-[10px] pb-6 pt-4">
     <div
       class="rounded-[28px] text-neutral-300 px-6 py-8 md:px-10 md:py-12 transition-colors duration-200 select-none"
       :style="{ backgroundColor: footerBg }"

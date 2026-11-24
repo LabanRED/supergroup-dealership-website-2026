@@ -44,7 +44,7 @@ function prev() {
 </script>
 
 <template>
-  <section class="mx-auto max-w-[1400px] px-[20px] md:px-10 py-6">
+  <section class="mx-auto max-w-[1400px] px-[10px] md:px-10 py-6">
     <div
       class="rounded-[32px] p-8 md:p-14 text-white bg-gradient-to-br from-[#00A5C5] via-[#2C8799] to-neutral-950 shadow-xl"
     >
@@ -65,7 +65,7 @@ function prev() {
             class="w-10 h-10 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition-colors cursor-pointer"
             @click="prev"
           >
-            ←
+            â†
           </button>
           <button
             type="button"
@@ -73,7 +73,7 @@ function prev() {
             class="w-10 h-10 rounded-full bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition-colors cursor-pointer"
             @click="next"
           >
-            →
+            â†’
           </button>
         </div>
       </div>

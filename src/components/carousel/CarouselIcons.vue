@@ -28,7 +28,7 @@ const selected = ref(0)
 </script>
 
 <template>
-  <section class="mx-auto max-w-[1400px] px-[20px] md:px-10 py-6">
+  <section class="mx-auto max-w-[1400px] px-[10px] md:px-10 py-6">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       <button
         v-for="(item, idx) in items"

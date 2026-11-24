@@ -282,7 +282,7 @@ function scrollVehicleImage(vehicleId, idx) {
 <template>
   <div
     class="mx-auto max-w-[1400px] pt-6 pb-0 space-y-0"
-    :class="activeDevice === 'mobile' ? 'px-[20px]' : 'px-[20px] md:px-10'"
+    :class="activeDevice === 'mobile' ? 'px-[10px]' : 'px-[10px] md:px-10'"
   >
     <!-- Browse Our Showroom Search Card -->
     <section ref="topSearchRef" class="!my-0 max-w-md mx-auto">

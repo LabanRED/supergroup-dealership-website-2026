@@ -3,7 +3,7 @@ import ctaImage from '../../images/get-in-touch-cta-image.webp'
 </script>
 
 <template>
-  <section id="contact" class="mx-auto max-w-[1400px] px-[20px] md:px-10 py-6">
+  <section id="contact" class="mx-auto max-w-[1400px] px-[10px] md:px-10 py-6">
     <div class="max-w-md mx-auto text-center">
       <div class="overflow-hidden rounded-[24px] mb-6 bg-neutral-100">
         <img

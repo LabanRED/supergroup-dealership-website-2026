@@ -16,7 +16,7 @@ defineProps({
 </script>
 
 <template>
-  <section class="mx-auto max-w-[1200px] px-[20px] md:px-10 py-20 md:py-32 text-center">
+  <section class="mx-auto max-w-[1200px] px-[10px] md:px-10 py-20 md:py-32 text-center">
     <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#00A5C5]/10 text-[#00A5C5] text-xs font-semibold uppercase tracking-wider mb-6">
       <span class="w-2 h-2 rounded-full bg-[#00A5C5]"></span>
       {{ badge }}

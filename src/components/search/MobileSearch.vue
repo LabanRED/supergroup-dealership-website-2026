@@ -130,7 +130,7 @@ function submitSearch() {
 
 <template>
   <section
-    class="!-mt-24 !mb-6 relative z-20 mx-auto max-w-[1400px] px-[20px]"
+    class="!-mt-24 !mb-6 relative z-20 mx-auto max-w-[1400px] px-[10px]"
     :class="activeDevice === 'mobile' ? 'block' : 'block md:hidden'"
   >
     <div
