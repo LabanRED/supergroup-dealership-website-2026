@@ -1,7 +1,8 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref } from 'vue'
 import { useDevicePreview } from '../../composables/useDevicePreview.js'
 import { useWishlist } from '../../composables/useWishlist.js'
+import { useChromeTheme } from '../../composables/useChromeTheme.js'
 import mobileLogo from '../../images/supergroup-dealerships-mobile-logo.webp'
 import desktopLogo from '../../images/supergroup-dealerships-desktop-logo.webp'
 import showroomMobileIcon from '../../images/supergroup-dealerships-showroom-mobile-icon.svg'
@@ -9,6 +10,13 @@ import burgerMenuIcon from '../../images/burger-menu-icon.svg'
 
 const { activeDevice, setDevice, isLocal } = useDevicePreview()
 const { wishlistCount } = useWishlist()
+const {
+  chromeBg: navBg,
+  onTouchStart: onNavTouchStart,
+  onTouchEnd: onNavTouchEnd,
+  onMouseDown: onNavMouseDown,
+  onMouseUp: onNavMouseUp,
+} = useChromeTheme()
 
 defineProps({
   sticky: {
@@ -26,61 +34,6 @@ defineProps({
 })
 
 const mobileMenuOpen = ref(false)
-const navBg = ref('#000000')
-const navColors = ['#000000', '#00032B', '#3C3C3C']
-let touchStartX = 0
-let touchStartY = 0
-
-function onNavTouchStart(event) {
-  const touch = event.touches?.[0]
-  if (!touch) return
-  touchStartX = touch.clientX
-  touchStartY = touch.clientY
-}
-
-function onNavTouchEnd(event) {
-  const touch = event.changedTouches?.[0]
-  if (!touch) return
-  const dx = touch.clientX - touchStartX
-  const dy = touch.clientY - touchStartY
-  if (Math.abs(dx) <= 40 || Math.abs(dx) <= Math.abs(dy)) return
-
-  const currentIdx = navColors.indexOf(navBg.value)
-  const idx = currentIdx === -1 ? 0 : currentIdx
-  const nextIdx = dx < 0 ? (idx + 1) % navColors.length : (idx - 1 + navColors.length) % navColors.length
-  navBg.value = navColors[nextIdx]
-}
-
-const menuColorMap = {
-  1: '#000000',
-  2: '#00032B',
-  3: '#3C3C3C',
-  Digit1: '#000000',
-  Digit2: '#00032B',
-  Digit3: '#3C3C3C',
-  Numpad1: '#000000',
-  Numpad2: '#00032B',
-  Numpad3: '#3C3C3C',
-}
-
-function handleMenuColorKeydown(event) {
-  const tag = event.target?.tagName
-  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || event.target?.isContentEditable) {
-    return
-  }
-  const color = menuColorMap[event.key] || menuColorMap[event.code]
-  if (color) {
-    navBg.value = color
-  }
-}
-
-onMounted(() => {
-  window.addEventListener('keydown', handleMenuColorKeydown)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('keydown', handleMenuColorKeydown)
-})
 
 const navItems = [
   { label: 'OUR DEALERS', href: null },
@@ -130,6 +83,8 @@ function closeMenus() {
       :style="{ backgroundColor: navBg }"
       @touchstart.passive="onNavTouchStart"
       @touchend.passive="onNavTouchEnd"
+      @mousedown="onNavMouseDown"
+      @mouseup="onNavMouseUp"
     >
       <!-- Mobile Menu Button (Left on mobile) -->
       <button

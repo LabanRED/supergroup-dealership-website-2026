@@ -1,6 +1,15 @@
 <script setup>
+import { useChromeTheme } from '../../composables/useChromeTheme.js'
 import supergroupLogo from '../../images/supergroup-dealerships-mobile-logo.webp'
 import bbbeeLogo from '../../images/supergroup-dealership-bbbee-level-2-logo-footer.png'
+
+const {
+  chromeBg: footerBg,
+  onTouchStart: onFooterTouchStart,
+  onTouchEnd: onFooterTouchEnd,
+  onMouseDown: onFooterMouseDown,
+  onMouseUp: onFooterMouseUp,
+} = useChromeTheme()
 
 const quicklinks = [
   { label: 'Showroom', href: '#showroom' },
@@ -13,7 +22,14 @@ const quicklinks = [
 
 <template>
   <footer class="mx-auto max-w-[1400px] px-[20px] pb-6 pt-4">
-    <div class="rounded-[28px] bg-[#1C1C1E] text-neutral-300 px-6 py-8 md:px-10 md:py-12">
+    <div
+      class="rounded-[28px] text-neutral-300 px-6 py-8 md:px-10 md:py-12 transition-colors duration-200 select-none"
+      :style="{ backgroundColor: footerBg }"
+      @touchstart.passive="onFooterTouchStart"
+      @touchend.passive="onFooterTouchEnd"
+      @mousedown="onFooterMouseDown"
+      @mouseup="onFooterMouseUp"
+    >
       <!-- Centered Supergroup Logo -->
       <div class="flex justify-center mb-8">
         <a href="#" aria-label="Supergroup Dealerships Home">
