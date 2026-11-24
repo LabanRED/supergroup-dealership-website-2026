@@ -13,7 +13,7 @@ defineProps({
 const conditionClasses = {
   New: 'bg-[#0072BC] text-white',
   Demo: 'bg-white text-[#0072BC]',
-  Used: 'bg-[#00032B] text-white',
+  Used: 'bg-[#00436E] text-white',
 }
 
 const fuelClasses = {
