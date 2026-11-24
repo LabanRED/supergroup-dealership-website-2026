@@ -15,6 +15,7 @@ import FinanceCalculator from '../components/vehicle/FinanceCalculator.vue'
 import DealerLocation from '../components/vehicle/DealerLocation.vue'
 import MoreFromDealer from '../components/vehicle/MoreFromDealer.vue'
 import SimilarVehicles from '../components/vehicle/SimilarVehicles.vue'
+import VehicleBadges from '../components/vehicle/VehicleBadges.vue'
 
 const { activeDevice } = useDevicePreview()
 const { isFavorite, toggleFavorite } = useWishlist()
@@ -164,11 +165,18 @@ function scrollToCalculator() {
         <!-- Price & Est. Payment Split -->
         <div class="flex items-center justify-start gap-[10px]">
           <div class="min-w-0">
-            <div
-              class="text-xs mb-1 transition-colors"
-              :class="isScrolled ? 'text-white' : 'text-neutral-500'"
-            >
-              Price
+            <div class="flex items-center gap-1.5 mb-1">
+              <span
+                class="text-xs transition-colors"
+                :class="isScrolled ? 'text-white' : 'text-neutral-500'"
+              >
+                Price
+              </span>
+              <VehicleBadges
+                inline
+                :condition="vehicle.condition"
+                :fuel-type="vehicle.fuelType"
+              />
             </div>
             <div
               class="text-[42px] font-semibold leading-none whitespace-nowrap transition-colors"
