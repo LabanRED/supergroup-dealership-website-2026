@@ -11,6 +11,14 @@ const emit = defineEmits(['search'])
 const query = ref('')
 const filtersOpen = ref(false)
 
+function handleSearchInputClick(event) {
+  if (!filtersOpen.value) {
+    event.preventDefault()
+    event.target?.blur?.()
+    filtersOpen.value = true
+  }
+}
+
 const selectedMake = ref('')
 const selectedModel = ref('')
 const selectedCondition = ref('')
@@ -136,11 +144,12 @@ function submitSearch() {
           <input
             v-model="query"
             type="search"
+            :readonly="!filtersOpen"
+            :inputmode="filtersOpen ? 'search' : 'none'"
             placeholder="Type to start searching..."
             aria-label="Search vehicles"
             class="flex-1 min-w-0 bg-transparent text-sm text-neutral-800 placeholder:text-neutral-500 focus:outline-none"
-            @focus="filtersOpen = true"
-            @click="filtersOpen = true"
+            @click="handleSearchInputClick"
           />
 
           <!-- Filter Toggle Button -->
