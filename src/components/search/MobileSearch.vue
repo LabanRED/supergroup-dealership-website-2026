@@ -128,7 +128,7 @@ function submitSearch() {
     <div
       class="rounded-[28px] bg-white p-5 shadow-[0_12px_36px_rgba(0,10,49,0.12)]"
     >
-      <form class="space-y-4" @submit.prevent="submitSearch">
+      <form @submit.prevent="submitSearch">
         <!-- Search Pill -->
         <div
           class="flex items-center gap-2 rounded-full bg-[#EAEAEA] pl-5 pr-1.5 py-1.5"
@@ -139,6 +139,8 @@ function submitSearch() {
             placeholder="Type to start searching..."
             aria-label="Search vehicles"
             class="flex-1 min-w-0 bg-transparent text-sm text-neutral-800 placeholder:text-neutral-500 focus:outline-none"
+            @focus="filtersOpen = true"
+            @click="filtersOpen = true"
           />
 
           <!-- Filter Toggle Button -->
@@ -168,9 +170,15 @@ function submitSearch() {
 
         <!-- Expandable 8-Field Filter Drawer -->
         <div
-          v-if="filtersOpen"
-          class="rounded-2xl border border-neutral-200 bg-neutral-50/70 p-4 space-y-3"
+          class="grid transition-all duration-300 ease-out"
+          :class="
+            filtersOpen
+              ? 'grid-rows-[1fr] opacity-100 mt-4'
+              : 'grid-rows-[0fr] opacity-0 mt-0 pointer-events-none'
+          "
         >
+          <div class="overflow-hidden">
+            <div class="rounded-2xl border border-neutral-200 bg-neutral-50/70 p-4 space-y-3">
           <div class="flex items-center justify-between">
             <span class="text-xs font-semibold uppercase tracking-wider text-neutral-500">
               Filter Vehicles
@@ -259,12 +267,14 @@ function submitSearch() {
               <option v-for="p in maxPriceOptions" :key="p.value" :value="p.value">{{ p.label }}</option>
             </select>
           </div>
+            </div>
+          </div>
         </div>
 
         <!-- Primary Action Pill -->
         <button
           type="submit"
-          class="w-full rounded-full py-3.5 px-6 text-sm font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-md hover:opacity-95 transition-opacity cursor-pointer"
+          class="mt-4 w-full rounded-full py-3.5 px-6 text-sm font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-md hover:opacity-95 transition-opacity cursor-pointer"
         >
           {{ hasSearchCriteria ? 'Search' : 'Find Your Next Car' }}
         </button>
