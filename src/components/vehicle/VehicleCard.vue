@@ -40,7 +40,7 @@ function scrollVehicleImage(idx) {
 
 <template>
   <article
-    class="rounded-[24px] border border-neutral-100 hover:border-[#0072BC] transition-colors bg-white shadow-[0_8px_28px_rgba(0,0,0,0.08)] overflow-hidden text-left"
+    class="@container rounded-[24px] border border-neutral-100 hover:border-[#0072BC] transition-colors bg-white shadow-[0_8px_28px_rgba(0,0,0,0.08)] overflow-hidden text-left"
   >
     <!-- Scrollable Vehicle Photo Gallery with Condition Pill & Favorite Heart -->
     <div class="relative aspect-[16/11] bg-neutral-100 overflow-hidden">
@@ -137,27 +137,27 @@ function scrollVehicleImage(idx) {
       </p>
 
       <!-- Price & Est. Payment Split -->
-      <div class="flex items-center justify-between gap-[10px] mb-5">
-        <div class="min-w-0">
+      <div class="flex items-center justify-between gap-2.5 mb-5">
+        <div class="min-w-0 flex-1">
           <div class="text-xs text-neutral-500 mb-1">Price</div>
-          <div class="text-[32px] sm:text-[38px] font-semibold text-[#0072BC] leading-none whitespace-nowrap">
+          <div class="text-[clamp(22px,8.2cqw,38px)] font-semibold text-[#0072BC] leading-none whitespace-nowrap">
             {{ vehicle.price }}
           </div>
         </div>
 
-        <div class="shrink-0 border-l border-[#969696] pl-[10px] space-y-1.5">
+        <div class="shrink-0 border-l border-[#969696] pl-2.5 space-y-1.5">
           <div class="text-[11px] text-neutral-500">Est. Payment</div>
-          <div class="text-xs font-medium text-neutral-800 flex items-center gap-1">
+          <div class="text-[11px] @[350px]:text-xs font-medium text-neutral-800 flex items-center gap-1 whitespace-nowrap">
             <span>{{ vehicle.estPayment }}</span>
             <span
-              class="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full border border-neutral-400 text-[9px] text-neutral-500"
+              class="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full border border-neutral-400 text-[9px] text-neutral-500 shrink-0"
             >
               i
             </span>
           </div>
           <button
             type="button"
-            class="w-full rounded bg-neutral-300/80 hover:bg-neutral-300 py-1.5 px-3 text-xs font-medium text-neutral-800 transition-colors cursor-pointer"
+            class="w-full rounded bg-neutral-300/80 hover:bg-neutral-300 py-1.5 px-2.5 @[350px]:px-3 text-xs font-medium text-neutral-800 transition-colors cursor-pointer"
           >
             Calculator
           </button>
@@ -165,18 +165,18 @@ function scrollVehicleImage(idx) {
       </div>
 
       <!-- 3-Icon Spec Row -->
-      <div class="grid grid-cols-3 gap-2 py-2 text-xs text-neutral-700 mb-3">
-        <div class="flex items-center gap-1.5">
+      <div class="flex items-center justify-between gap-2 py-2 text-[11px] @[350px]:text-xs text-neutral-700 mb-3">
+        <div class="flex items-center gap-1 min-w-0">
           <img :src="mileageIcon" alt="" class="w-4 h-4 shrink-0" />
           <span class="truncate">{{ vehicle.mileage }}</span>
         </div>
-        <div class="flex items-center justify-center gap-1.5">
+        <div class="flex items-center gap-1 shrink-0">
           <img :src="fuelIcon" alt="" class="w-4 h-4 shrink-0" />
-          <span class="truncate">{{ vehicle.fuelType }}</span>
+          <span>{{ vehicle.fuelType }}</span>
         </div>
-        <div class="flex items-center justify-end gap-1.5">
+        <div class="flex items-center gap-1 shrink-0">
           <img :src="transmissionIcon" alt="" class="w-4 h-4 shrink-0" />
-          <span class="truncate">{{ vehicle.transmission }}</span>
+          <span>{{ vehicle.transmission }}</span>
         </div>
       </div>
 
