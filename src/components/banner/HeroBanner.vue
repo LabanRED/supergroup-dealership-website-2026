@@ -1,5 +1,6 @@
 <script setup>
 import { useDevicePreview } from '../../composables/useDevicePreview.js'
+import CrossfadeVideo from './CrossfadeVideo.vue'
 import mobileHeroVideo from '../../images/supergroup-dealerships-mobile-hero-banner-background.mp4'
 import desktopHeroVideo from '../../images/supergroup-dealerships-desktop-hero-banner-background.mp4'
 import supergroupSymbol from '../../images/supergroup-dealerships-logo-blue-white.webp'
@@ -9,82 +10,84 @@ const { activeDevice } = useDevicePreview()
 
 <template>
   <section
-    class="!mt-0 hero-fade-in"
-    :class="
-      activeDevice === 'mobile'
-        ? 'w-full px-0 !mb-0'
-        : 'w-full px-0 !mb-0 md:!mb-[30px] md:mx-auto md:max-w-[1400px] md:px-10 md:pt-6'
-    "
+    class="!mt-0 hero-fade-in w-full px-0 !mb-0"
   >
     <div
-      class="relative overflow-hidden bg-[#000A31] text-white flex flex-col items-center justify-start text-center"
+      class="relative overflow-hidden bg-[#000A31] text-white flex flex-col items-center justify-start text-center rounded-none"
       :class="
         activeDevice === 'mobile'
-          ? 'px-6 pt-8 pb-[126px] rounded-none'
-          : 'px-6 pt-8 pb-[126px] md:min-h-[540px] md:px-14 md:pt-14 md:pb-36 md:rounded-[32px]'
+          ? 'px-6 pt-8 pb-[126px]'
+          : 'px-6 pt-8 pb-[126px] md:min-h-[500px] md:px-14 md:pt-[50px] md:pb-24'
       "
     >
-      <!-- Mobile Background Video -->
-      <video
+      <!-- Mobile Background Video (Crossfade Loop) -->
+      <CrossfadeVideo
         :src="mobileHeroVideo"
-        autoplay
-        loop
-        muted
-        playsinline
-        class="absolute inset-0 w-full h-full object-cover"
         :class="activeDevice === 'mobile' ? 'block' : 'block md:hidden'"
-      ></video>
+      />
 
-      <!-- Desktop Background Video -->
-      <video
+      <!-- Desktop Background Video (Crossfade Loop) -->
+      <CrossfadeVideo
         :src="desktopHeroVideo"
-        autoplay
-        loop
-        muted
-        playsinline
-        class="absolute inset-0 w-full h-full object-cover"
         :class="activeDevice === 'mobile' ? 'hidden' : 'hidden md:block'"
-      ></video>
+      />
 
       <!-- Subtle top dark scrim for text legibility -->
       <div
-        class="pointer-events-none absolute inset-x-0 top-0 h-56 bg-gradient-to-b from-[#000A31]/70 to-transparent"
+        class="pointer-events-none absolute inset-x-0 top-0 z-[2] h-56 bg-gradient-to-b from-[#000A31]/70 to-transparent"
       ></div>
 
       <!-- Bottom white fade into page -->
       <div
-        class="pointer-events-none absolute inset-x-0 bottom-0 h-28 md:h-36 bg-gradient-to-t from-white via-white/40 to-transparent"
+        class="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-32 md:h-48"
+        style="
+          background: linear-gradient(
+            to top,
+            #ffffff 0%,
+            #ffffff 18%,
+            rgba(255, 255, 255, 0.72) 55%,
+            transparent 100%
+          );
+        "
       ></div>
 
       <!-- Background Supergroup Symbol (fades in and out behind hero text at 40% opacity) -->
       <div
         aria-hidden="true"
-        class="pointer-events-none absolute inset-x-0 top-4 md:top-8 z-[5] flex items-center justify-center hero-symbol-intro"
+        class="pointer-events-none absolute inset-x-0 top-4 z-[5] flex items-center justify-center hero-symbol-intro"
+        :class="activeDevice === 'mobile' ? '' : 'md:top-[42px]'"
       >
         <img
           :src="supergroupSymbol"
           alt=""
-          class="h-32 md:h-36 w-auto object-contain"
+          class="h-32 w-auto object-contain"
+          :class="activeDevice === 'mobile' ? '' : 'md:h-52'"
         />
       </div>
 
       <!-- Hero Copy (fades in from small to big) -->
       <div class="relative z-10 flex flex-col items-center hero-copy-reveal">
         <p
-          class="tracking-wide mb-2"
-          style="font-family: var(--font-guester); font-size: 20px; line-height: 1.2; color: #ffffff;"
+          class="tracking-wide mb-2 text-white"
+          :class="
+            activeDevice === 'mobile'
+              ? 'hero-welcome-mobile'
+              : 'hero-welcome-mobile md:font-poppins md:font-normal md:uppercase md:!text-[36px] md:leading-[1.2] md:tracking-[0.04em] md:mb-1'
+          "
         >
           Welcome to
         </p>
 
         <div class="relative inline-block">
           <h1
-            class="relative z-10 font-poppins font-semibold bg-clip-text text-transparent select-none pb-2"
+            class="relative z-10 font-poppins font-semibold bg-clip-text text-transparent select-none pb-2 text-[56px] leading-[54px]"
+            :class="
+              activeDevice === 'mobile'
+                ? ''
+                : 'md:text-[92px] md:leading-[96px] md:pb-2'
+            "
             style="
-              font-size: 56px;
-              line-height: 54px;
-              font-weight: 600;
-              background-image: linear-gradient(180deg, #ffffff 0%, #ffffff 55%, rgba(255, 255, 255, 0.55) 100%);
+              background-image: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.88) 48%, rgba(255, 255, 255, 0.25) 100%);
             "
           >
             Supergroup
@@ -94,6 +97,7 @@ const { activeDevice } = useDevicePreview()
           <div
             aria-hidden="true"
             class="pointer-events-none absolute top-[12px] -right-[1px] z-20 w-0 h-0 flex items-center justify-center"
+            :class="activeDevice === 'mobile' ? '' : 'md:top-[22px] md:-right-[2px]'"
           >
             <div class="w-24 h-24 shrink-0 flex items-center justify-center sunflare-shine">
             <!-- Outer atmospheric halo -->
@@ -143,17 +147,44 @@ const { activeDevice } = useDevicePreview()
         </div>
 
         <p
-          class="font-poppins font-light mt-1"
-          style="font-size: 24px; line-height: 1.25; font-weight: 300; color: #ffffff;"
+          class="font-poppins font-light mt-1 text-[24px] leading-[1.25] text-white"
+          :class="
+            activeDevice === 'mobile'
+              ? ''
+              : 'md:text-[36px] md:leading-[1.2] md:mt-0'
+          "
         >
           Dealerships
         </p>
+      </div>
+
+      <!-- Desktop Search & Filter Slot (50px below Hero Copy) -->
+      <div
+        v-if="$slots.default"
+        class="relative z-20 w-full mt-[50px]"
+        :class="activeDevice === 'mobile' ? 'hidden' : 'hidden md:block'"
+      >
+        <slot />
       </div>
     </div>
   </section>
 </template>
 
 <style scoped>
+.hero-welcome-mobile {
+  font-family: var(--font-guester);
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+@media (min-width: 768px) {
+  .hero-welcome-mobile.md\:font-poppins {
+    font-family: var(--font-poppins), 'Poppins', sans-serif;
+    font-size: 36px;
+    line-height: 1.2;
+  }
+}
+
 .hero-fade-in {
   animation: heroFadeIn 0.6s ease-out both;
 }

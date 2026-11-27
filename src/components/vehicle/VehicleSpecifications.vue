@@ -1,5 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { useDevicePreview } from '../../composables/useDevicePreview.js'
+
+const { activeDevice } = useDevicePreview()
 
 const props = defineProps({
   fuelType: {
@@ -90,10 +93,19 @@ function toggle(id) {
 </script>
 
 <template>
-  <section class="!my-0 pt-[30px] pb-6 space-y-4">
+  <section
+    class="!my-0 pt-[30px] pb-6 space-y-4"
+    :class="activeDevice === 'mobile' ? '' : 'lg:pt-0 lg:pb-0'"
+  >
     <h2>Additional Specifications</h2>
 
-    <div class="space-y-3">
+    <div
+      :class="
+        activeDevice === 'mobile'
+          ? 'space-y-3'
+          : 'space-y-3 md:grid md:grid-cols-2 md:gap-3 md:space-y-0 md:items-start'
+      "
+    >
       <div
         v-for="section in sections"
         :key="section.id"
@@ -128,22 +140,6 @@ function toggle(id) {
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Specs Note -->
-    <div class="pt-3 space-y-3 text-xs leading-relaxed text-neutral-600">
-      <div>
-        <div class="font-semibold text-[#004A87] mb-1">Please note:</div>
-        <p>
-          The data displayed above are manufacturer specs for New vehicles and do not reflect the current condition of a used vehicle which may differ from the one being offered for sale. We recommend that you always check the details with the seller prior to purchase.
-        </p>
-      </div>
-      <p v-if="fuelType === 'Electric'">
-        ** Real world range and energy consumption averages may vary according to factors such as driving styles, environmental conditions, load, wheel and tyre fitment, accessories and options fitted.
-      </p>
-      <p v-else>
-        ** Real world fuel consumption averages may vary according to factors such as driving styles, environmental conditions, load, wheel and tyre fitment, accessories and options fitted.
-      </p>
     </div>
   </section>
 </template>

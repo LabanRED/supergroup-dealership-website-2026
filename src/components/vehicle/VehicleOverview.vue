@@ -1,11 +1,14 @@
 <script setup>
 import { computed } from 'vue'
+import { useDevicePreview } from '../../composables/useDevicePreview.js'
 import mileageIcon from '../../images/vdp-mileage-icon.svg'
 import paintIcon from '../../images/vdp-paint-icon.svg'
 import bodyTypeIcon from '../../images/vdp-body-type-icon.svg'
 import transmissionIcon from '../../images/vdp-transmission-icon.svg'
 import engineSizeIcon from '../../images/vdp-engine-size-icon.svg'
 import fuelTypeIcon from '../../images/vdp-fuel-type-icon.svg'
+
+const { activeDevice } = useDevicePreview()
 
 const props = defineProps({
   mileage: {
@@ -45,10 +48,16 @@ const items = computed(() => [
 </script>
 
 <template>
-  <section class="!my-0 pt-4 space-y-4">
+  <section
+    class="!my-0 pt-4 space-y-4"
+    :class="activeDevice === 'mobile' ? '' : 'lg:pt-0'"
+  >
     <h2>Overview</h2>
 
-    <div class="grid grid-cols-2 gap-x-6 gap-y-5">
+    <div
+      class="grid gap-x-6 gap-y-5"
+      :class="activeDevice === 'mobile' ? 'grid-cols-2' : 'grid-cols-2 md:grid-cols-3'"
+    >
       <div
         v-for="item in items"
         :key="item.label"

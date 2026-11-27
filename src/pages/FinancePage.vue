@@ -97,7 +97,7 @@ function handleSubmit() {
 
 <template>
   <div
-    class="mx-auto max-w-[1400px] py-6"
+    class="mx-auto max-w-[1600px] py-6"
     :class="activeDevice === 'mobile' ? 'px-[10px]' : 'px-[10px] md:px-10'"
   >
     <div class="max-w-md mx-auto space-y-5">
@@ -130,7 +130,7 @@ function handleSubmit() {
       <div class="py-1 flex items-center justify-between gap-3">
         <div class="min-w-0">
           <div class="text-[13px] uppercase tracking-wide text-[#0072BC] font-medium">
-            {{ vehicleSummary.condition }} Â· {{ vehicleSummary.dealerName }}
+            {{ vehicleSummary.condition }} Ã‚Â· {{ vehicleSummary.dealerName }}
           </div>
           <div class="text-[16px] font-semibold text-neutral-900 truncate">
             {{ vehicleSummary.title }}
@@ -350,7 +350,10 @@ function handleSubmit() {
                 required
                 class="mt-0.5 w-4 h-4 rounded border-neutral-300 text-[#0072BC] focus:ring-[#0072BC]"
               />
-              <span>By submitting this form I agree to the terms and conditions and privacy policies</span>
+              <span>
+                I have read and agree to the Supergroup Dealerships Trading Pty Ltd
+                <a href="#privacy" class="font-semibold text-[#0072BC] hover:underline" @click.stop>Privacy Policy</a>
+              </span>
             </label>
 
             <label class="flex items-start gap-2.5 cursor-pointer">

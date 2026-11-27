@@ -1,5 +1,5 @@
 <template>
-  <section class="mx-auto max-w-[1400px] px-[10px] md:px-10 py-6">
+  <section class="mx-auto max-w-[1600px] px-[10px] md:px-10 py-6">
     <div
       class="rounded-[32px] border border-neutral-200 bg-gradient-to-r from-neutral-50 to-cyan-50/40 p-8 md:p-14 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center"
     >
@@ -13,7 +13,7 @@
           Predictive Inventory & Demand Attribution
         </h2>
         <p class="text-neutral-600 max-w-xl">
-          Connect social engagement and LiveChat AI conversations directly to DMS stock turnâ€”automatically boosting slow-moving units before floorplan costs spike.
+          Connect social engagement and LiveChat AI conversations directly to DMS stock turnÃ¢â‚¬â€automatically boosting slow-moving units before floorplan costs spike.
         </p>
       </div>
 

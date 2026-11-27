@@ -15,7 +15,13 @@ import FramesPage from './pages/FramesPage.vue'
 import ReviewsPage from './pages/ReviewsPage.vue'
 import LiveChatAIPage from './pages/LiveChatAIPage.vue'
 
-const { activeDevice } = useDevicePreview()
+const { activeDevice, setDevice, isLocal } = useDevicePreview()
+
+const previewModes = [
+  { id: 'desktop', label: 'Desktop' },
+  { id: 'tablet', label: 'Tablet' },
+  { id: 'mobile', label: 'Mobile' },
+]
 
 const pageMap = {
   '#showroom': ShowroomPage,
@@ -84,17 +90,41 @@ onUnmounted(() => {
 <template>
   <div
     :class="
-      activeDevice === 'mobile'
+      activeDevice === 'mobile' || activeDevice === 'tablet'
         ? 'w-full min-h-screen bg-white md:h-dvh md:overflow-hidden md:bg-neutral-200 md:p-4 md:flex md:justify-center md:items-center'
         : 'w-full min-h-screen bg-white'
     "
   >
-    <!-- iPhone 17 Pro Chassis (Desktop Preview) -->
+    <!-- Floating Device Switcher when in Framed Mobile/Tablet Preview on Desktop -->
+    <div
+      v-if="isLocal && (activeDevice === 'mobile' || activeDevice === 'tablet')"
+      class="hidden md:flex fixed top-4 right-4 z-[60] items-center gap-1 rounded-full bg-neutral-900/90 backdrop-blur-md p-1 shadow-lg ring-1 ring-white/15"
+      title="Switch device preview"
+    >
+      <button
+        v-for="mode in previewModes"
+        :key="mode.id"
+        type="button"
+        class="px-3 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer"
+        :class="
+          activeDevice === mode.id
+            ? 'bg-[#00A5C5] text-white'
+            : 'text-neutral-300 hover:text-white'
+        "
+        @click="setDevice(mode.id)"
+      >
+        {{ mode.label }}
+      </button>
+    </div>
+
+    <!-- iPhone 17 Pro / Tablet Chassis (Desktop Preview) -->
     <div
       :class="
         activeDevice === 'mobile'
           ? 'relative w-full min-h-screen md:min-h-0 md:w-[416px] md:max-w-full md:h-[min(890px,calc(100dvh-2rem))] md:rounded-[58px] md:bg-[#1C1D22] md:p-[7px] md:shadow-[0_24px_60px_rgba(0,0,0,0.32)] md:ring-1 md:ring-white/25'
-          : 'w-full min-h-screen'
+          : activeDevice === 'tablet'
+            ? 'relative w-full min-h-screen md:min-h-0 md:w-[820px] md:max-w-full md:h-[min(1180px,calc(100dvh-2rem))] md:rounded-[36px] md:bg-[#1C1D22] md:p-[10px] md:shadow-[0_24px_60px_rgba(0,0,0,0.32)] md:ring-1 md:ring-white/25'
+            : 'w-full min-h-screen'
       "
     >
       <!-- Hardware Side Buttons -->
@@ -117,12 +147,14 @@ onUnmounted(() => {
         ></div>
       </template>
 
-      <!-- Inner Screen (402px wide on desktop) -->
+      <!-- Inner Screen -->
       <div
         :class="
           activeDevice === 'mobile'
             ? 'relative w-full min-h-screen md:min-h-0 md:h-full md:rounded-[51px] md:overflow-hidden bg-white flex flex-col'
-            : 'w-full min-h-screen bg-white flex flex-col'
+            : activeDevice === 'tablet'
+              ? 'relative w-full min-h-screen md:min-h-0 md:h-full md:rounded-[28px] md:overflow-hidden bg-white flex flex-col'
+              : 'w-full min-h-screen bg-white flex flex-col'
         "
       >
         <!-- Dynamic Island Status Bar -->
@@ -170,11 +202,11 @@ onUnmounted(() => {
           ref="scrollContainerRef"
           :data-device="activeDevice"
           :class="
-            activeDevice === 'mobile'
+            activeDevice === 'mobile' || activeDevice === 'tablet'
               ? 'w-full flex-1 min-h-0 bg-white flex flex-col md:overflow-y-auto md:overflow-x-clip'
               : 'w-full min-h-screen bg-white flex flex-col'
           "
-          :style="activeDevice === 'mobile' ? { scrollbarWidth: 'none' } : undefined"
+          :style="activeDevice === 'mobile' || activeDevice === 'tablet' ? { scrollbarWidth: 'none' } : undefined"
         >
           <Header :sticky="!isVehicleDetail" :is-showroom="isShowroom" :is-vehicle-detail="isVehicleDetail" />
           <main ref="mainRef" class="flex-1">

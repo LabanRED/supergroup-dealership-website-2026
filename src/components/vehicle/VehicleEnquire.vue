@@ -1,5 +1,8 @@
 <script setup>
 import { ref } from 'vue'
+import { useDevicePreview } from '../../composables/useDevicePreview.js'
+
+const { activeDevice } = useDevicePreview()
 
 defineProps({
   sectionId: {
@@ -32,8 +35,15 @@ function handleSubmit() {
 </script>
 
 <template>
-  <section :id="sectionId" class="!my-0 pt-2 pb-6">
-    <div class="rounded-[28px] border border-neutral-300 bg-white p-6 space-y-5">
+  <section
+    :id="sectionId"
+    class="!my-0 pt-2 pb-6"
+    :class="activeDevice === 'mobile' ? '' : 'lg:py-0 lg:h-full'"
+  >
+    <div
+      class="rounded-[28px] border border-neutral-300 bg-white p-6 space-y-5"
+      :class="activeDevice === 'mobile' ? '' : 'lg:h-full lg:flex lg:flex-col lg:justify-between'"
+    >
       <div class="flex items-start justify-between gap-3">
         <div>
           <h3 class="text-2xl font-medium text-[#004A87] mb-1">Enquire Now</h3>
@@ -153,19 +163,18 @@ function handleSubmit() {
           Submit
         </button>
 
-        <label class="flex items-center justify-center gap-2 text-[11px] text-[#0072BC] cursor-pointer pt-1">
+        <label class="flex items-center justify-center gap-2 text-[11px] leading-relaxed text-[#0072BC] cursor-pointer pt-1">
           <input
             v-model="optIn"
             type="checkbox"
-            class="w-4 h-4 rounded-full accent-[#0072BC] cursor-pointer"
+            required
+            class="w-4 h-4 rounded-full accent-[#0072BC] cursor-pointer shrink-0"
           />
-          <span>Please send me news, reviews and special offers</span>
+          <span>
+            I have read and agree to the Supergroup Dealerships Trading Pty Ltd
+            <a href="#privacy" class="font-semibold hover:underline" @click.stop>Privacy Policy</a>
+          </span>
         </label>
-
-        <p class="text-center leading-relaxed" style="color: #0072BC; font-size: 11px;">
-          By submitting you agree to our
-          <a href="#terms" class="font-semibold hover:underline">Terms and Conditions</a>
-        </p>
       </form>
 
       <div v-else class="rounded-2xl bg-[#E5EFF8] p-6 text-center space-y-3">

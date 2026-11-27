@@ -3,7 +3,7 @@ import supergroupSymbolIcon from '../../images/brand-logos/supergroup-dealership
 </script>
 
 <template>
-  <section class="!my-0 mx-auto max-w-[1400px] px-[10px] md:px-10 py-[30px]">
+  <section class="!my-0 mx-auto max-w-[1600px] px-[10px] md:px-10 py-[30px]">
     <div class="flex items-center gap-4">
       <div class="h-px flex-1 bg-neutral-400/60"></div>
       <img

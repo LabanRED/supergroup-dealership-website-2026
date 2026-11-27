@@ -14,6 +14,7 @@ import { vehicles } from '../data/vehicles.js'
 import FinanceCalculator from '../components/vehicle/FinanceCalculator.vue'
 import VehicleEnquire from '../components/vehicle/VehicleEnquire.vue'
 import VehicleBadges from '../components/vehicle/VehicleBadges.vue'
+import SupergroupDivider from '../components/common/SupergroupDivider.vue'
 
 const { activeDevice } = useDevicePreview()
 const { favorites, toggleFavorite } = useWishlist()
@@ -90,6 +91,16 @@ onUnmounted(() => {
 function openFiltersFromSticky() {
   filtersOpen.value = true
   topSearchRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
+function handleSearchInputClick(event) {
+  if (!filtersOpen.value) {
+    if (activeDevice.value === 'mobile' || window.innerWidth < 768) {
+      event.preventDefault()
+      event.target?.blur?.()
+    }
+    filtersOpen.value = true
+  }
 }
 
 const selectedMake = ref('')
@@ -172,6 +183,34 @@ const maxPriceOptions = [
   { label: 'R 850,000', value: 850000 },
   { label: 'R 1,200,000+', value: 1200000 },
 ]
+const mileageOptions = [
+  { label: 'Up to 10,000 km', value: 10000 },
+  { label: 'Up to 25,000 km', value: 25000 },
+  { label: 'Up to 50,000 km', value: 50000 },
+  { label: 'Up to 100,000 km', value: 100000 },
+  { label: 'Up to 150,000 km', value: 150000 },
+]
+
+const openSidebarGroups = ref({
+  makeModel: false,
+  price: false,
+  condition: false,
+  year: false,
+  mileage: false,
+  transmission: false,
+  fuel: false,
+  bodyType: false,
+  dealer: false,
+})
+
+function toggleSidebarGroup(key) {
+  openSidebarGroups.value[key] = !openSidebarGroups.value[key]
+}
+
+const resultsSectionRef = ref(null)
+function applySidebarFilters() {
+  resultsSectionRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
 
 const filteredVehicles = computed(() => {
   const q = query.value.trim().toLowerCase()
@@ -281,236 +320,289 @@ function scrollVehicleImage(vehicleId, idx) {
 
 <template>
   <div
-    class="mx-auto max-w-[1400px] pt-6 pb-0 space-y-0"
+    class="mx-auto max-w-[1600px] pt-6 pb-0 space-y-0"
     :class="activeDevice === 'mobile' ? 'px-[10px]' : 'px-[10px] md:px-10'"
   >
     <!-- Browse Our Showroom Search Card -->
-    <section ref="topSearchRef" class="!my-0 max-w-md mx-auto">
+    <section
+      ref="topSearchRef"
+      class="!my-0 mx-auto"
+      :class="activeDevice === 'mobile' ? 'max-w-md' : 'max-w-md md:max-w-[1600px]'"
+    >
       <div
         class="rounded-[28px] border border-[#2FA6F3] bg-white px-5 py-6 text-center shadow-[0_6px_24px_rgba(0,114,188,0.08)]"
       >
-        <p class="text-base text-neutral-600 mb-1" style="color: #525252;">
-          Browse Our
-        </p>
         <h1
-          class="font-poppins font-medium text-[#0072BC] mb-3"
-          style="font-size: 36px; line-height: 1.15; font-weight: 500;"
+          class="font-poppins font-medium text-[#0072BC] mb-2 text-[32px] leading-tight"
+          :class="activeDevice === 'mobile' ? '' : 'md:text-[48px] md:leading-[64px]'"
         >
-          Showroom
+          Browse Our Showroom
         </h1>
-        <p class="text-lg text-neutral-700 leading-relaxed mb-6" style="color: #404040;">
-          Find your vehicle from our<br />
+        <p class="text-base md:text-lg text-neutral-700 leading-relaxed mb-6" style="color: #404040;">
+          Find your vehicle from our
           <strong class="font-semibold text-neutral-900">2 000+</strong> quality dealerships stock
         </p>
 
         <form class="space-y-4 text-left" @submit.prevent="filtersOpen = false">
-          <!-- Search Input Box -->
-          <div
-            class="flex items-center gap-2 rounded-full border border-neutral-200 bg-white pl-5 pr-1.5 py-1.5"
-          >
-            <input
-              v-model="query"
-              type="search"
-              placeholder="Type to start searching..."
-              aria-label="Search showroom vehicles"
-              class="flex-1 min-w-0 bg-transparent text-sm text-neutral-800 placeholder:text-neutral-400 focus:outline-none"
-            />
-
-            <button
-              type="button"
-              class="relative p-2 rounded-full hover:bg-neutral-100 transition-colors cursor-pointer shrink-0"
-              aria-label="Toggle showroom filters"
-              :aria-expanded="filtersOpen"
-              @click="filtersOpen = !filtersOpen"
+          <!-- Search Row (Inline Pill + CTA on Desktop matching Home Page; Stacked on Mobile) -->
+          <div :class="activeDevice === 'mobile' ? '' : 'md:flex md:items-center md:gap-3'">
+            <!-- Search Input Pill -->
+            <div
+              class="flex items-center gap-2 rounded-full bg-[#EAEAEA] pl-5 pr-1.5 py-1.5 border-2 border-transparent md:hover:border-[#0072BC] md:focus-within:border-[#0072BC] transition-colors duration-300"
+              :class="activeDevice === 'mobile' ? '' : 'md:flex-1 md:min-w-0 md:h-[52px] md:pl-6 md:pr-3.5'"
             >
-              <img :src="filterIcon" alt="" class="w-6 h-[15px]" />
-              <span
-                v-if="activeFilterCount > 0"
-                class="absolute top-1 right-1 w-2 h-2 rounded-full bg-[#2FA6F3]"
-              ></span>
-            </button>
+              <input
+                v-model="query"
+                type="search"
+                :readonly="activeDevice === 'mobile' && !filtersOpen"
+                :inputmode="activeDevice === 'mobile' && !filtersOpen ? 'none' : 'search'"
+                placeholder="Type to start searching..."
+                aria-label="Search showroom vehicles"
+                class="flex-1 min-w-0 bg-transparent text-sm text-neutral-800 placeholder:text-neutral-500 focus:outline-none"
+                @click="handleSearchInputClick"
+                @focus="filtersOpen = true"
+              />
 
-            <button
-              type="submit"
-              aria-label="Search"
-              class="rounded-full hover:opacity-95 transition-opacity cursor-pointer shrink-0"
-            >
-              <img :src="searchIcon" alt="Search" class="w-10 h-10" />
-            </button>
-          </div>
-
-          <!-- Expandable 12-Field Filter Panel -->
-          <div
-            v-if="filtersOpen"
-            class="rounded-2xl border border-neutral-200 bg-neutral-50/70 p-4 space-y-3"
-          >
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-semibold uppercase tracking-wider text-neutral-500">
-                Filters
-              </span>
               <button
-                v-if="activeFilterCount > 0 || query"
                 type="button"
-                class="text-xs font-medium text-[#0072BC] hover:underline cursor-pointer"
-                @click="resetFilters"
+                class="relative p-2 rounded-full hover:bg-black/5 transition-colors cursor-pointer shrink-0"
+                aria-label="Toggle showroom filters"
+                :aria-expanded="filtersOpen"
+                @click="filtersOpen = !filtersOpen"
               >
-                Reset ({{ activeFilterCount }})
+                <img :src="filterIcon" alt="" class="w-6 h-[15px]" />
+                <span
+                  v-if="activeFilterCount > 0"
+                  class="absolute top-1 right-1 w-2 h-2 rounded-full bg-[#2FA6F3]"
+                ></span>
+              </button>
+
+              <button
+                type="submit"
+                aria-label="Search"
+                class="rounded-full hover:opacity-95 transition-opacity cursor-pointer shrink-0"
+                :class="activeDevice === 'mobile' ? '' : 'md:hidden'"
+              >
+                <img :src="searchIcon" alt="Search" class="w-10 h-10" />
               </button>
             </div>
 
-            <div class="grid grid-cols-2 gap-2.5">
-              <select
-                v-model="selectedMake"
-                aria-label="Make"
-                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
-              >
-                <option value="">Make</option>
-                <option v-for="make in makes" :key="make" :value="make">{{ make }}</option>
-              </select>
-
-              <select
-                v-model="selectedModel"
-                aria-label="Model"
-                :disabled="!selectedMake"
-                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC] disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                <option value="">{{ selectedMake ? 'Model' : 'Select make first' }}</option>
-                <option v-for="model in availableModels" :key="model" :value="model">{{ model }}</option>
-              </select>
-
-              <select
-                v-model="selectedMinYear"
-                aria-label="Min Year"
-                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
-              >
-                <option value="">Min Year</option>
-                <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
-              </select>
-
-              <select
-                v-model="selectedMaxYear"
-                aria-label="Max Year"
-                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
-              >
-                <option value="">Max Year</option>
-                <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
-              </select>
-
-              <select
-                v-model="selectedMinPrice"
-                aria-label="Min Price"
-                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
-              >
-                <option value="">Min Price</option>
-                <option v-for="p in minPriceOptions" :key="p.value" :value="p.value">{{ p.label }}</option>
-              </select>
-
-              <select
-                v-model="selectedMaxPrice"
-                aria-label="Max Price"
-                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
-              >
-                <option value="">Max Price</option>
-                <option v-for="p in maxPriceOptions" :key="p.value" :value="p.value">{{ p.label }}</option>
-              </select>
-
-              <select
-                v-model="selectedCondition"
-                aria-label="Vehicle Type"
-                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
-              >
-                <option value="">Vehicle Type</option>
-                <option v-for="cond in conditions" :key="cond" :value="cond">{{ cond }}</option>
-              </select>
-
-              <select
-                v-model="selectedTransmission"
-                aria-label="Transmission"
-                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
-              >
-                <option value="">Transmission</option>
-                <option v-for="trans in transmissions" :key="trans" :value="trans">{{ trans }}</option>
-              </select>
-
-              <select
-                v-model="selectedFuel"
-                aria-label="Fuel Type"
-                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
-              >
-                <option value="">Fuel Type</option>
-                <option v-for="fuel in fuelTypes" :key="fuel" :value="fuel">{{ fuel }}</option>
-              </select>
-
-              <select
-                v-model="selectedBodyType"
-                aria-label="Body Type"
-                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
-              >
-                <option value="">Body Type</option>
-                <option v-for="body in bodyTypes" :key="body" :value="body">{{ body }}</option>
-              </select>
-
-              <select
-                v-model="selectedDealer"
-                aria-label="Dealer"
-                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
-              >
-                <option value="">Dealer</option>
-                <option v-for="d in dealers" :key="d" :value="d">{{ d }}</option>
-              </select>
-
-              <select
-                v-model="sortBy"
-                aria-label="Sort By"
-                class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
-              >
-                <option value="default">Sort By</option>
-                <option value="price-asc">Price - Low to High</option>
-                <option value="price-desc">Price - High to Low</option>
-                <option value="mileage-asc">Mileage - Low to High</option>
-              </select>
-            </div>
-
-            <button
-              type="button"
-              class="w-full rounded-lg py-2.5 px-4 text-xs font-semibold uppercase tracking-wider text-white bg-[#0072BC] hover:bg-[#005f9e] transition-colors cursor-pointer"
-              @click="filtersOpen = false"
+            <!-- Inline Desktop CTA(s) -->
+            <div
+              v-if="activeDevice !== 'mobile'"
+              class="hidden md:flex items-center gap-2 shrink-0"
             >
-              Apply Filter
-            </button>
+              <button
+                type="submit"
+                class="h-[52px] rounded-full px-7 text-sm font-medium whitespace-nowrap transition-all cursor-pointer"
+                :class="
+                  hasActiveFilters
+                    ? 'text-neutral-900 bg-white border border-neutral-800 hover:bg-neutral-50'
+                    : 'text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-md hover:opacity-95'
+                "
+              >
+                {{ hasActiveFilters ? 'Search' : 'Find Your Next Car' }}
+              </button>
+              <button
+                v-if="hasActiveFilters"
+                type="button"
+                class="h-[52px] rounded-full px-6 text-sm font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-md hover:opacity-95 transition-opacity cursor-pointer whitespace-nowrap"
+                @click="clearAllAndReset"
+              >
+                Clear All
+              </button>
+            </div>
           </div>
 
-          <!-- Search CTA (Default vs Filtered State) -->
-          <div v-if="hasActiveFilters" class="grid grid-cols-2 gap-3">
+          <!-- Smooth Expandable 12-Field Filter Panel -->
+          <div
+            class="grid transition-all duration-300 ease-out"
+            :class="
+              filtersOpen
+                ? 'grid-rows-[1fr] opacity-100 !mt-4'
+                : 'grid-rows-[0fr] opacity-0 !mt-0 pointer-events-none'
+            "
+          >
+            <div class="overflow-hidden">
+              <div class="rounded-2xl border border-neutral-200 bg-neutral-50/70 p-4 space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-semibold uppercase tracking-wider text-neutral-500">
+                    Filters
+                  </span>
+                  <button
+                    v-if="activeFilterCount > 0 || query"
+                    type="button"
+                    class="text-xs font-medium text-[#0072BC] hover:underline cursor-pointer"
+                    @click="resetFilters"
+                  >
+                    Reset ({{ activeFilterCount }})
+                  </button>
+                </div>
+
+                <div
+                  class="grid gap-2.5"
+                  :class="activeDevice === 'mobile' ? 'grid-cols-2' : 'grid-cols-2 md:grid-cols-4'"
+                >
+                  <select
+                    v-model="selectedMake"
+                    aria-label="Make"
+                    class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+                  >
+                    <option value="">Make</option>
+                    <option v-for="make in makes" :key="make" :value="make">{{ make }}</option>
+                  </select>
+
+                  <select
+                    v-model="selectedModel"
+                    aria-label="Model"
+                    :disabled="!selectedMake"
+                    class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC] disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    <option value="">{{ selectedMake ? 'Model' : 'Select make first' }}</option>
+                    <option v-for="model in availableModels" :key="model" :value="model">{{ model }}</option>
+                  </select>
+
+                  <select
+                    v-model="selectedMinYear"
+                    aria-label="Min Year"
+                    class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+                  >
+                    <option value="">Min Year</option>
+                    <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
+                  </select>
+
+                  <select
+                    v-model="selectedMaxYear"
+                    aria-label="Max Year"
+                    class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+                  >
+                    <option value="">Max Year</option>
+                    <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
+                  </select>
+
+                  <select
+                    v-model="selectedMinPrice"
+                    aria-label="Min Price"
+                    class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+                  >
+                    <option value="">Min Price</option>
+                    <option v-for="p in minPriceOptions" :key="p.value" :value="p.value">{{ p.label }}</option>
+                  </select>
+
+                  <select
+                    v-model="selectedMaxPrice"
+                    aria-label="Max Price"
+                    class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+                  >
+                    <option value="">Max Price</option>
+                    <option v-for="p in maxPriceOptions" :key="p.value" :value="p.value">{{ p.label }}</option>
+                  </select>
+
+                  <select
+                    v-model="selectedCondition"
+                    aria-label="Vehicle Type"
+                    class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+                  >
+                    <option value="">Vehicle Type</option>
+                    <option v-for="cond in conditions" :key="cond" :value="cond">{{ cond }}</option>
+                  </select>
+
+                  <select
+                    v-model="selectedTransmission"
+                    aria-label="Transmission"
+                    class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+                  >
+                    <option value="">Transmission</option>
+                    <option v-for="trans in transmissions" :key="trans" :value="trans">{{ trans }}</option>
+                  </select>
+
+                  <select
+                    v-model="selectedFuel"
+                    aria-label="Fuel Type"
+                    class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+                  >
+                    <option value="">Fuel Type</option>
+                    <option v-for="fuel in fuelTypes" :key="fuel" :value="fuel">{{ fuel }}</option>
+                  </select>
+
+                  <select
+                    v-model="selectedBodyType"
+                    aria-label="Body Type"
+                    class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+                  >
+                    <option value="">Body Type</option>
+                    <option v-for="body in bodyTypes" :key="body" :value="body">{{ body }}</option>
+                  </select>
+
+                  <select
+                    v-model="selectedDealer"
+                    aria-label="Dealer"
+                    class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+                  >
+                    <option value="">Dealer</option>
+                    <option v-for="d in dealers" :key="d" :value="d">{{ d }}</option>
+                  </select>
+
+                  <select
+                    v-model="sortBy"
+                    aria-label="Sort By"
+                    class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+                  >
+                    <option value="default">Sort By</option>
+                    <option value="price-asc">Price - Low to High</option>
+                    <option value="price-desc">Price - High to Low</option>
+                    <option value="mileage-asc">Mileage - Low to High</option>
+                  </select>
+                </div>
+
+                <button
+                  type="button"
+                  class="w-full rounded-lg py-2.5 px-4 text-xs font-semibold uppercase tracking-wider text-white bg-[#0072BC] hover:bg-[#005f9e] transition-colors cursor-pointer"
+                  @click="filtersOpen = false"
+                >
+                  Apply Filter
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Search CTA (Mobile Stacked Only) -->
+          <div :class="activeDevice === 'mobile' ? 'block' : 'block md:hidden'">
+            <div v-if="hasActiveFilters" class="grid grid-cols-2 gap-3">
+              <button
+                type="submit"
+                class="w-full rounded-full py-3.5 px-6 text-sm font-medium text-neutral-900 bg-white border border-neutral-800 hover:bg-neutral-50 transition-colors cursor-pointer"
+              >
+                Search
+              </button>
+              <button
+                type="button"
+                class="w-full rounded-full py-3.5 px-6 text-sm font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-md hover:opacity-95 transition-opacity cursor-pointer"
+                @click="clearAllAndReset"
+              >
+                Clear All
+              </button>
+            </div>
             <button
+              v-else
               type="submit"
-              class="w-full rounded-full py-3.5 px-6 text-sm font-medium text-neutral-900 bg-white border border-neutral-800 hover:bg-neutral-50 transition-colors cursor-pointer"
+              class="w-full rounded-full py-3.5 px-6 text-sm font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-md hover:opacity-95 transition-opacity cursor-pointer"
             >
               Search
             </button>
-            <button
-              type="button"
-              class="w-full rounded-full py-3.5 px-6 text-sm font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-md hover:opacity-95 transition-opacity cursor-pointer"
-              @click="clearAllAndReset"
-            >
-              Clear All
-            </button>
           </div>
-          <button
-            v-else
-            type="submit"
-            class="w-full rounded-full py-3.5 px-6 text-sm font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-md hover:opacity-95 transition-opacity cursor-pointer"
-          >
-            Search
-          </button>
         </form>
       </div>
     </section>
 
-    <!-- Sticky Filters Pill Bar (appears on scroll without shifting layout) -->
+    <!-- Sticky Filters Pill Bar (Mobile/Tablet only; desktop uses left sidebar) -->
     <div
-      class="sticky z-40 max-w-md mx-auto h-0 overflow-visible"
-      :class="activeDevice === 'mobile' ? 'top-[102px]' : 'top-[102px] lg:top-[118px]'"
+      class="sticky z-40 mx-auto h-0 overflow-visible"
+      :class="
+        activeDevice === 'mobile'
+          ? 'max-w-md top-[102px]'
+          : 'max-w-md md:max-w-[1600px] top-[102px] lg:hidden'
+      "
     >
       <div
         class="bg-white/95 backdrop-blur-sm py-2 transition-all duration-200"
@@ -543,8 +635,406 @@ function scrollVehicleImage(vehicleId, idx) {
       </div>
     </div>
 
+    <!-- Section Divider (50px top & bottom padding) -->
+    <SupergroupDivider class="!px-0 !py-[50px]" />
+
     <!-- Featured Stock Results -->
-    <section class="!my-0 !pt-[30px] max-w-md mx-auto space-y-5">
+    <section
+      ref="resultsSectionRef"
+      class="!my-0 !pt-0 mx-auto"
+      :class="
+        activeDevice === 'mobile'
+          ? 'max-w-md space-y-5'
+          : 'max-w-md md:max-w-none lg:grid lg:grid-cols-[276px_1fr] lg:gap-8 lg:items-start'
+      "
+    >
+      <!-- Desktop Left Filter Sidebar -->
+      <aside
+        class="sticky top-[132px] rounded-[24px] border border-[#2FA6F3]/60 bg-white p-5 shadow-[0_8px_28px_rgba(0,114,188,0.08)]"
+        :class="activeDevice === 'mobile' ? 'hidden' : 'hidden lg:block'"
+      >
+        <div class="flex items-center justify-between pb-3 border-b border-neutral-100">
+          <div class="inline-flex items-center gap-2 text-sm font-semibold text-[#004A87]">
+            <img :src="filterIcon" alt="" class="w-4 h-3" />
+            <span>Filters</span>
+            <span
+              v-if="activeFilterCount > 0"
+              class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-[#0072BC] text-[10px] font-semibold text-white"
+            >
+              {{ activeFilterCount }}
+            </span>
+          </div>
+          <button
+            type="button"
+            class="text-xs font-medium text-[#0072BC] hover:underline cursor-pointer"
+            @click="resetFilters"
+          >
+            Clear All
+          </button>
+        </div>
+
+        <div class="divide-y divide-neutral-100">
+          <!-- Make & Model -->
+          <div class="py-3">
+            <button
+              type="button"
+              class="w-full flex items-center justify-between text-xs font-medium text-[#004A87] cursor-pointer"
+              @click="toggleSidebarGroup('makeModel')"
+            >
+              <span class="inline-flex items-center gap-1.5">
+                <span>Make &amp; Model</span>
+                <span v-if="selectedMake || selectedModel" class="w-1.5 h-1.5 rounded-full bg-[#2FA6F3]"></span>
+              </span>
+              <svg
+                class="w-4 h-4 text-[#0072BC] transition-transform duration-200"
+                :class="{ 'rotate-180': openSidebarGroups.makeModel }"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+            <div v-if="openSidebarGroups.makeModel" class="mt-3 space-y-2">
+              <select
+                v-model="selectedMake"
+                aria-label="Filter by Make"
+                class="w-full rounded-xl border border-neutral-200 bg-neutral-50/70 px-3 py-2 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+              >
+                <option value="">All Makes</option>
+                <option v-for="make in makes" :key="make" :value="make">{{ make }}</option>
+              </select>
+              <select
+                v-model="selectedModel"
+                aria-label="Filter by Model"
+                :disabled="!selectedMake"
+                class="w-full rounded-xl border border-neutral-200 bg-neutral-50/70 px-3 py-2 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC] disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                <option value="">{{ selectedMake ? 'All Models' : 'Select make first' }}</option>
+                <option v-for="model in availableModels" :key="model" :value="model">{{ model }}</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Condition -->
+          <div class="py-3">
+            <button
+              type="button"
+              class="w-full flex items-center justify-between text-xs font-medium text-[#004A87] cursor-pointer"
+              @click="toggleSidebarGroup('condition')"
+            >
+              <span class="inline-flex items-center gap-1.5">
+                <span>Condition</span>
+                <span v-if="selectedCondition" class="w-1.5 h-1.5 rounded-full bg-[#2FA6F3]"></span>
+              </span>
+              <svg
+                class="w-4 h-4 text-[#0072BC] transition-transform duration-200"
+                :class="{ 'rotate-180': openSidebarGroups.condition }"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+            <div v-if="openSidebarGroups.condition" class="mt-3 flex flex-wrap gap-1.5">
+              <button
+                v-for="cond in conditions"
+                :key="cond"
+                type="button"
+                class="rounded-full px-3 py-1 text-xs font-medium border transition-colors cursor-pointer"
+                :class="
+                  selectedCondition === cond
+                    ? 'bg-[#0072BC] border-[#0072BC] text-white'
+                    : 'bg-white border-neutral-200 text-neutral-700 hover:border-[#0072BC]'
+                "
+                @click="selectedCondition = selectedCondition === cond ? '' : cond"
+              >
+                {{ cond }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Price Range -->
+          <div class="py-3">
+            <button
+              type="button"
+              class="w-full flex items-center justify-between text-xs font-medium text-[#004A87] cursor-pointer"
+              @click="toggleSidebarGroup('price')"
+            >
+              <span class="inline-flex items-center gap-1.5">
+                <span>Price Range</span>
+                <span v-if="selectedMinPrice || selectedMaxPrice" class="w-1.5 h-1.5 rounded-full bg-[#2FA6F3]"></span>
+              </span>
+              <svg
+                class="w-4 h-4 text-[#0072BC] transition-transform duration-200"
+                :class="{ 'rotate-180': openSidebarGroups.price }"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+            <div v-if="openSidebarGroups.price" class="mt-3 grid grid-cols-2 gap-2">
+              <select
+                v-model="selectedMinPrice"
+                aria-label="Sidebar Min Price"
+                class="w-full rounded-xl border border-neutral-200 bg-neutral-50/70 px-2.5 py-2 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+              >
+                <option value="">Min</option>
+                <option v-for="p in minPriceOptions" :key="p.value" :value="p.value">{{ p.label }}</option>
+              </select>
+              <select
+                v-model="selectedMaxPrice"
+                aria-label="Sidebar Max Price"
+                class="w-full rounded-xl border border-neutral-200 bg-neutral-50/70 px-2.5 py-2 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+              >
+                <option value="">Max</option>
+                <option v-for="p in maxPriceOptions" :key="p.value" :value="p.value">{{ p.label }}</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Year Range -->
+          <div class="py-3">
+            <button
+              type="button"
+              class="w-full flex items-center justify-between text-xs font-medium text-[#004A87] cursor-pointer"
+              @click="toggleSidebarGroup('year')"
+            >
+              <span class="inline-flex items-center gap-1.5">
+                <span>Year Range</span>
+                <span v-if="selectedMinYear || selectedMaxYear" class="w-1.5 h-1.5 rounded-full bg-[#2FA6F3]"></span>
+              </span>
+              <svg
+                class="w-4 h-4 text-[#0072BC] transition-transform duration-200"
+                :class="{ 'rotate-180': openSidebarGroups.year }"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+            <div v-if="openSidebarGroups.year" class="mt-3 grid grid-cols-2 gap-2">
+              <select
+                v-model="selectedMinYear"
+                aria-label="Sidebar Min Year"
+                class="w-full rounded-xl border border-neutral-200 bg-neutral-50/70 px-2.5 py-2 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+              >
+                <option value="">Min Year</option>
+                <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
+              </select>
+              <select
+                v-model="selectedMaxYear"
+                aria-label="Sidebar Max Year"
+                class="w-full rounded-xl border border-neutral-200 bg-neutral-50/70 px-2.5 py-2 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+              >
+                <option value="">Max Year</option>
+                <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Mileage (km) -->
+          <div class="py-3">
+            <button
+              type="button"
+              class="w-full flex items-center justify-between text-xs font-medium text-[#004A87] cursor-pointer"
+              @click="toggleSidebarGroup('mileage')"
+            >
+              <span class="inline-flex items-center gap-1.5">
+                <span>Mileage (km)</span>
+                <span v-if="selectedMaxMileage" class="w-1.5 h-1.5 rounded-full bg-[#2FA6F3]"></span>
+              </span>
+              <svg
+                class="w-4 h-4 text-[#0072BC] transition-transform duration-200"
+                :class="{ 'rotate-180': openSidebarGroups.mileage }"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+            <div v-if="openSidebarGroups.mileage" class="mt-3">
+              <select
+                v-model="selectedMaxMileage"
+                aria-label="Sidebar Max Mileage"
+                class="w-full rounded-xl border border-neutral-200 bg-neutral-50/70 px-3 py-2 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+              >
+                <option value="">Any Mileage</option>
+                <option v-for="m in mileageOptions" :key="m.value" :value="m.value">{{ m.label }}</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Transmission -->
+          <div class="py-3">
+            <button
+              type="button"
+              class="w-full flex items-center justify-between text-xs font-medium text-[#004A87] cursor-pointer"
+              @click="toggleSidebarGroup('transmission')"
+            >
+              <span class="inline-flex items-center gap-1.5">
+                <span>Transmission</span>
+                <span v-if="selectedTransmission" class="w-1.5 h-1.5 rounded-full bg-[#2FA6F3]"></span>
+              </span>
+              <svg
+                class="w-4 h-4 text-[#0072BC] transition-transform duration-200"
+                :class="{ 'rotate-180': openSidebarGroups.transmission }"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+            <div v-if="openSidebarGroups.transmission" class="mt-3 flex flex-wrap gap-1.5">
+              <button
+                v-for="trans in transmissions"
+                :key="trans"
+                type="button"
+                class="rounded-full px-3 py-1 text-xs font-medium border transition-colors cursor-pointer"
+                :class="
+                  selectedTransmission === trans
+                    ? 'bg-[#0072BC] border-[#0072BC] text-white'
+                    : 'bg-white border-neutral-200 text-neutral-700 hover:border-[#0072BC]'
+                "
+                @click="selectedTransmission = selectedTransmission === trans ? '' : trans"
+              >
+                {{ trans }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Fuel Type -->
+          <div class="py-3">
+            <button
+              type="button"
+              class="w-full flex items-center justify-between text-xs font-medium text-[#004A87] cursor-pointer"
+              @click="toggleSidebarGroup('fuel')"
+            >
+              <span class="inline-flex items-center gap-1.5">
+                <span>Fuel Type</span>
+                <span v-if="selectedFuel" class="w-1.5 h-1.5 rounded-full bg-[#2FA6F3]"></span>
+              </span>
+              <svg
+                class="w-4 h-4 text-[#0072BC] transition-transform duration-200"
+                :class="{ 'rotate-180': openSidebarGroups.fuel }"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+            <div v-if="openSidebarGroups.fuel" class="mt-3 flex flex-wrap gap-1.5">
+              <button
+                v-for="fuel in fuelTypes"
+                :key="fuel"
+                type="button"
+                class="rounded-full px-3 py-1 text-xs font-medium border transition-colors cursor-pointer"
+                :class="
+                  selectedFuel === fuel
+                    ? 'bg-[#0072BC] border-[#0072BC] text-white'
+                    : 'bg-white border-neutral-200 text-neutral-700 hover:border-[#0072BC]'
+                "
+                @click="selectedFuel = selectedFuel === fuel ? '' : fuel"
+              >
+                {{ fuel }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Body Type -->
+          <div class="py-3">
+            <button
+              type="button"
+              class="w-full flex items-center justify-between text-xs font-medium text-[#004A87] cursor-pointer"
+              @click="toggleSidebarGroup('bodyType')"
+            >
+              <span class="inline-flex items-center gap-1.5">
+                <span>Body Type</span>
+                <span v-if="selectedBodyType" class="w-1.5 h-1.5 rounded-full bg-[#2FA6F3]"></span>
+              </span>
+              <svg
+                class="w-4 h-4 text-[#0072BC] transition-transform duration-200"
+                :class="{ 'rotate-180': openSidebarGroups.bodyType }"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+            <div v-if="openSidebarGroups.bodyType" class="mt-3">
+              <select
+                v-model="selectedBodyType"
+                aria-label="Sidebar Body Type"
+                class="w-full rounded-xl border border-neutral-200 bg-neutral-50/70 px-3 py-2 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+              >
+                <option value="">All Body Types</option>
+                <option v-for="body in bodyTypes" :key="body" :value="body">{{ body }}</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Dealership -->
+          <div class="py-3">
+            <button
+              type="button"
+              class="w-full flex items-center justify-between text-xs font-medium text-[#004A87] cursor-pointer"
+              @click="toggleSidebarGroup('dealer')"
+            >
+              <span class="inline-flex items-center gap-1.5">
+                <span>Dealership</span>
+                <span v-if="selectedDealer" class="w-1.5 h-1.5 rounded-full bg-[#2FA6F3]"></span>
+              </span>
+              <svg
+                class="w-4 h-4 text-[#0072BC] transition-transform duration-200"
+                :class="{ 'rotate-180': openSidebarGroups.dealer }"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+            <div v-if="openSidebarGroups.dealer" class="mt-3">
+              <select
+                v-model="selectedDealer"
+                aria-label="Sidebar Dealership"
+                class="w-full rounded-xl border border-neutral-200 bg-neutral-50/70 px-3 py-2 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
+              >
+                <option value="">All Dealerships</option>
+                <option v-for="d in dealers" :key="d" :value="d">{{ d }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="mt-4 w-full rounded-full py-2.5 px-4 text-xs font-semibold text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-sm hover:opacity-95 transition-opacity cursor-pointer"
+          @click="applySidebarFilters"
+        >
+          Apply Filters
+        </button>
+      </aside>
+
+      <!-- Results Column -->
+      <div class="min-w-0 space-y-5">
       <!-- Showing & Sort By Row -->
       <div class="flex items-center justify-between gap-2 text-xs text-neutral-700 px-1 whitespace-nowrap">
         <div>
@@ -581,12 +1071,21 @@ function scrollVehicleImage(vehicleId, idx) {
       </div>
 
       <div
-        v-for="vehicle in filteredVehicles"
-        :key="vehicle.id"
-        class="space-y-3"
+        v-if="filteredVehicles.length > 0"
+        class="grid gap-6 items-start"
+        :class="
+          activeDevice === 'mobile'
+            ? 'grid-cols-1'
+            : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+        "
       >
+        <div
+          v-for="vehicle in filteredVehicles"
+          :key="vehicle.id"
+          class="space-y-3"
+        >
       <article
-        class="rounded-[24px] border border-neutral-100 bg-white shadow-[0_8px_28px_rgba(0,0,0,0.08)] overflow-hidden"
+        class="rounded-[24px] border border-neutral-100 hover:border-[#0072BC] transition-colors bg-white shadow-[0_8px_28px_rgba(0,0,0,0.08)] overflow-hidden"
       >
         <!-- Scrollable Vehicle Photo Gallery with Condition Pill & Favorite Heart -->
         <div class="relative aspect-[16/11] bg-neutral-100 overflow-hidden">
@@ -768,6 +1267,7 @@ function scrollVehicleImage(vehicleId, idx) {
         :class="activeDevice === 'mobile' ? 'scroll-mt-[172px]' : 'scroll-mt-[188px]'"
         @close="openEnquireId = null"
       />
+        </div>
       </div>
 
       <div
@@ -775,6 +1275,7 @@ function scrollVehicleImage(vehicleId, idx) {
         class="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 text-center text-sm text-neutral-600"
       >
         No matching vehicles found. Try clearing your filters.
+      </div>
       </div>
     </section>
 

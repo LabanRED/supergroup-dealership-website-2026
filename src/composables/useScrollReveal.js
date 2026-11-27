@@ -43,7 +43,24 @@ export function useScrollReveal(mainRef, scrollContainerRef, watchSources = []) 
     if (!mainEl) return
 
     const candidates = Array.from(mainEl.querySelectorAll(REVEAL_SELECTOR))
+    const sectionCandidates = Array.from(
+      mainEl.querySelectorAll(':scope > div > section, :scope > section'),
+    )
     const newlyAdded = []
+
+    for (const sec of sectionCandidates) {
+      if (
+        sec.dataset.sectionReveal === 'true' ||
+        sec.classList.contains('hero-fade-in') ||
+        sec.closest('[data-no-reveal]') ||
+        sec.offsetHeight < 80
+      ) {
+        continue
+      }
+      sec.dataset.sectionReveal = 'true'
+      sec.classList.add('scroll-reveal-section')
+      newlyAdded.push(sec)
+    }
 
     for (const el of candidates) {
       if (shouldSkipElement(el)) continue

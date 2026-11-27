@@ -11,7 +11,9 @@ import FooterCTA from '../components/cta/FooterCTA.vue'
 <template>
   <div>
     <!-- 1. HeroBanner -->
-    <HeroBanner />
+    <HeroBanner>
+      <MobileSearch embedded />
+    </HeroBanner>
 
     <!-- Mobile Search & Filter -->
     <MobileSearch />
@@ -27,6 +29,9 @@ import FooterCTA from '../components/cta/FooterCTA.vue'
 
     <!-- Customer Reviews -->
     <CustomerReviews />
+
+    <!-- Divider -->
+    <SupergroupDivider />
 
     <!-- Browse Showroom CTA -->
     <FooterCTA />

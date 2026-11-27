@@ -133,7 +133,7 @@ function closeMenus() {
         <img
           :src="desktopLogo"
           alt="Supergroup Dealerships"
-          class="h-9 lg:h-11 w-auto"
+          class="h-[61px] lg:h-[74px] w-auto"
           :class="activeDevice === 'mobile' ? 'hidden' : 'hidden md:block'"
         />
       </a>
@@ -204,9 +204,9 @@ function closeMenus() {
         </template>
       </nav>
 
-      <!-- Right Controls: Desktop Wishlist + Local Device Switcher -->
+      <!-- Right Controls: Desktop Wishlist + Showroom Icon + Local Device Switcher -->
       <div
-        class="items-center gap-3 shrink-0"
+        class="items-center gap-2 shrink-0"
         :class="activeDevice === 'mobile' ? 'hidden' : 'hidden md:flex'"
       >
         <a
@@ -233,6 +233,16 @@ function closeMenus() {
           >
             {{ wishlistCount }}
           </span>
+        </a>
+
+        <a
+          v-if="!isShowroom"
+          href="#showroom"
+          class="p-2 rounded-full hover:bg-white/10 transition-colors shrink-0 inline-flex"
+          aria-label="Showrooms"
+          @click="closeMenus"
+        >
+          <img :src="showroomMobileIcon" alt="Showrooms" class="w-[27px] h-[24px]" />
         </a>
 
         <!-- Local-only Device Preview Switcher -->

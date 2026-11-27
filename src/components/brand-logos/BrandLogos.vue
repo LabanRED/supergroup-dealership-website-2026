@@ -1,4 +1,8 @@
 <script setup>
+import { useDevicePreview } from '../../composables/useDevicePreview.js'
+
+const { activeDevice } = useDevicePreview()
+
 const logoModules = import.meta.glob('../../images/brand-logos/*.webp', {
   eager: true,
   import: 'default',
@@ -14,9 +18,16 @@ const brands = Object.entries(logoModules)
 </script>
 
 <template>
-  <section class="!mb-0 mx-auto max-w-[1400px] px-[10px] md:px-10 pt-6 pb-0">
+  <section
+    class="relative z-20 !mb-0 mx-auto max-w-[1600px] px-[10px] md:px-10 pt-6 pb-0"
+    :class="activeDevice === 'mobile' ? '' : 'lg:!-mt-[70px] lg:pt-[54px]'"
+  >
     <div class="text-center mb-6">
-      <p class="text-lg text-neutral-500 mb-1" style="color: #737373;">
+      <p
+        class="text-lg text-neutral-500 mb-1"
+        :class="activeDevice === 'mobile' ? '' : 'md:!text-[28px] md:leading-snug'"
+        style="color: #737373;"
+      >
         Representing
       </p>
       <h2>

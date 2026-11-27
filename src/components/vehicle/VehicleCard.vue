@@ -40,7 +40,7 @@ function scrollVehicleImage(idx) {
 
 <template>
   <article
-    class="rounded-[24px] border border-neutral-100 bg-white shadow-[0_8px_28px_rgba(0,0,0,0.08)] overflow-hidden text-left"
+    class="rounded-[24px] border border-neutral-100 hover:border-[#0072BC] transition-colors bg-white shadow-[0_8px_28px_rgba(0,0,0,0.08)] overflow-hidden text-left"
   >
     <!-- Scrollable Vehicle Photo Gallery with Condition Pill & Favorite Heart -->
     <div class="relative aspect-[16/11] bg-neutral-100 overflow-hidden">

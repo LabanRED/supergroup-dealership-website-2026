@@ -6,6 +6,13 @@ import searchIcon from '../../images/search-icon.svg'
 
 const { activeDevice } = useDevicePreview()
 
+defineProps({
+  embedded: {
+    type: Boolean,
+    default: false,
+  },
+})
+
 const emit = defineEmits(['search'])
 
 const query = ref('')
@@ -130,50 +137,76 @@ function submitSearch() {
 
 <template>
   <section
-    class="!-mt-24 !mb-6 relative z-20 mx-auto max-w-[1400px] px-[10px]"
-    :class="activeDevice === 'mobile' ? 'block' : 'block md:hidden'"
+    class="relative z-20 mx-auto max-w-[1000px]"
+    :class="
+      embedded
+        ? '!my-0 w-full text-left'
+        : [
+            '!-mt-24 !mb-6 px-[10px]',
+            activeDevice === 'mobile' ? 'block' : 'block md:hidden',
+          ]
+    "
   >
     <div
-      class="rounded-[28px] bg-white p-5 shadow-[0_12px_36px_rgba(0,10,49,0.12)]"
+      class="overflow-hidden bg-white shadow-[0_12px_36px_rgba(0,10,49,0.12)] transition-[border-radius] duration-300 ease-out"
+      :class="
+        embedded
+          ? [filtersOpen ? 'rounded-[28px]' : 'rounded-[38px]', 'p-2.5 md:p-3']
+          : 'rounded-[28px] p-5'
+      "
     >
       <form @submit.prevent="submitSearch">
-        <!-- Search Pill -->
-        <div
-          class="flex items-center gap-2 rounded-full bg-[#EAEAEA] pl-5 pr-1.5 py-1.5"
-        >
-          <input
-            v-model="query"
-            type="search"
-            :readonly="!filtersOpen"
-            :inputmode="filtersOpen ? 'search' : 'none'"
-            placeholder="Type to start searching..."
-            aria-label="Search vehicles"
-            class="flex-1 min-w-0 bg-transparent text-sm text-neutral-800 placeholder:text-neutral-500 focus:outline-none"
-            @click="handleSearchInputClick"
-          />
-
-          <!-- Filter Toggle Button -->
-          <button
-            type="button"
-            class="relative p-2 rounded-full hover:bg-black/5 transition-colors cursor-pointer shrink-0"
-            aria-label="Toggle search filters"
-            :aria-expanded="filtersOpen"
-            @click="filtersOpen = !filtersOpen"
+        <!-- Search Row (inline pill + CTA on desktop embedded; stacked on mobile) -->
+        <div :class="embedded ? 'flex items-center gap-3' : ''">
+          <!-- Search Pill -->
+          <div
+            class="flex items-center gap-2 rounded-full bg-[#EAEAEA] pl-5 pr-1.5 py-1.5 border-2 border-transparent md:hover:border-[#0072BC] md:focus-within:border-[#0072BC] transition-colors duration-300"
+            :class="embedded ? 'flex-1 min-w-0 h-[52px] pl-6 pr-3.5' : ''"
           >
-            <img :src="filterIcon" alt="" class="w-6 h-[15px]" />
-            <span
-              v-if="activeFilterCount > 0"
-              class="absolute top-1 right-1 w-2 h-2 rounded-full bg-[#2FA6F3]"
-            ></span>
-          </button>
+            <input
+              v-model="query"
+              type="search"
+              :readonly="!filtersOpen"
+              :inputmode="filtersOpen ? 'search' : 'none'"
+              placeholder="Type to start searching..."
+              aria-label="Search vehicles"
+              class="flex-1 min-w-0 bg-transparent text-sm text-neutral-800 placeholder:text-neutral-500 focus:outline-none"
+              @click="handleSearchInputClick"
+            />
 
-          <!-- Circular Search Button -->
+            <!-- Filter Toggle Button -->
+            <button
+              type="button"
+              class="relative p-2 rounded-full hover:bg-black/5 transition-colors cursor-pointer shrink-0"
+              aria-label="Toggle search filters"
+              :aria-expanded="filtersOpen"
+              @click="filtersOpen = !filtersOpen"
+            >
+              <img :src="filterIcon" alt="" class="w-6 h-[15px]" />
+              <span
+                v-if="activeFilterCount > 0"
+                class="absolute top-1 right-1 w-2 h-2 rounded-full bg-[#2FA6F3]"
+              ></span>
+            </button>
+
+            <!-- Circular Search Button (Mobile Only) -->
+            <button
+              v-if="!embedded"
+              type="submit"
+              aria-label="Search"
+              class="rounded-full hover:opacity-95 transition-opacity cursor-pointer shrink-0"
+            >
+              <img :src="searchIcon" alt="Search" class="w-10 h-10" />
+            </button>
+          </div>
+
+          <!-- Inline Primary Action Pill (Desktop Embedded) -->
           <button
+            v-if="embedded"
             type="submit"
-            aria-label="Search"
-            class="rounded-full hover:opacity-95 transition-opacity cursor-pointer shrink-0"
+            class="shrink-0 h-[52px] rounded-full px-7 text-sm font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-md hover:opacity-95 transition-opacity cursor-pointer whitespace-nowrap"
           >
-            <img :src="searchIcon" alt="Search" class="w-10 h-10" />
+            {{ hasSearchCriteria ? 'Search' : 'Find Your Next Car' }}
           </button>
         </div>
 
@@ -214,7 +247,10 @@ function submitSearch() {
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-2.5">
+          <div
+            class="grid gap-2.5"
+            :class="activeDevice === 'mobile' ? 'grid-cols-2' : 'grid-cols-2 md:grid-cols-4'"
+          >
             <select
               v-model="selectedMake"
               aria-label="Make"
@@ -292,8 +328,9 @@ function submitSearch() {
           </div>
         </div>
 
-        <!-- Primary Action Pill -->
+        <!-- Primary Action Pill (Mobile Stacked) -->
         <button
+          v-if="!embedded"
           type="submit"
           class="mt-4 w-full rounded-full py-3.5 px-6 text-sm font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-md hover:opacity-95 transition-opacity cursor-pointer"
         >
