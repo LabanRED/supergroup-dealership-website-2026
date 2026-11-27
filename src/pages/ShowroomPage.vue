@@ -331,6 +331,11 @@ function scrollVehicleImage(vehicleId, idx) {
     >
       <div
         class="rounded-[28px] border border-[#2FA6F3] bg-white px-5 py-6 text-center shadow-[0_6px_24px_rgba(0,114,188,0.08)]"
+        :class="
+          activeDevice === 'mobile'
+            ? ''
+            : 'md:rounded-none md:border-0 md:bg-transparent md:shadow-none md:px-0 md:pt-8 md:pb-2'
+        "
       >
         <h1
           class="font-poppins font-medium text-[#0072BC] mb-2 text-[32px] leading-tight"
@@ -338,7 +343,11 @@ function scrollVehicleImage(vehicleId, idx) {
         >
           Browse Our Showroom
         </h1>
-        <p class="text-base md:text-lg text-neutral-700 leading-relaxed mb-6" style="color: #404040;">
+        <p
+          class="text-base md:text-lg text-neutral-700 leading-relaxed mb-6"
+          :class="activeDevice === 'mobile' ? '' : 'md:mb-8'"
+          style="color: #404040;"
+        >
           Find your vehicle from our
           <strong class="font-semibold text-neutral-900">2 000+</strong> quality dealerships stock
         </p>
