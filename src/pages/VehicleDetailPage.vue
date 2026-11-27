@@ -429,6 +429,7 @@ function scrollToCalculator() {
             <VehicleSpecifications
               :fuel-type="vehicle.fuelType"
               :specifications="vehicle.specifications"
+              :engine-specs="vehicle.engineSpecs"
             />
           </div>
 

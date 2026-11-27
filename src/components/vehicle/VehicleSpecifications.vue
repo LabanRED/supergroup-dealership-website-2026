@@ -13,6 +13,10 @@ const props = defineProps({
     type: Array,
     default: null,
   },
+  engineSpecs: {
+    type: Array,
+    default: null,
+  },
 })
 
 const defaultSections = [
@@ -81,9 +85,13 @@ const defaultSections = [
   },
 ]
 
-const sections = computed(() =>
-  props.specifications?.length ? props.specifications : defaultSections,
-)
+const sections = computed(() => {
+  const baseSections = props.specifications?.length ? props.specifications : defaultSections
+  if (!props.engineSpecs?.length) return baseSections
+  return baseSections.map((section) =>
+    section.id === 'engine' ? { ...section, specs: props.engineSpecs } : section,
+  )
+})
 
 const openId = ref(null)
 

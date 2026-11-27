@@ -78,9 +78,92 @@ function normalizeFuelType(raw) {
   return formatTitleCase(raw, 'Petrol')
 }
 
-function extractEngineSize(variant) {
-  const match = String(variant || '').match(/\b(\d\.\d)\s*(?:L|T|I|D)?\b/i)
-  return match ? `${match[1]}L` : '—'
+function extractEngineSize(variant, text = '') {
+  const combined = `${variant || ''} ${text || ''}`
+  const ccMatch = combined.match(/\b(\d{3,4})\s*cc\b/i)
+  const litreMatch =
+    String(variant || '').match(/\b(\d\.\d)\s*(?:L|T|TD|TDI|TSI|TCI|TFSI|CDI|I|D|V)?\b/i) ||
+    String(text || '').match(/\b(\d\.\d)\s*(?:l|litre|liter)s?\b/i)
+
+  if (ccMatch && litreMatch) {
+    return `${formatNumberSpaces(Number(ccMatch[1]))} cc (${litreMatch[1]}L)`
+  }
+  if (ccMatch) {
+    return `${formatNumberSpaces(Number(ccMatch[1]))} cc`
+  }
+  if (litreMatch) {
+    return `${litreMatch[1]}L`
+  }
+  return 'N/A'
+}
+
+function extractCylinders(variant, text = '') {
+  const combined = `${text || ''} ${variant || ''}`
+  const hasTurbo = /\bturbo(?:charged)?\b/i.test(combined)
+  const hasTwinTurbo = /\btwin[-\s]?turbo\b/i.test(combined)
+  const turboSuffix = hasTwinTurbo ? ' Twin-Turbo' : hasTurbo ? ' Turbo' : ''
+
+  const inlineMatch = combined.match(/\b[iI]([3456])\b/)
+  if (inlineMatch) {
+    return `${inlineMatch[1]}-Cylinder Inline${turboSuffix}`
+  }
+
+  const vMatch = combined.match(/\b[vV](6|8|10|12)\b/)
+  if (vMatch) {
+    return `V${vMatch[1]}${turboSuffix}`
+  }
+
+  const cylMatch = combined.match(/\b(\d{1,2})[-\s]?cyl(?:inder)?s?\b/i)
+  if (cylMatch) {
+    return `${cylMatch[1]}-Cylinder${turboSuffix}`
+  }
+
+  const flatMatch = combined.match(/\bflat[-\s]?([46])\b/i)
+  if (flatMatch) {
+    return `${flatMatch[1]}-Cylinder Boxer${turboSuffix}`
+  }
+
+  return 'N/A'
+}
+
+function extractMaxPower(variant, text = '') {
+  const combined = `${text || ''} ${variant || ''}`
+  const match = combined.match(/\b(\d+(?:\.\d+)?)\s*kW(?:\s*@\s*([\d,\s]+)\s*rpm)?\b/i)
+  if (!match) return 'N/A'
+  return match[2] ? `${match[1]} kW @ ${match[2].trim()} rpm` : `${match[1]} kW`
+}
+
+function extractMaxTorque(variant, text = '') {
+  const combined = `${text || ''} ${variant || ''}`
+  const match = combined.match(/\b(\d+(?:\.\d+)?)\s*Nm(?:\s*@\s*([\d,\s]+)\s*rpm)?\b/i)
+  if (!match) return 'N/A'
+  return match[2] ? `${match[1]} Nm @ ${match[2].trim()} rpm` : `${match[1]} Nm`
+}
+
+function extractFuelConsumption(text = '', fuelType = '') {
+  const lPer100 = String(text || '').match(/\b(\d+(?:\.\d+)?)\s*l\s*\/\s*100\s*km\b/i)
+  if (lPer100) return `${lPer100[1]} L/100 km`
+
+  if (fuelType === 'Electric') {
+    const kwhPer100 = String(text || '').match(/\b(\d+(?:\.\d+)?)\s*kWh\s*\/\s*100\s*km\b/i)
+    if (kwhPer100) return `${kwhPer100[1]} kWh/100 km`
+  }
+
+  return 'N/A'
+}
+
+function buildEngineSpecs(item, trim, description, fuelType) {
+  const specText = [item.features, item.comments, item.disclaimer, description].filter(Boolean).join(' ')
+  const rawFuel = String(item.fuelType || '').trim()
+
+  return [
+    { label: 'Engine Size', value: extractEngineSize(trim, specText) },
+    { label: 'Cylinders', value: extractCylinders(trim, specText) },
+    { label: 'Fuel Type', value: rawFuel ? fuelType : 'N/A' },
+    { label: 'Max Power', value: extractMaxPower(trim, specText) },
+    { label: 'Max Torque', value: extractMaxTorque(trim, specText) },
+    { label: 'Fuel Consumption', value: extractFuelConsumption(specText, fuelType) },
+  ]
 }
 
 function normalizeStockItem(item) {
@@ -106,6 +189,10 @@ function normalizeStockItem(item) {
     .replace(/\r\n/g, '\n')
     .trim()
 
+  const fuelType = normalizeFuelType(item.fuelType)
+  const engineSpecs = buildEngineSpecs(item, trim, description, fuelType)
+  const engineSize = engineSpecs[0].value
+
   return {
     id: item.stockId,
     stockNo: item.stockNo || '',
@@ -122,9 +209,10 @@ function normalizeStockItem(item) {
     mileageValue,
     mileage: `${formatNumberSpaces(mileageValue)} km`,
     transmission: normalizeTransmission(item.transmission),
-    fuelType: normalizeFuelType(item.fuelType),
+    fuelType,
     exteriorColour: formatTitleCase(item.colour, 'Standard'),
-    engineSize: extractEngineSize(trim),
+    engineSize,
+    engineSpecs,
     dealer,
     region: String(item.region || '').trim(),
     address,
