@@ -18,7 +18,10 @@ const wishlistedVehicles = computed(() =>
     class="mx-auto max-w-[1600px] py-6"
     :class="activeDevice === 'mobile' ? 'px-[10px]' : 'px-[10px] md:px-10'"
   >
-    <div class="max-w-md mx-auto space-y-5">
+    <div
+      class="mx-auto space-y-5"
+      :class="activeDevice === 'mobile' ? 'max-w-md' : 'max-w-md md:max-w-none lg:space-y-6'"
+    >
       <!-- Top Bar: Browse vehicles + Clear All -->
       <div class="flex items-center justify-between gap-3">
         <a
@@ -47,22 +50,41 @@ const wishlistedVehicles = computed(() =>
 
       <!-- My Wishlist Heading + Item Count -->
       <div class="flex items-center justify-between gap-3">
-        <div class="flex items-center gap-2">
-          <svg class="w-5 h-5 fill-[#D92D20] text-[#D92D20] shrink-0" viewBox="0 0 24 24">
+        <div class="flex items-center gap-2.5">
+          <svg
+            class="w-5 h-5 fill-[#D92D20] text-[#D92D20] shrink-0"
+            :class="activeDevice === 'mobile' ? '' : 'md:w-7 md:h-7'"
+            viewBox="0 0 24 24"
+          >
             <path
               d="M12 21s-6.7-4.35-9.2-8.1C.8 9.9 2.3 5.5 6.4 4.8c2.2-.38 4.2.58 5.6 2.15 1.4-1.57 3.4-2.53 5.6-2.15 4.1.7 5.6 5.1 3.6 8.1C18.7 16.65 12 21 12 21z"
             />
           </svg>
-          <h1 class="text-xl font-semibold text-[#0072BC]">My Wishlist</h1>
+          <h1
+            class="text-xl font-semibold text-[#0072BC]"
+            :class="activeDevice === 'mobile' ? '' : 'md:text-3xl'"
+          >
+            My Wishlist
+          </h1>
         </div>
 
-        <span class="text-xs font-medium text-neutral-600">
+        <span
+          class="text-xs font-medium text-neutral-600"
+          :class="activeDevice === 'mobile' ? '' : 'md:text-sm'"
+        >
           {{ wishlistedVehicles.length }} {{ wishlistedVehicles.length === 1 ? 'item' : 'items' }}
         </span>
       </div>
 
       <!-- Wishlisted Vehicles -->
-      <div v-if="wishlistedVehicles.length > 0" class="space-y-5">
+      <div
+        v-if="wishlistedVehicles.length > 0"
+        :class="
+          activeDevice === 'mobile'
+            ? 'space-y-5'
+            : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-start'
+        "
+      >
         <VehicleCard
           v-for="vehicle in wishlistedVehicles"
           :key="vehicle.id"
@@ -74,6 +96,7 @@ const wishlistedVehicles = computed(() =>
       <div
         v-else
         class="rounded-[24px] border border-neutral-200 bg-neutral-50 p-8 text-center space-y-4"
+        :class="activeDevice === 'mobile' ? '' : 'md:py-16'"
       >
         <div class="w-12 h-12 rounded-full bg-white border border-neutral-200 mx-auto flex items-center justify-center text-neutral-400">
           <svg class="w-6 h-6 fill-none stroke-current" stroke-width="2" viewBox="0 0 24 24">
