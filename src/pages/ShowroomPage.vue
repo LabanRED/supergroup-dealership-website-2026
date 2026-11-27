@@ -343,7 +343,7 @@ function scrollVehicleImage(vehicleId, idx) {
           <strong class="font-semibold text-neutral-900">2 000+</strong> quality dealerships stock
         </p>
 
-        <form class="space-y-4 text-left" @submit.prevent="filtersOpen = false">
+        <form class="mx-auto max-w-[1000px] space-y-4 text-left" @submit.prevent="filtersOpen = false">
           <!-- Search Row (Inline Pill + CTA on Desktop matching Home Page; Stacked on Mobile) -->
           <div :class="activeDevice === 'mobile' ? '' : 'md:flex md:items-center md:gap-3'">
             <!-- Search Input Pill -->
