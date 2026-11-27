@@ -316,6 +316,20 @@ function scrollVehicleImage(vehicleId, idx) {
     [vehicleId]: idx,
   }
 }
+
+let cardPointerDown = { x: 0, y: 0 }
+
+function onCardMouseDown(event) {
+  cardPointerDown = { x: event.clientX, y: event.clientY }
+}
+
+function onCardClick(vehicleId, event) {
+  if (event.target?.closest?.('button, a, input, select')) return
+  const dx = Math.abs(event.clientX - cardPointerDown.x)
+  const dy = Math.abs(event.clientY - cardPointerDown.y)
+  if (dx > 6 || dy > 6) return
+  window.location.hash = `#vehicle-detail?id=${vehicleId}`
+}
 </script>
 
 <template>
@@ -1106,7 +1120,9 @@ function scrollVehicleImage(vehicleId, idx) {
           class="space-y-3"
         >
       <article
-        class="@container rounded-[24px] border border-neutral-100 hover:border-[#0072BC] transition-colors bg-white shadow-[0_8px_28px_rgba(0,0,0,0.08)] overflow-hidden"
+        class="@container rounded-[24px] border border-neutral-100 hover:border-[#0072BC] transition-colors bg-white shadow-[0_8px_28px_rgba(0,0,0,0.08)] overflow-hidden cursor-pointer"
+        @mousedown="onCardMouseDown"
+        @click="onCardClick(vehicle.id, $event)"
       >
         <!-- Scrollable Vehicle Photo Gallery with Condition Pill & Favorite Heart -->
         <div class="relative aspect-[16/11] bg-neutral-100 overflow-hidden">

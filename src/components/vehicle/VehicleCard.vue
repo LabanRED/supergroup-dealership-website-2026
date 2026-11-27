@@ -9,7 +9,7 @@ import hybridHevIcon from '../../images/hybrid-hev-icon.svg'
 import electricIcon from '../../images/electric-icon.svg'
 import VehicleBadges from './VehicleBadges.vue'
 
-defineProps({
+const props = defineProps({
   vehicle: {
     type: Object,
     required: true,
@@ -36,11 +36,27 @@ function scrollVehicleImage(idx) {
     behavior: 'smooth',
   })
 }
+
+let cardPointerDown = { x: 0, y: 0 }
+
+function onCardMouseDown(event) {
+  cardPointerDown = { x: event.clientX, y: event.clientY }
+}
+
+function onCardClick(event) {
+  if (event.target?.closest?.('button, a, input, select')) return
+  const dx = Math.abs(event.clientX - cardPointerDown.x)
+  const dy = Math.abs(event.clientY - cardPointerDown.y)
+  if (dx > 6 || dy > 6) return
+  window.location.hash = `#vehicle-detail?id=${props.vehicle.id}`
+}
 </script>
 
 <template>
   <article
-    class="@container rounded-[24px] border border-neutral-100 hover:border-[#0072BC] transition-colors bg-white shadow-[0_8px_28px_rgba(0,0,0,0.08)] overflow-hidden text-left"
+    class="@container rounded-[24px] border border-neutral-100 hover:border-[#0072BC] transition-colors bg-white shadow-[0_8px_28px_rgba(0,0,0,0.08)] overflow-hidden text-left cursor-pointer"
+    @mousedown="onCardMouseDown"
+    @click="onCardClick"
   >
     <!-- Scrollable Vehicle Photo Gallery with Condition Pill & Favorite Heart -->
     <div class="relative aspect-[16/11] bg-neutral-100 overflow-hidden">
