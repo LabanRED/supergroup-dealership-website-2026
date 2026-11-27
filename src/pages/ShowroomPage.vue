@@ -578,7 +578,7 @@ function scrollVehicleImage(vehicleId, idx) {
 
                 <button
                   type="button"
-                  class="w-full rounded-lg py-2.5 px-4 text-xs font-semibold uppercase tracking-wider text-white bg-[#0072BC] hover:bg-[#005f9e] transition-colors cursor-pointer"
+                  class="w-full rounded-full py-3 px-6 text-sm font-medium text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-sm hover:opacity-95 transition-opacity cursor-pointer"
                   @click="filtersOpen = false"
                 >
                   Apply Filter
