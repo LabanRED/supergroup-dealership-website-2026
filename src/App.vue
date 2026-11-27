@@ -44,6 +44,16 @@ const currentPage = computed(() => {
 const isVehicleDetail = computed(() => currentHash.value.split('?')[0] === '#vehicle-detail')
 const isShowroom = computed(() => currentHash.value.split('?')[0] === '#showroom')
 
+function formatStatusTime() {
+  const now = new Date()
+  const hours = String(now.getHours()).padStart(2, '0')
+  const minutes = String(now.getMinutes()).padStart(2, '0')
+  return `${hours}:${minutes}`
+}
+
+const statusBarTime = ref(formatStatusTime())
+let statusTimeInterval = null
+
 function handleHashChange() {
   const newHash = window.location.hash
   currentHash.value = newHash
@@ -58,10 +68,16 @@ function handleHashChange() {
 
 onMounted(() => {
   window.addEventListener('hashchange', handleHashChange)
+  statusTimeInterval = window.setInterval(() => {
+    statusBarTime.value = formatStatusTime()
+  }, 30000)
 })
 
 onUnmounted(() => {
   window.removeEventListener('hashchange', handleHashChange)
+  if (statusTimeInterval) {
+    window.clearInterval(statusTimeInterval)
+  }
 })
 </script>
 
@@ -109,14 +125,43 @@ onUnmounted(() => {
             : 'w-full min-h-screen bg-white flex flex-col'
         "
       >
-        <!-- Dynamic Island Safe-Area Bar -->
+        <!-- Dynamic Island Status Bar -->
         <div
           v-if="activeDevice === 'mobile'"
-          class="hidden md:flex shrink-0 h-[44px] bg-white items-center justify-center relative z-50 select-none"
+          class="hidden md:flex shrink-0 h-[44px] px-6 bg-white items-center justify-between relative z-50 select-none text-neutral-900"
           aria-hidden="true"
         >
-          <div class="w-[116px] h-[30px] rounded-full bg-black flex items-center justify-end pr-2.5 shadow-inner">
+          <!-- Time -->
+          <span class="w-[88px] text-[13px] font-semibold tracking-tight tabular-nums leading-none">
+            {{ statusBarTime }}
+          </span>
+
+          <!-- Dynamic Island -->
+          <div class="w-[116px] h-[30px] rounded-full bg-black flex items-center justify-end pr-2.5 shadow-inner shrink-0">
             <span class="w-2.5 h-2.5 rounded-full bg-[#111827] ring-1 ring-slate-700/70"></span>
+          </div>
+
+          <!-- Signal, Wi-Fi & Battery Icons -->
+          <div class="w-[88px] flex items-center justify-end gap-1.5">
+            <!-- Cellular Signal -->
+            <svg class="w-[16px] h-[11px] fill-current" viewBox="0 0 18 12">
+              <rect x="0.5" y="8" width="2.8" height="3.5" rx="0.8" />
+              <rect x="4.8" y="5.8" width="2.8" height="5.7" rx="0.8" />
+              <rect x="9.1" y="3.3" width="2.8" height="8.2" rx="0.8" />
+              <rect x="13.4" y="0.8" width="2.8" height="10.7" rx="0.8" />
+            </svg>
+
+            <!-- Wi-Fi Signal -->
+            <svg class="w-[15px] h-[11px] fill-current" viewBox="0 0 16 12">
+              <path d="M8 9.2a1.4 1.4 0 1 1 0 2.8 1.4 1.4 0 0 1 0-2.8Zm-3.1-1.9a4.6 4.6 0 0 1 6.2 0 .75.75 0 1 1-1.05 1.08 3.1 3.1 0 0 0-4.1 0 .75.75 0 1 1-1.05-1.08Zm-2.5-2.6a8.2 8.2 0 0 1 11.2 0 .75.75 0 1 1-1.05 1.07 6.7 6.7 0 0 0-9.1 0 .75.75 0 0 1-1.05-1.07ZM.2 2.2a11.4 11.4 0 0 1 15.6 0 .75.75 0 0 1-1.05 1.07 9.9 9.9 0 0 0-13.5 0A.75.75 0 0 1 .2 2.2Z" />
+            </svg>
+
+            <!-- Battery -->
+            <svg class="w-[24px] h-[12px]" viewBox="0 0 27 13" fill="none">
+              <rect x="1" y="1" width="22" height="11" rx="3" stroke="currentColor" stroke-width="1.5" />
+              <rect x="3.2" y="3.2" width="16.5" height="6.6" rx="1.4" fill="currentColor" />
+              <path d="M24.8 4.4v4.2a1.6 1.6 0 0 0 0-4.2Z" fill="currentColor" />
+            </svg>
           </div>
         </div>
 
