@@ -104,10 +104,11 @@ function scrollToIndex(index) {
   activeIndex.value = clamped
   isProgrammaticScroll = true
 
+  const padLeft = parseFloat(window.getComputedStyle(track).paddingLeft) || 0
   const targetLeft =
     clamped === 0
       ? 0
-      : track.children[clamped]?.offsetLeft ?? 0
+      : Math.max(0, (track.children[clamped]?.offsetLeft ?? 0) - padLeft)
 
   track.scrollTo({
     left: targetLeft,
@@ -118,6 +119,15 @@ function scrollToIndex(index) {
   scrollTimeout = setTimeout(() => {
     isProgrammaticScroll = false
   }, 450)
+}
+
+function stepReview(direction) {
+  const maxIdx = getMaxIndex()
+  if (direction > 0) {
+    scrollToIndex(activeIndex.value >= maxIdx ? 0 : activeIndex.value + 1)
+  } else {
+    scrollToIndex(activeIndex.value <= 0 ? maxIdx : activeIndex.value - 1)
+  }
 }
 
 function handleScroll() {
@@ -199,71 +209,101 @@ onUnmounted(() => {
       </p>
     </div>
 
-    <!-- Scrollable Review Track (1 card on mobile, 3 cards on desktop, auto-scrolling) -->
+    <!-- Scrollable Review Track with Desktop Side Chevrons -->
     <div
-      ref="trackRef"
-      class="relative flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 mx-auto cursor-grab active:cursor-grabbing select-none"
-      :class="activeDevice === 'mobile' ? 'max-w-md' : 'max-w-md md:max-w-none'"
-      style="scrollbar-width: none;"
-      @scroll="handleScroll"
-      @mousedown="isPaused = true; handleTrackMouseDown($event)"
-      @mouseup="isPaused = false"
+      :class="activeDevice === 'mobile' ? '' : 'md:flex md:items-center md:gap-4'"
       @mouseenter="isPaused = true"
       @mouseleave="isPaused = false"
-      @touchstart.passive="isPaused = true"
-      @touchend.passive="isPaused = false"
-      @dragstart.prevent
     >
-      <article
-        v-for="review in reviews"
-        :key="review.id"
-        class="snap-start shrink-0 rounded-[28px] bg-white border border-neutral-100 hover:border-[#0072BC] transition-colors p-6 shadow-[0_8px_28px_rgba(0,0,0,0.06)] flex flex-col justify-between"
-        :class="
-          activeDevice === 'mobile'
-            ? 'w-full'
-            : 'w-full md:w-[calc((100%-32px)/3)]'
-        "
+      <!-- Desktop Left Chevron -->
+      <button
+        type="button"
+        aria-label="Previous review"
+        class="shrink-0 w-11 h-11 rounded-full bg-white border border-neutral-300 text-neutral-700 hover:border-[#0072BC] hover:text-[#0072BC] shadow-sm items-center justify-center transition-colors cursor-pointer"
+        :class="activeDevice === 'mobile' ? 'hidden' : 'hidden md:flex'"
+        @click="stepReview(-1)"
       >
-        <div>
-          <!-- 5 Stars -->
-          <div class="flex items-center gap-1.5 mb-3">
-            <img
-              v-for="n in 5"
-              :key="n"
-              :src="starIcon"
-              alt="Star"
-              draggable="false"
-              class="w-5 h-5"
-            />
-          </div>
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
 
-          <!-- Google Badge + Date -->
-          <div class="flex items-center gap-2 mb-4">
-            <img :src="googleLogo" alt="Google" draggable="false" class="h-4 w-auto" />
-            <span class="text-xs text-neutral-400">
-              {{ review.timeAgo }}
-            </span>
-          </div>
+      <div
+        ref="trackRef"
+        class="relative flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-px-1.5 px-1.5 pt-2 pb-5 mx-auto cursor-grab active:cursor-grabbing select-none"
+        :class="activeDevice === 'mobile' ? 'max-w-md' : 'max-w-md md:max-w-none md:flex-1 md:min-w-0'"
+        style="scrollbar-width: none;"
+        @scroll="handleScroll"
+        @mousedown="isPaused = true; handleTrackMouseDown($event)"
+        @mouseup="isPaused = false"
+        @touchstart.passive="isPaused = true"
+        @touchend.passive="isPaused = false"
+        @dragstart.prevent
+      >
+        <article
+          v-for="review in reviews"
+          :key="review.id"
+          class="snap-start shrink-0 rounded-[28px] bg-white border border-neutral-200/80 hover:border-[#0072BC] transition-colors p-6 shadow-[0_8px_24px_rgba(0,0,0,0.06)] flex flex-col justify-between"
+          :class="
+            activeDevice === 'mobile'
+              ? 'w-full'
+              : 'w-full md:w-[calc((100%-32px)/3)]'
+          "
+        >
+          <div>
+            <!-- 5 Stars -->
+            <div class="flex items-center gap-1.5 mb-3">
+              <img
+                v-for="n in 5"
+                :key="n"
+                :src="starIcon"
+                alt="Star"
+                draggable="false"
+                class="w-5 h-5"
+              />
+            </div>
 
-          <!-- Reviewer Profile -->
-          <div class="flex items-center gap-3 mb-4">
-            <img
-              :src="review.avatar"
-              :alt="review.name"
-              draggable="false"
-              class="w-12 h-12 rounded-full object-cover shrink-0"
-            />
-            <span class="font-medium text-base text-neutral-900">
-              {{ review.name }}
-            </span>
-          </div>
+            <!-- Google Badge + Date -->
+            <div class="flex items-center gap-2 mb-4">
+              <img :src="googleLogo" alt="Google" draggable="false" class="h-4 w-auto" />
+              <span class="text-xs text-neutral-400">
+                {{ review.timeAgo }}
+              </span>
+            </div>
 
-          <!-- Review Text -->
-          <p class="text-sm text-neutral-800 leading-relaxed">
-            {{ review.text }}
-          </p>
-        </div>
-      </article>
+            <!-- Reviewer Profile -->
+            <div class="flex items-center gap-3 mb-4">
+              <img
+                :src="review.avatar"
+                :alt="review.name"
+                draggable="false"
+                class="w-12 h-12 rounded-full object-cover shrink-0"
+              />
+              <span class="font-medium text-base text-neutral-900">
+                {{ review.name }}
+              </span>
+            </div>
+
+            <!-- Review Text -->
+            <p class="text-sm text-neutral-800 leading-relaxed">
+              {{ review.text }}
+            </p>
+          </div>
+        </article>
+      </div>
+
+      <!-- Desktop Right Chevron -->
+      <button
+        type="button"
+        aria-label="Next review"
+        class="shrink-0 w-11 h-11 rounded-full items-center justify-center text-white bg-gradient-to-r from-[#0072BC] to-[#2FA6F3] shadow-md hover:opacity-95 transition-opacity cursor-pointer"
+        :class="activeDevice === 'mobile' ? 'hidden' : 'hidden md:flex'"
+        @click="stepReview(1)"
+      >
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
     </div>
 
     <!-- Pagination Dots -->

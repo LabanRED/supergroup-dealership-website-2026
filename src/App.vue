@@ -72,8 +72,23 @@ function handleHashChange() {
   }
 }
 
+function handleDeviceToggleKey(event) {
+  if (event.key !== 'Tab' || event.ctrlKey || event.altKey || event.metaKey) return
+  if (window.innerWidth < 768) return
+
+  const target = event.target
+  const tag = target?.tagName?.toUpperCase()
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || target?.isContentEditable) {
+    return
+  }
+
+  event.preventDefault()
+  setDevice(activeDevice.value === 'mobile' ? 'desktop' : 'mobile')
+}
+
 onMounted(() => {
   window.addEventListener('hashchange', handleHashChange)
+  window.addEventListener('keydown', handleDeviceToggleKey)
   statusTimeInterval = window.setInterval(() => {
     statusBarTime.value = formatStatusTime()
   }, 30000)
@@ -81,6 +96,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('hashchange', handleHashChange)
+  window.removeEventListener('keydown', handleDeviceToggleKey)
   if (statusTimeInterval) {
     window.clearInterval(statusTimeInterval)
   }

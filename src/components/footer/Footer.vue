@@ -202,7 +202,7 @@ const quicklinks = [
         <img
           :src="bbbeeLogo"
           alt="Level 2 BBBEE"
-          class="h-24 w-auto"
+          class="h-[125px] w-auto"
         />
       </div>
 
