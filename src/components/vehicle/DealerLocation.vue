@@ -1,6 +1,7 @@
 <script setup>
+import { computed } from 'vue'
 import { useDevicePreview } from '../../composables/useDevicePreview.js'
-import dealerImage from '../../images/suzuki-dealer-image.webp'
+import { getDealerImage } from '../../utils/dealerImage.js'
 
 const { activeDevice } = useDevicePreview()
 
@@ -18,6 +19,8 @@ const props = defineProps({
     default: '010 593 4429',
   },
 })
+
+const dealerImage = computed(() => getDealerImage(props.dealerName))
 
 function scrollToEnquire() {
   document.getElementById('vdp-enquire')?.scrollIntoView({ behavior: 'smooth' })

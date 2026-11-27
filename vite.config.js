@@ -7,8 +7,22 @@ export default defineConfig({
   plugins: [vue(), tailwindcss()],
   server: {
     port: 3000,
+    proxy: {
+      '/api/conexa': {
+        target: 'https://conexa.r-e-d.co.za/api',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/conexa/, ''),
+      },
+    },
   },
   preview: {
     port: 3000,
+    proxy: {
+      '/api/conexa': {
+        target: 'https://conexa.r-e-d.co.za/api',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/conexa/, ''),
+      },
+    },
   },
 })

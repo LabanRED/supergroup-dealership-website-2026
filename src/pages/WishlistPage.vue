@@ -2,14 +2,15 @@
 import { computed } from 'vue'
 import { useDevicePreview } from '../composables/useDevicePreview.js'
 import { useWishlist } from '../composables/useWishlist.js'
-import { vehicles } from '../data/vehicles.js'
+import { useStockFeed } from '../composables/useStockFeed.js'
 import VehicleCard from '../components/vehicle/VehicleCard.vue'
 
 const { activeDevice } = useDevicePreview()
 const { favorites, clearWishlist } = useWishlist()
+const { stockVehicles } = useStockFeed()
 
 const wishlistedVehicles = computed(() =>
-  vehicles.filter((v) => favorites.value.has(v.id))
+  stockVehicles.value.filter((v) => favorites.value.has(v.id))
 )
 </script>
 

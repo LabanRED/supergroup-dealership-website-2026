@@ -10,7 +10,7 @@ import fuelIcon from '../images/supergroup-dealerships-fuel-type-icon.svg'
 import transmissionIcon from '../images/supergroup-dealerships-transmission-icon.svg'
 import hybridHevIcon from '../images/hybrid-hev-icon.svg'
 import electricIcon from '../images/electric-icon.svg'
-import { vehicles } from '../data/vehicles.js'
+import { useStockFeed } from '../composables/useStockFeed.js'
 import FinanceCalculator from '../components/vehicle/FinanceCalculator.vue'
 import VehicleEnquire from '../components/vehicle/VehicleEnquire.vue'
 import VehicleBadges from '../components/vehicle/VehicleBadges.vue'
@@ -18,6 +18,7 @@ import SupergroupDivider from '../components/common/SupergroupDivider.vue'
 
 const { activeDevice } = useDevicePreview()
 const { favorites, toggleFavorite } = useWishlist()
+const { stockVehicles, stockTotal, isLoading } = useStockFeed()
 const handleGalleryMouseDown = createDragScrollHandler({ snapToSlide: true })
 const query = ref('')
 const filtersOpen = ref(false)
@@ -51,8 +52,8 @@ async function toggleEnquire(vehicleId) {
     ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 const galleryRefs = {}
+const PAGE_SIZE = 18
 const currentPage = ref(1)
-const totalPages = 3815
 const sortBy = ref('default')
 const sortOptions = [
   { value: 'default', label: 'Price - Default' },
@@ -116,23 +117,31 @@ const selectedFuel = ref('')
 const selectedBodyType = ref('')
 const selectedDealer = ref('')
 
-const modelsByMake = {
-  'Alfa Romeo': ['Junior'],
-  Renault: ['Clio', 'Kwid', 'Triber', 'Kiger', 'Duster'],
-  Suzuki: ['Super Carry', 'Swift', 'Jimny', 'Baleno', 'Fronx'],
-  GWM: ['Ora 5', 'Haval Jolion', 'Haval H6'],
-  Geely: ['E2', 'Geometry C'],
-  Toyota: ['Corolla Cross', 'Hilux', 'Fortuner', 'Starlet', 'RAV4'],
-  Volkswagen: ['Polo', 'Polo Vivo', 'Golf', 'T-Cross', 'Tiguan'],
-  Ford: ['Ranger', 'Everest', 'Puma', 'Territory'],
-  Hyundai: ['Grand i10', 'Venue', 'Creta', 'Tucson'],
-  BMW: ['1 Series', '3 Series', 'X1', 'X3'],
-  'Mercedes-Benz': ['A-Class', 'C-Class', 'GLA', 'GLC'],
-  Chery: ['Tiggo 4 Pro', 'Tiggo 7 Pro Max', 'Tiggo 8 Pro'],
-}
+const modelsByMake = computed(() => {
+  const map = {}
+  for (const v of stockVehicles.value) {
+    if (!v.make) continue
+    if (!map[v.make]) map[v.make] = new Set()
+    if (v.model) map[v.make].add(v.model)
+  }
+  const result = {}
+  for (const [make, set] of Object.entries(map)) {
+    result[make] = Array.from(set).sort((a, b) => a.localeCompare(b))
+  }
+  return result
+})
 
-const makes = Object.keys(modelsByMake)
-const availableModels = computed(() => (selectedMake.value ? modelsByMake[selectedMake.value] || [] : []))
+const makeCounts = computed(() => {
+  const counts = {}
+  for (const v of stockVehicles.value) {
+    if (!v.make) continue
+    counts[v.make] = (counts[v.make] || 0) + 1
+  }
+  return counts
+})
+
+const makes = computed(() => Object.keys(modelsByMake.value).sort((a, b) => a.localeCompare(b)))
+const availableModels = computed(() => (selectedMake.value ? modelsByMake.value[selectedMake.value] || [] : []))
 
 watch(selectedMake, () => {
   if (!availableModels.value.includes(selectedModel.value)) {
@@ -156,19 +165,21 @@ function applyFiltersFromHash() {
   if (params.has('maxPrice')) selectedMaxPrice.value = params.get('maxPrice') || ''
 }
 
-const years = [2026, 2025, 2024, 2023, 2022, 2021, 2020]
+const years = computed(() => {
+  const set = new Set(stockVehicles.value.map((v) => v.year).filter(Boolean))
+  return Array.from(set).sort((a, b) => b - a)
+})
 const conditions = ['New', 'Demo', 'Used']
 const transmissions = ['Automatic', 'Manual']
 const fuelTypes = ['Petrol', 'Diesel', 'Hybrid', 'Electric']
-const bodyTypes = ['Hatchback', 'Bakkie / Pickup', 'SUV', 'Cross-Over', 'Sedan']
-const dealers = [
-  'Arnold Chatz Cars',
-  'Suzuki Edenvale',
-  'Suzuki Bedfordview',
-  'Lionel Motors Renault',
-  'GWM Haval Benoni',
-  'Geely Rustenburg',
-]
+const bodyTypes = computed(() => {
+  const set = new Set(stockVehicles.value.map((v) => v.bodyType).filter(Boolean))
+  return Array.from(set).sort((a, b) => a.localeCompare(b))
+})
+const dealers = computed(() => {
+  const set = new Set(stockVehicles.value.map((v) => v.dealer).filter(Boolean))
+  return Array.from(set).sort((a, b) => a.localeCompare(b))
+})
 const minPriceOptions = [
   { label: 'R 150,000', value: 150000 },
   { label: 'R 250,000', value: 250000 },
@@ -214,7 +225,7 @@ function applySidebarFilters() {
 
 const filteredVehicles = computed(() => {
   const q = query.value.trim().toLowerCase()
-  const list = vehicles.filter((v) => {
+  const list = stockVehicles.value.filter((v) => {
     if (selectedMake.value && v.make !== selectedMake.value) return false
     if (selectedModel.value && v.model !== selectedModel.value) return false
     if (selectedMinYear.value && v.year < Number(selectedMinYear.value)) return false
@@ -227,7 +238,7 @@ const filteredVehicles = computed(() => {
     if (selectedFuel.value && v.fuelType !== selectedFuel.value) return false
     if (selectedBodyType.value && v.bodyType !== selectedBodyType.value) return false
     if (selectedDealer.value && v.dealer !== selectedDealer.value) return false
-    if (q && !`${v.name} ${v.trim} ${v.dealer} ${v.fuelType}`.toLowerCase().includes(q)) return false
+    if (q && !`${v.name} ${v.trim} ${v.dealer} ${v.fuelType} ${v.bodyType}`.toLowerCase().includes(q)) return false
     return true
   })
 
@@ -242,6 +253,60 @@ const filteredVehicles = computed(() => {
   }
   return list
 })
+
+const totalPages = computed(() => Math.max(1, Math.ceil(filteredVehicles.value.length / PAGE_SIZE)))
+
+const paginatedVehicles = computed(() => {
+  const start = (currentPage.value - 1) * PAGE_SIZE
+  return filteredVehicles.value.slice(start, start + PAGE_SIZE)
+})
+
+const showingRangeLabel = computed(() => {
+  const total = filteredVehicles.value.length
+  if (!total) return '0 of 0'
+  const start = (currentPage.value - 1) * PAGE_SIZE + 1
+  const end = Math.min(currentPage.value * PAGE_SIZE, total)
+  return `${start} - ${end} of ${total.toLocaleString('en-ZA')}`
+})
+
+const visiblePages = computed(() => {
+  const total = totalPages.value
+  const current = currentPage.value
+  if (total <= 5) {
+    return Array.from({ length: total }, (_, i) => i + 1)
+  }
+  const pages = new Set([1, total, current, Math.max(1, current - 1), Math.min(total, current + 1)])
+  return Array.from(pages).sort((a, b) => a - b)
+})
+
+function goToPage(page) {
+  const clamped = Math.max(1, Math.min(page, totalPages.value))
+  currentPage.value = clamped
+  resultsSectionRef.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
+watch(
+  [
+    query,
+    selectedMake,
+    selectedModel,
+    selectedMinYear,
+    selectedMaxYear,
+    selectedMinPrice,
+    selectedMaxPrice,
+    selectedMaxMileage,
+    selectedCondition,
+    selectedTransmission,
+    selectedFuel,
+    selectedBodyType,
+    selectedDealer,
+    sortBy,
+    stockVehicles,
+  ],
+  () => {
+    currentPage.value = 1
+  },
+)
 
 const activeFilterCount = computed(() => {
   return [
@@ -363,7 +428,7 @@ function onCardClick(vehicleId, event) {
           style="color: #404040;"
         >
           Find your vehicle from our
-          <strong class="font-semibold text-neutral-900">2 000+</strong> quality dealerships stock
+          <strong class="font-semibold text-neutral-900">{{ stockTotal.toLocaleString('en-ZA') }}</strong> quality dealerships stock
         </p>
 
         <form class="mx-auto max-w-[1000px] space-y-4 text-left" @submit.prevent="filtersOpen = false">
@@ -484,7 +549,9 @@ function onCardClick(vehicleId, event) {
                     class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
                   >
                     <option value="">Make</option>
-                    <option v-for="make in makes" :key="make" :value="make">{{ make }}</option>
+                    <option v-for="make in makes" :key="make" :value="make">
+                      {{ make }} ({{ makeCounts[make] || 0 }})
+                    </option>
                   </select>
 
                   <select
@@ -738,7 +805,9 @@ function onCardClick(vehicleId, event) {
                 class="w-full rounded-xl border border-neutral-200 bg-neutral-50/70 px-3 py-2 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
               >
                 <option value="">All Makes</option>
-                <option v-for="make in makes" :key="make" :value="make">{{ make }}</option>
+                <option v-for="make in makes" :key="make" :value="make">
+                  {{ make }} ({{ makeCounts[make] || 0 }})
+                </option>
               </select>
               <select
                 v-model="selectedModel"
@@ -1072,10 +1141,17 @@ function onCardClick(vehicleId, event) {
       <div class="min-w-0 space-y-5">
       <!-- Showing & Sort By Row -->
       <div class="flex items-center justify-between gap-2 text-xs text-neutral-700 px-1 whitespace-nowrap">
-        <div>
+        <div class="inline-flex items-center gap-2">
           <span>Showing </span>
           <span class="font-medium text-[#0072BC]">
-            {{ filteredVehicles.length ? `1 - ${filteredVehicles.length}` : '0' }} of 2066
+            {{ showingRangeLabel }}
+          </span>
+          <span
+            v-if="isLoading"
+            class="inline-flex items-center gap-1.5 text-[11px] text-neutral-500"
+          >
+            <span class="w-2 h-2 rounded-full bg-[#2FA6F3] animate-pulse"></span>
+            Loading live stock...
           </span>
         </div>
 
@@ -1115,7 +1191,7 @@ function onCardClick(vehicleId, event) {
         "
       >
         <div
-          v-for="vehicle in filteredVehicles"
+          v-for="vehicle in paginatedVehicles"
           :key="vehicle.id"
           class="space-y-3"
         >
@@ -1135,10 +1211,11 @@ function onCardClick(vehicleId, event) {
             @dragstart.prevent
           >
             <img
-              v-for="(img, idx) in vehicle.images"
+              v-for="(img, idx) in vehicle.images.slice(0, 12)"
               :key="idx"
               :src="img"
               :alt="`${vehicle.name} photo ${idx + 1}`"
+              loading="lazy"
               draggable="false"
               class="w-full h-full shrink-0 snap-start snap-always object-cover"
             />
@@ -1182,7 +1259,7 @@ function onCardClick(vehicleId, event) {
 
             <div class="flex items-center gap-1.5">
               <button
-                v-for="(_, idx) in vehicle.images"
+                v-for="(_, idx) in vehicle.images.slice(0, 12)"
                 :key="idx"
                 type="button"
                 :aria-label="`View photo ${idx + 1}`"
@@ -1318,6 +1395,7 @@ function onCardClick(vehicleId, event) {
 
     <!-- Pagination -->
     <nav
+      v-if="totalPages > 1"
       aria-label="Showroom pagination"
       class="max-w-md mx-auto pt-[30px] pb-[50px] flex items-center justify-center gap-3 text-sm"
     >
@@ -1325,7 +1403,7 @@ function onCardClick(vehicleId, event) {
         type="button"
         class="inline-flex items-center gap-1 text-neutral-700 hover:text-[#0072BC] transition-colors cursor-pointer disabled:opacity-50"
         :disabled="currentPage === 1"
-        @click="currentPage = Math.max(1, currentPage - 1)"
+        @click="goToPage(currentPage - 1)"
       >
         <svg class="w-4 h-4 text-[#0072BC]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
@@ -1334,42 +1412,33 @@ function onCardClick(vehicleId, event) {
       </button>
 
       <div class="flex items-center gap-1.5">
-        <button
-          v-for="page in [1, 2, 3]"
-          :key="page"
-          type="button"
-          class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-medium transition-colors cursor-pointer"
-          :class="
-            currentPage === page
-              ? 'bg-[#0072BC] text-white'
-              : 'text-[#0072BC] hover:bg-[#0072BC]/10'
-          "
-          @click="currentPage = page"
-        >
-          {{ page }}
-        </button>
-
-        <span class="px-1 text-[#0072BC]">...</span>
-
-        <button
-          type="button"
-          class="px-2 h-9 rounded-full flex items-center justify-center text-sm font-medium transition-colors cursor-pointer"
-          :class="
-            currentPage === totalPages
-              ? 'bg-[#0072BC] text-white'
-              : 'text-[#0072BC] hover:bg-[#0072BC]/10'
-          "
-          @click="currentPage = totalPages"
-        >
-          {{ totalPages }}
-        </button>
+        <template v-for="(page, i) in visiblePages" :key="page">
+          <span
+            v-if="i > 0 && page - visiblePages[i - 1] > 1"
+            class="px-1 text-[#0072BC]"
+          >
+            ...
+          </span>
+          <button
+            type="button"
+            class="min-w-9 px-2 h-9 rounded-full flex items-center justify-center text-sm font-medium transition-colors cursor-pointer"
+            :class="
+              currentPage === page
+                ? 'bg-[#0072BC] text-white'
+                : 'text-[#0072BC] hover:bg-[#0072BC]/10'
+            "
+            @click="goToPage(page)"
+          >
+            {{ page }}
+          </button>
+        </template>
       </div>
 
       <button
         type="button"
         class="inline-flex items-center gap-1 text-neutral-700 hover:text-[#0072BC] transition-colors cursor-pointer disabled:opacity-50"
         :disabled="currentPage === totalPages"
-        @click="currentPage = Math.min(totalPages, currentPage + 1)"
+        @click="goToPage(currentPage + 1)"
       >
         <span>Next</span>
         <svg class="w-4 h-4 text-[#0072BC]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

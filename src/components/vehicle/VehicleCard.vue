@@ -69,10 +69,11 @@ function onCardClick(event) {
         @dragstart.prevent
       >
         <img
-          v-for="(img, idx) in vehicle.images"
+          v-for="(img, idx) in vehicle.images.slice(0, 12)"
           :key="idx"
           :src="img"
           :alt="`${vehicle.name} photo ${idx + 1}`"
+          loading="lazy"
           draggable="false"
           class="w-full h-full shrink-0 snap-start snap-always object-cover"
         />
@@ -118,7 +119,7 @@ function onCardClick(event) {
 
         <div class="flex items-center gap-1.5">
           <button
-            v-for="(_, idx) in vehicle.images"
+            v-for="(_, idx) in vehicle.images.slice(0, 12)"
             :key="idx"
             type="button"
             :aria-label="`View photo ${idx + 1}`"

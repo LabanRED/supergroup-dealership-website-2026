@@ -1,11 +1,36 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useDevicePreview } from '../../composables/useDevicePreview.js'
-import { vehicles } from '../../data/vehicles'
+import { useStockFeed } from '../../composables/useStockFeed.js'
 import VehicleCard from './VehicleCard.vue'
 
+const props = defineProps({
+  bodyType: {
+    type: String,
+    default: '',
+  },
+  make: {
+    type: String,
+    default: '',
+  },
+  excludeId: {
+    type: [Number, String],
+    default: null,
+  },
+})
+
 const { activeDevice } = useDevicePreview()
+const { stockVehicles } = useStockFeed()
 const trackRef = ref(null)
+
+const similarVehicles = computed(() => {
+  const pool = stockVehicles.value.filter((v) => v.id !== props.excludeId)
+  if (!props.bodyType && !props.make) return pool.slice(0, 12)
+  const matching = pool.filter(
+    (v) => (props.bodyType && v.bodyType === props.bodyType) || (props.make && v.make === props.make),
+  )
+  return (matching.length >= 4 ? matching : [...matching, ...pool.filter((v) => !matching.includes(v))]).slice(0, 12)
+})
 
 function scrollTrack(direction) {
   const track = trackRef.value
@@ -64,7 +89,7 @@ function scrollTrack(direction) {
         style="scrollbar-width: none;"
       >
         <VehicleCard
-          v-for="item in vehicles"
+          v-for="item in similarVehicles"
           :key="`similar-${item.id}`"
           :vehicle="item"
           class="w-[88%] shrink-0 snap-start"

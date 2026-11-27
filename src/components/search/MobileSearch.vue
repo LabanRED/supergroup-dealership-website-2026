@@ -1,10 +1,12 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { useDevicePreview } from '../../composables/useDevicePreview.js'
+import { useStockFeed } from '../../composables/useStockFeed.js'
 import filterIcon from '../../images/filter-icon.svg'
 import searchIcon from '../../images/search-icon.svg'
 
 const { activeDevice } = useDevicePreview()
+const { stockVehicles } = useStockFeed()
 
 defineProps({
   embedded: {
@@ -35,23 +37,31 @@ const selectedMaxMileage = ref('')
 const selectedMinPrice = ref('')
 const selectedMaxPrice = ref('')
 
-const modelsByMake = {
-  'Alfa Romeo': ['Junior'],
-  Renault: ['Clio', 'Kwid', 'Triber', 'Kiger', 'Duster'],
-  Suzuki: ['Super Carry', 'Swift', 'Jimny', 'Baleno', 'Fronx'],
-  GWM: ['Ora 5', 'Haval Jolion', 'Haval H6'],
-  Geely: ['E2', 'Geometry C'],
-  Toyota: ['Corolla Cross', 'Hilux', 'Fortuner', 'Starlet', 'RAV4'],
-  Volkswagen: ['Polo', 'Polo Vivo', 'Golf', 'T-Cross', 'Tiguan'],
-  Ford: ['Ranger', 'Everest', 'Puma', 'Territory'],
-  Hyundai: ['Grand i10', 'Venue', 'Creta', 'Tucson'],
-  BMW: ['1 Series', '3 Series', 'X1', 'X3'],
-  'Mercedes-Benz': ['A-Class', 'C-Class', 'GLA', 'GLC'],
-  Chery: ['Tiggo 4 Pro', 'Tiggo 7 Pro Max', 'Tiggo 8 Pro'],
-}
+const modelsByMake = computed(() => {
+  const map = {}
+  for (const v of stockVehicles.value) {
+    if (!v.make) continue
+    if (!map[v.make]) map[v.make] = new Set()
+    if (v.model) map[v.make].add(v.model)
+  }
+  const result = {}
+  for (const [make, set] of Object.entries(map)) {
+    result[make] = Array.from(set).sort((a, b) => a.localeCompare(b))
+  }
+  return result
+})
 
-const makes = Object.keys(modelsByMake)
-const availableModels = computed(() => (selectedMake.value ? modelsByMake[selectedMake.value] || [] : []))
+const makeCounts = computed(() => {
+  const counts = {}
+  for (const v of stockVehicles.value) {
+    if (!v.make) continue
+    counts[v.make] = (counts[v.make] || 0) + 1
+  }
+  return counts
+})
+
+const makes = computed(() => Object.keys(modelsByMake.value).sort((a, b) => a.localeCompare(b)))
+const availableModels = computed(() => (selectedMake.value ? modelsByMake.value[selectedMake.value] || [] : []))
 
 watch(selectedMake, () => {
   selectedModel.value = ''
@@ -257,7 +267,9 @@ function submitSearch() {
               class="w-full rounded-xl border border-neutral-200 bg-white px-3 py-2.5 text-xs text-neutral-800 focus:outline-none focus:border-[#0072BC]"
             >
               <option value="">Make</option>
-              <option v-for="make in makes" :key="make" :value="make">{{ make }}</option>
+              <option v-for="make in makes" :key="make" :value="make">
+                {{ make }} ({{ makeCounts[make] || 0 }})
+              </option>
             </select>
 
             <select

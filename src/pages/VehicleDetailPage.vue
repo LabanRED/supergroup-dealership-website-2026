@@ -4,7 +4,7 @@ import { useDevicePreview } from '../composables/useDevicePreview.js'
 import { useWishlist } from '../composables/useWishlist.js'
 import { useChromeTheme } from '../composables/useChromeTheme.js'
 import { createDragScrollHandler } from '../composables/useDragScroll.js'
-import { vehicles } from '../data/vehicles.js'
+import { useStockFeed } from '../composables/useStockFeed.js'
 import hybridHevIcon from '../images/hybrid-hev-icon.svg'
 import electricIcon from '../images/electric-icon.svg'
 import VehicleOverview from '../components/vehicle/VehicleOverview.vue'
@@ -20,6 +20,7 @@ import VehicleBadges from '../components/vehicle/VehicleBadges.vue'
 const { activeDevice } = useDevicePreview()
 const { isFavorite, toggleFavorite } = useWishlist()
 const { chromeBg } = useChromeTheme()
+const { stockVehicles } = useStockFeed()
 const handleGalleryMouseDown = createDragScrollHandler({ snapToSlide: true })
 
 const currentHash = ref(typeof window !== 'undefined' ? window.location.hash : '')
@@ -27,7 +28,7 @@ const currentHash = ref(typeof window !== 'undefined' ? window.location.hash : '
 const vehicle = computed(() => {
   const queryStr = currentHash.value.includes('?') ? currentHash.value.split('?')[1] : ''
   const idParam = Number(new URLSearchParams(queryStr).get('id'))
-  return vehicles.find((v) => v.id === idParam) || vehicles[0]
+  return stockVehicles.value.find((v) => v.id === idParam) || stockVehicles.value[0]
 })
 
 const isScrolled = ref(false)
@@ -487,14 +488,18 @@ function scrollToCalculator() {
         <!-- Divider -->
         <SupergroupDivider />
 
-      <!-- More Listings From This Dealer -->
-      <MoreFromDealer />
+        <!-- More Listings From This Dealer -->
+        <MoreFromDealer :dealer-name="vehicle.dealer" :exclude-id="vehicle.id" />
 
-      <!-- Divider -->
-      <SupergroupDivider />
+        <!-- Divider -->
+        <SupergroupDivider />
 
-      <!-- Similar Vehicles -->
-      <SimilarVehicles />
+        <!-- Similar Vehicles -->
+        <SimilarVehicles
+          :body-type="vehicle.bodyType"
+          :make="vehicle.make"
+          :exclude-id="vehicle.id"
+        />
       </div>
     </div>
   </div>

@@ -1,12 +1,32 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useDevicePreview } from '../../composables/useDevicePreview.js'
-import dealerImage from '../../images/suzuki-dealer-image.webp'
-import { vehicles } from '../../data/vehicles'
+import { useStockFeed } from '../../composables/useStockFeed.js'
+import { getDealerImage } from '../../utils/dealerImage.js'
 import VehicleCard from './VehicleCard.vue'
 
+const props = defineProps({
+  dealerName: {
+    type: String,
+    default: '',
+  },
+  excludeId: {
+    type: [Number, String],
+    default: null,
+  },
+})
+
 const { activeDevice } = useDevicePreview()
+const { stockVehicles } = useStockFeed()
 const trackRef = ref(null)
+const dealerImage = computed(() => getDealerImage(props.dealerName))
+
+const dealerVehicles = computed(() => {
+  const pool = stockVehicles.value.filter((v) => v.id !== props.excludeId)
+  if (!props.dealerName) return pool.slice(0, 12)
+  const sameDealer = pool.filter((v) => v.dealer === props.dealerName)
+  return (sameDealer.length >= 4 ? sameDealer : [...sameDealer, ...pool.filter((v) => v.dealer !== props.dealerName)]).slice(0, 12)
+})
 
 function scrollTrack(direction) {
   const track = trackRef.value
@@ -77,7 +97,7 @@ function scrollTrack(direction) {
         style="scrollbar-width: none;"
       >
         <VehicleCard
-          v-for="item in vehicles"
+          v-for="item in dealerVehicles"
           :key="`dealer-${item.id}`"
           :vehicle="item"
           class="w-[88%] shrink-0 snap-start"
