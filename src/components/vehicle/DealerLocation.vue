@@ -30,13 +30,13 @@ function scrollToEnquire() {
     :class="
       activeDevice === 'mobile'
         ? 'space-y-4'
-        : 'space-y-4 lg:space-y-0 lg:grid lg:grid-cols-12 lg:gap-10 lg:items-center'
+        : 'space-y-4 lg:space-y-0 lg:pt-[38px] lg:pb-[54px] lg:grid lg:grid-cols-12 lg:gap-10 lg:items-stretch'
     "
   >
     <!-- Left Column: Heading, Copy, and Dealer Info Card -->
     <div
       class="space-y-4"
-      :class="activeDevice === 'mobile' ? '' : 'lg:col-span-6 lg:space-y-5'"
+      :class="activeDevice === 'mobile' ? '' : 'lg:col-span-7 lg:space-y-5'"
     >
       <h2>Dealership Location</h2>
 
@@ -126,15 +126,15 @@ function scrollToEnquire() {
       </div>
     </div>
 
-    <!-- Right Column (Desktop Only): Dealership Exterior Image -->
+    <!-- Right Column (Desktop Only): Dealership Exterior Image matched to left column height -->
     <div
-      class="overflow-hidden rounded-[24px] bg-neutral-100 aspect-[16/10]"
-      :class="activeDevice === 'mobile' ? 'hidden' : 'hidden lg:block lg:col-span-6'"
+      class="relative overflow-hidden rounded-[24px] bg-neutral-100"
+      :class="activeDevice === 'mobile' ? 'hidden' : 'hidden lg:block lg:col-span-5 lg:min-h-[260px]'"
     >
       <img
         :src="dealerImage"
         :alt="`${dealerName} dealership exterior`"
-        class="w-full h-full object-cover"
+        class="lg:absolute lg:inset-0 w-full h-full object-cover"
       />
     </div>
   </section>
